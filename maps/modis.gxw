@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gxw SYSTEM "grass-gxw.dtd">
+<gxw>
+    <layer_manager dim="865,358,550,431">
+    </layer_manager>
+    <display render="1" mode="3" showCompExtent="1" constrainRes="0" dim="0,22,1440,874" extent="-12631034.986347,2724278.773428,-4848852.560175,5485622.564182">
+        <layer type="raster" name="mask_lower48_5min@GADM" checked="0" opacity="1.000000">
+            <task name="d.rast">
+                <flag name="o" />
+                <parameter name="map">
+                    <value>mask_lower48_5min@GADM</value>
+                </parameter>
+            </task>
+        </layer>
+        <layer type="vector" name="lower48_region@GADM" checked="0" opacity="1.000000">
+            <task name="d.vect">
+                <parameter name="map">
+                    <value>lower48_region@GADM</value>
+                </parameter>
+                <parameter name="type">
+                    <value>point,area,face,centroid,line,boundary</value>
+                </parameter>
+            </task>
+        </layer>
+        <layer type="vector" name="lower48_global@GADM" checked="0" opacity="1.000000">
+            <task name="d.vect">
+                <parameter name="map">
+                    <value>lower48_global@GADM</value>
+                </parameter>
+                <parameter name="type">
+                    <value>point,area,face,centroid,line,boundary</value>
+                </parameter>
+            </task>
+        </layer>
+        <layer type="raster" name="gadm0@GADM" checked="0" opacity="1.000000">
+            <task name="d.rast">
+                <flag name="o" />
+                <parameter name="map">
+                    <value>gadm0@GADM</value>
+                </parameter>
+            </task>
+        </layer>
+        <layer type="raster" name="grid_5min@PERMANENT" checked="0" opacity="1.000000">
+            <selected />
+            <task name="d.rast">
+                <flag name="o" />
+                <parameter name="map">
+                    <value>grid_5min@PERMANENT</value>
+                </parameter>
+            </task>
+        </layer>
+        <layer type="raster" name="2008_lct1@MCD12Q1" checked="1" opacity="1.000000">
+            <task name="d.rast">
+                <flag name="o" />
+                <parameter name="map">
+                    <value>2008_lct1@MCD12Q1</value>
+                </parameter>
+            </task>
+        </layer>
+        <layer type="raster" name="2007_lct1@MCD12Q1" checked="1" opacity="1.000000">
+            <task name="d.rast">
+                <flag name="o" />
+                <parameter name="map">
+                    <value>2007_lct1@MCD12Q1</value>
+                </parameter>
+            </task>
+        </layer>
+        <layer type="raster" name="2006_lct1@MCD12Q1" checked="1" opacity="1.000000">
+            <task name="d.rast">
+                <flag name="o" />
+                <parameter name="map">
+                    <value>2006_lct1@MCD12Q1</value>
+                </parameter>
+            </task>
+        </layer>
+        <layer type="raster" name="2005_lct1@MCD12Q1" checked="1" opacity="1.000000">
+            <task name="d.rast">
+                <flag name="o" />
+                <parameter name="map">
+                    <value>2005_lct1@MCD12Q1</value>
+                </parameter>
+            </task>
+        </layer>
+        <layer type="raster" name="2004_lct1@MCD12Q1" checked="1" opacity="1.000000">
+            <task name="d.rast">
+                <flag name="o" />
+                <parameter name="map">
+                    <value>2004_lct1@MCD12Q1</value>
+                </parameter>
+            </task>
+        </layer>
+        <layer type="raster" name="2003_lct1@MCD12Q1" checked="0" opacity="1.000000">
+            <task name="d.rast">
+                <flag name="o" />
+                <parameter name="map">
+                    <value>2003_lct1@MCD12Q1</value>
+                </parameter>
+            </task>
+        </layer>
+        <layer type="raster" name="2002_lct1@MCD12Q1" checked="1" opacity="1.000000">
+            <task name="d.rast">
+                <flag name="o" />
+                <parameter name="map">
+                    <value>2002_lct1@MCD12Q1</value>
+                </parameter>
+            </task>
+        </layer>
+        <layer type="raster" name="2001_lct1@MCD12Q1" checked="1" opacity="1.000000">
+            <task name="d.rast">
+                <flag name="o" />
+                <parameter name="map">
+                    <value>2001_lct1@MCD12Q1</value>
+                </parameter>
+            </task>
+        </layer>
+    </display>
+</gxw>

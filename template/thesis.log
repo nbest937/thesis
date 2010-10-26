@@ -1,0 +1,760 @@
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2010.6.25)  17 AUG 2010 18:45
+entering extended mode
+ restricted \write18 enabled.
+ Source specials enabled.
+ %&-line parsing enabled.
+**thesis.tex
+(./thesis.tex
+LaTeX2e <2009/09/24>
+Babel <v3.8l> and hyphenation patterns for english, usenglishmax, dumylang, noh
+yphenation, farsi, arabic, croatian, bulgarian, ukrainian, russian, czech, slov
+ak, danish, dutch, finnish, french, basque, ngerman, german, german-x-2009-06-1
+9, ngerman-x-2009-06-19, ibycus, monogreek, greek, ancientgreek, hungarian, san
+skrit, italian, latin, latvian, lithuanian, mongolian2a, mongolian, bokmal, nyn
+orsk, romanian, irish, coptic, serbian, turkish, welsh, esperanto, uppersorbian
+, estonian, indonesian, interlingua, icelandic, kurmanji, slovenian, polish, po
+rtuguese, spanish, galician, catalan, swedish, ukenglish, pinyin, loaded.
+(./Latex/Classes/PhDthesisPSnPDF.cls
+Document Class: Latex/Classes/PhDthesisPSnPDF 2007/09/06 v2 PhD thesis class
+(/usr/share/texmf-texlive/tex/latex/base/book.cls
+Document Class: book 2007/10/19 v1.4h Standard LaTeX document class
+(/usr/share/texmf-texlive/tex/latex/base/bk11.clo
+File: bk11.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@chapter=\count80
+\c@section=\count81
+\c@subsection=\count82
+\c@subsubsection=\count83
+\c@paragraph=\count84
+\c@subparagraph=\count85
+\c@figure=\count86
+\c@table=\count87
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/usr/share/texmf-texlive/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2009/06/22 v3.00
+
+(/usr/share/texmf-texlive/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2009/06/22 v3.00 Basic AMSFonts support
+\@emptytoks=\toks14
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 96.
+))
+(/usr/share/texmf-texlive/tex/latex/graphics/graphics.sty
+Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf-texlive/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/etc/texmf/tex/latex/config/graphics.cfg
+File: graphics.cfg 2009/08/28 v1.8 graphics configuration of TeX Live
+)
+Package graphics Info: Driver file: dvips.def on input line 91.
+
+(/usr/share/texmf-texlive/tex/latex/graphics/dvips.def
+File: dvips.def 1999/02/16 v3.0i Driver-dependant file (DPC,SPQR)
+))
+(/usr/share/texmf-texlive/tex/latex/caption/caption.sty
+Package: caption 2009/10/09 v3.1k Customizing captions (AR)
+
+(/usr/share/texmf-texlive/tex/latex/caption/caption3.sty
+Package: caption3 2009/10/09 v3.1k caption3 kernel (AR)
+
+(/usr/share/texmf-texlive/tex/latex/graphics/keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks15
+)
+\captionmargin=\dimen103
+\captionmargin@=\dimen104
+\captionwidth=\dimen105
+\caption@indent=\dimen106
+\caption@parindent=\dimen107
+\caption@hangindent=\dimen108
+)
+\c@ContinuedFloat=\count88
+)
+(/usr/share/texmf-texlive/tex/latex/fancyhdr/fancyhdr.sty
+\fancy@headwidth=\skip43
+\f@ncyO@elh=\skip44
+\f@ncyO@erh=\skip45
+\f@ncyO@olh=\skip46
+\f@ncyO@orh=\skip47
+\f@ncyO@elf=\skip48
+\f@ncyO@erf=\skip49
+\f@ncyO@olf=\skip50
+\f@ncyO@orf=\skip51
+)
+(/usr/share/texmf-texlive/tex/latex/amsfonts/eucal.sty
+Package: eucal 2009/06/22 v3.00 Euler Script fonts
+LaTeX Font Info:    Overwriting math alphabet `\EuScript' in version `bold'
+(Font)                  U/eus/m/n --> U/eus/b/n on input line 33.
+)
+(/var/lib/texmf/tex/generic/babel/babel.sty
+Package: babel 2008/07/06 v3.8l The Babel package
+
+(/usr/share/texmf-texlive/tex/generic/babel/english.ldf
+Language: english 2005/03/30 v3.3o English support from the babel system
+
+(/usr/share/texmf-texlive/tex/generic/babel/babel.def
+File: babel.def 2008/07/06 v3.8l Babel common definitions
+\babel@savecnt=\count89
+\U@D=\dimen109
+)
+\l@canadian = a dialect from \language\l@american 
+\l@australian = a dialect from \language\l@british 
+\l@newzealand = a dialect from \language\l@british 
+))
+(/usr/share/texmf-texlive/tex/latex/graphics/color.sty
+Package: color 2005/11/14 v1.0j Standard LaTeX Color (DPC)
+
+(/etc/texmf/tex/latex/config/color.cfg
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package color Info: Driver file: dvips.def on input line 130.
+
+(/usr/share/texmf-texlive/tex/latex/graphics/dvipsnam.def
+File: dvipsnam.def 1999/02/16 v3.0i Driver-dependant file (DPC,SPQR)
+))
+(/usr/share/texmf-texlive/tex/latex/footmisc/footmisc.sty
+Package: footmisc 2009/09/15 v5.5a a miscellany of footnote facilities
+\FN@temptoken=\toks16
+\footnotemargin=\dimen110
+\c@pp@next@reset=\count90
+\c@@fnserial=\count91
+Package footmisc Info: Declaring symbol style bringhurst on input line 855.
+Package footmisc Info: Declaring symbol style chicago on input line 863.
+Package footmisc Info: Declaring symbol style wiley on input line 872.
+Package footmisc Info: Declaring symbol style lamport-robust on input line 883.
+
+Package footmisc Info: Declaring symbol style lamport* on input line 903.
+Package footmisc Info: Declaring symbol style lamport*-robust on input line 924
+.
+)
+(/usr/share/texmf-texlive/tex/latex/natbib/natbib.sty
+Package: natbib 2009/07/16 8.31 (PWD, AO)
+\bibhang=\skip52
+\bibsep=\skip53
+LaTeX Info: Redefining \cite on input line 694.
+\c@NAT@ctr=\count92
+)
+(/usr/share/texmf-texlive/tex/latex/base/ifthen.sty
+Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
+)
+(/usr/share/texmf-texlive/tex/latex/tools/multicol.sty
+Package: multicol 2008/12/05 v1.6h multicolumn formatting (FMi)
+\c@tracingmulticols=\count93
+\mult@box=\box26
+\multicol@leftmargin=\dimen111
+\c@unbalance=\count94
+\c@collectmore=\count95
+\doublecol@number=\count96
+\multicoltolerance=\count97
+\multicolpretolerance=\count98
+\full@width=\dimen112
+\page@free=\dimen113
+\premulticols=\dimen114
+\postmulticols=\dimen115
+\multicolsep=\skip54
+\multicolbaselineskip=\skip55
+\partial@page=\box27
+\last@line=\box28
+\mult@rightbox=\box29
+\mult@grightbox=\box30
+\mult@gfirstbox=\box31
+\mult@firstbox=\box32
+\@tempa=\box33
+\@tempa=\box34
+\@tempa=\box35
+\@tempa=\box36
+\@tempa=\box37
+\@tempa=\box38
+\@tempa=\box39
+\@tempa=\box40
+\@tempa=\box41
+\@tempa=\box42
+\@tempa=\box43
+\@tempa=\box44
+\@tempa=\box45
+\@tempa=\box46
+\@tempa=\box47
+\@tempa=\box48
+\@tempa=\box49
+\c@columnbadness=\count99
+\c@finalcolumnbadness=\count100
+\last@try=\dimen116
+\multicolovershoot=\dimen117
+\multicolundershoot=\dimen118
+\mult@nat@firstbox=\box50
+\colbreak@box=\box51
+)
+(/usr/share/texmf-texlive/tex/latex/tocbibind/tocbibind.sty
+Package: tocbibind 2009/09/04 v1.5i extra ToC listings
+
+
+Package tocbibind Note: The document has chapter divisions.
+
+
+Package tocbibind Note: Using chapter style headings, unless overridden.
+
+) (/usr/share/texmf-texlive/tex/latex/nomencl/nomencl.sty
+Package: nomencl 2005/09/22 v4.2 Nomenclature package (LN)
+\nomlabelwidth=\dimen119
+\nom@tempdim=\dimen120
+\nomitemsep=\skip56
+)
+\@nomenclaturefile=\write3
+\openout3 = `thesis.nlo'.
+
+
+Writing nomenclature file thesis.nlo
+(/usr/share/texmf-texlive/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2009/04/10 v2.0 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in pdf mode not detected.
+)
+(/usr/share/texmf-texlive/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2009/10/09 v6.79a Hypertext links for LaTeX
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/ifvtex.sty
+Package: ifvtex 2008/11/04 v1.4 Switches for detecting VTeX and its modes (HO)
+Package ifvtex Info: VTeX not detected.
+)
+(/usr/share/texmf-texlive/tex/generic/ifxetex/ifxetex.sty
+Package: ifxetex 2009/01/23 v0.5 Provides ifxetex conditional
+)
+(/usr/share/texmf-texlive/tex/latex/oberdiek/hycolor.sty
+Package: hycolor 2009/10/02 v1.5 Code for color options of hyperref/bookmark (H
+O)
+
+(/usr/share/texmf-texlive/tex/latex/oberdiek/xcolor-patch.sty
+Package: xcolor-patch 2009/10/02 xcolor patch
+))
+\@linkdim=\dimen121
+\Hy@linkcounter=\count101
+\Hy@pagecounter=\count102
+
+(/usr/share/texmf-texlive/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2009/10/09 v6.79a Hyperref: PDFDocEncoding definition (HO)
+)
+(/usr/share/texmf-texlive/tex/generic/oberdiek/etexcmds.sty
+Package: etexcmds 2007/12/12 v1.2 Prefix for e-TeX command names (HO)
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/infwarerr.sty
+Package: infwarerr 2007/09/09 v1.2 Providing info/warning/message (HO)
+)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+)
+(/etc/texmf/tex/latex/config/hyperref.cfg
+File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
+)
+(/usr/share/texmf-texlive/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2009/08/13 v3.4 Keyval support for LaTeX options (HO)
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/kvsetkeys.sty
+Package: kvsetkeys 2009/07/30 v1.5 Key value parser with default handler suppor
+t (HO)
+))
+Package hyperref Info: Option `bookmarks' set `true' on input line 2864.
+Package hyperref Info: Option `bookmarksopen' set `true' on input line 2864.
+Package hyperref Info: Option `bookmarksnumbered' set `true' on input line 2864
+.
+Package hyperref Info: Option `breaklinks' set `true' on input line 2864.
+Package hyperref Info: Option `linktocpage' set `true' on input line 2864.
+Package hyperref Info: Option `colorlinks' set `true' on input line 2864.
+Package hyperref Info: Option `hyperindex' set `true' on input line 2864.
+Package hyperref Info: Option `hyperfigures' set `true' on input line 2864.
+Package hyperref Info: Hyper figures ON on input line 2973.
+Package hyperref Info: Link nesting OFF on input line 2980.
+Package hyperref Info: Hyper index ON on input line 2983.
+Package hyperref Info: Plain pages OFF on input line 2990.
+Package hyperref Info: Backreferencing ON on input line 2993.
+
+Implicit mode ON; LaTeX internals redefined
+Package hyperref Info: Bookmarks ON on input line 3191.
+(/usr/share/texmf-texlive/tex/latex/hyperref/backref.sty
+Package: backref 2006/09/05 v1.28 Bibliographical back referencing
+)
+(/usr/share/texmf-texlive/tex/latex/ltxmisc/url.sty
+\Urlmuskip=\muskip10
+Package: url 2006/04/12  ver 3.3  Verb mode for urls, etc.
+)
+LaTeX Info: Redefining \url on input line 3428.
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/bitset.sty
+Package: bitset 2007/09/28 v1.0 Data type bit set (HO)
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/intcalc.sty
+Package: intcalc 2007/09/27 v1.1 Expandable integer calculations (HO)
+)
+(/usr/share/texmf-texlive/tex/generic/oberdiek/bigintcalc.sty
+Package: bigintcalc 2007/11/11 v1.1 Expandable big integer calculations (HO)
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/pdftexcmds.sty
+Package: pdftexcmds 2009/09/23 v0.6 LuaTeX support for pdfTeX utility functions
+ (HO)
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/ifluatex.sty
+Package: ifluatex 2009/04/17 v1.2 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+)
+(/usr/share/texmf-texlive/tex/generic/oberdiek/ltxcmds.sty
+Package: ltxcmds 2009/08/05 v1.0 Some LaTeX kernel commands for general use (HO
+)
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+)))
+\Fld@menulength=\count103
+\Field@Width=\dimen122
+\Fld@charsize=\dimen123
+\Field@toks=\toks17
+Package hyperref Info: Hyper figures ON on input line 4375.
+Package hyperref Info: Link nesting OFF on input line 4382.
+Package hyperref Info: Hyper index ON on input line 4385.
+Package hyperref Info: backreferencing ON on input line 4390.
+Package hyperref Info: Link coloring ON on input line 4395.
+Package hyperref Info: Link coloring with OCG OFF on input line 4402.
+Package hyperref Info: PDF/A mode OFF on input line 4407.
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/atbegshi.sty
+Package: atbegshi 2008/07/31 v1.9 At begin shipout hook (HO)
+)
+\Hy@abspage=\count104
+\c@Item=\count105
+\c@Hfootnote=\count106
+)
+*hyperref using driver hdvips*
+(/usr/share/texmf-texlive/tex/latex/hyperref/hdvips.def
+File: hdvips.def 2009/10/09 v6.79a Hyperref driver for dvips
+
+(/usr/share/texmf-texlive/tex/latex/hyperref/pdfmark.def
+File: pdfmark.def 2009/10/09 v6.79a Hyperref definitions for pdfmark specials
+
+
+Package hyperref Warning: You have enabled option `breaklinks'.
+(hyperref)                But driver `hdvips.def' does not suppport this.
+(hyperref)                Expect trouble with the link areas of broken links.
+
+\pdf@docset=\toks18
+\pdf@box=\box52
+\pdf@toks=\toks19
+\pdf@defaulttoks=\toks20
+\Fld@listcount=\count107
+)) (/usr/share/texmf-texlive/tex/latex/graphics/epsfig.sty
+Package: epsfig 1999/02/16 v1.7a (e)psfig emulation (SPQR)
+
+(/usr/share/texmf-texlive/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+\Gin@req@height=\dimen124
+\Gin@req@width=\dimen125
+)
+\epsfxsize=\dimen126
+\epsfysize=\dimen127
+))
+\@input{Latex/Macros/MacroFile1.aux}
+\openout2 = `Latex/Macros/MacroFile1.aux'.
+
+(./Latex/Macros/MacroFile1.tex)
+
+LaTeX Warning: Unused global option(s):
+    [pdftex].
+
+(./thesis.aux (./0_frontmatter/abstract.aux) (./0_frontmatter/dedication.aux)
+(./0_frontmatter/acknowledgement.aux) (./0_frontmatter/glossary.aux)
+(./1_introduction/introduction.aux
+
+LaTeX Warning: Label `largepotato' multiply defined.
+
+) (./2/aims.aux) (./3/XYZ.aux) (./4/XYZ.aux) (./5/XYZ.aux) (./6/XYZ.aux)
+(./7/discussion.aux) (./8/materials_methods.aux)
+(./9_backmatter/declaration.aux))
+\openout1 = `thesis.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 90.
+LaTeX Font Info:    ... okay on input line 90.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 90.
+LaTeX Font Info:    ... okay on input line 90.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 90.
+LaTeX Font Info:    ... okay on input line 90.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 90.
+LaTeX Font Info:    ... okay on input line 90.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 90.
+LaTeX Font Info:    ... okay on input line 90.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 90.
+LaTeX Font Info:    ... okay on input line 90.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 90.
+LaTeX Font Info:    ... okay on input line 90.
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: hyperref package is loaded.
+Package caption Info: End \AtBeginDocument code.
+Package hyperref Info: Link coloring ON on input line 90.
+
+(/usr/share/texmf-texlive/tex/latex/hyperref/nameref.sty
+Package: nameref 2007/05/29 v2.31 Cross-referencing by name of section
+
+(/usr/share/texmf-texlive/tex/latex/oberdiek/refcount.sty
+Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
+)
+\c@section@level=\count108
+)
+LaTeX Info: Redefining \ref on input line 90.
+LaTeX Info: Redefining \pageref on input line 90.
+ (./thesis.out)
+(./thesis.out)
+\@outlinefile=\write4
+\openout4 = `thesis.out'.
+
+Package backref Info: ** backref set up for natbib ** on input line 90.
+\AtBeginShipoutBox=\box53
+File: 0_frontmatter/figures/logo.eps Graphic file (type eps)
+ <0_frontmatter/figures/logo.eps> [1
+
+
+
+\FN@pp@footnotehinttrue 
+
+] [2]
+\openout2 = `0_frontmatter/abstract.aux'.
+
+ (./0_frontmatter/abstract.tex [3
+
+]) [4
+\FN@pp@footnotehinttrue 
+
+
+]
+\openout2 = `0_frontmatter/dedication.aux'.
+
+ (./0_frontmatter/dedication.tex [1
+
+])
+\openout2 = `0_frontmatter/acknowledgement.aux'.
+
+ (./0_frontmatter/acknowledgement.tex
+[2
+
+
+]) (./thesis.toc
+LaTeX Font Info:    Try loading font information for U+msa on input line 6.
+ (/usr/share/texmf-texlive/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2009/06/22 v3.00 AMS symbols A
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 6.
+
+(/usr/share/texmf-texlive/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2009/06/22 v3.00 AMS symbols B
+))
+\tf@toc=\write5
+\openout5 = `thesis.toc'.
+
+ [3
+\FN@pp@footnotehinttrue 
+
+
+] [4
+
+] (./thesis.lof)
+\tf@lof=\write6
+\openout6 = `thesis.lof'.
+
+ [5] [6
+
+] (./thesis.lot)
+\tf@lot=\write7
+\openout7 = `thesis.lot'.
+
+ [7]
+\openout2 = `0_frontmatter/glossary.aux'.
+
+ (./0_frontmatter/glossary.tex)
+(./thesis.nls [8
+
+
+\FN@pp@footnotehinttrue 
+
+
+]
+Underfull \hbox (badness 10000) detected at line 5
+[]\OT1/cmr/bx/n/9 DAPI[]
+ []
+
+
+Underfull \hbox (badness 10000) detected at line 7
+[]\OT1/cmr/bx/n/9 DEPC[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 7--9
+[][]\OT1/cmr/m/n/9 diethyl-pyro-carbonate; used to
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 7--9
+\OT1/cmr/m/n/9 re-move RNA-degrading en-zymes
+ []
+
+
+Underfull \hbox (badness 10000) detected at line 9
+[]\OT1/cmr/bx/n/9 DMSO[]
+ []
+
+
+Underfull \hbox (badness 10000) detected at line 11
+[]\OT1/cmr/bx/n/9 EDTA[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 11--13
+[][]\OT1/cmr/m/n/9 Ethylene-diamine-tetraacetic acid;
+ []
+
+) [9] [10
+
+]
+\openout2 = `1_introduction/introduction.aux'.
+
+ (./1_introduction/introduction.tex
+ 1.
+File: 1_introduction/figures/largepotato.eps Graphic file (type eps)
+<1_introduction/figures/largepotato.eps>
+
+LaTeX Warning: Float too large for page by 29.6759pt on input line 78.
+
+File: 1_introduction/figures/largepotato.eps Graphic file (type eps)
+<1_introduction/figures/largepotato.eps>
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 103.
+
+
+(/usr/share/texmf-texlive/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 103.
+ [1
+
+
+] [2] [3]) [4]
+\openout2 = `2/aims.aux'.
+
+
+(./2/aims.tex
+ 2.
+) [5
+
+
+
+]
+\openout2 = `3/XYZ.aux'.
+
+
+No file 3/XYZ.tex.
+\openout2 = `4/XYZ.aux'.
+
+No file 4/XYZ.tex.
+\openout2 = `5/XYZ.aux'.
+
+No file 5/XYZ.tex.
+\openout2 = `6/XYZ.aux'.
+
+No file 6/XYZ.tex.
+\openout2 = `7/discussion.aux'.
+
+(./7/discussion.tex [6
+
+
+
+
+
+
+
+
+
+
+
+]
+ 3.
+) [7]
+\openout2 = `8/materials_methods.aux'.
+
+ (./8/materials_methods.tex [8
+
+
+
+]
+ 4.
+) [9] (./thesis.bbl (./thesis.brf)
+\tf@brf=\write8
+\openout8 = `thesis.brf'.
+
+ [10
+
+
+])
+Overfull \vbox (80.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (79.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (78.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (77.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (76.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (75.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (74.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (73.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (72.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (71.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (70.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (69.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (68.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (67.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (66.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (65.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (64.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (63.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (62.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (61.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (60.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (59.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (58.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (57.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (56.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (55.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (54.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (53.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (52.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (51.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (50.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (49.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (48.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (47.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (46.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (45.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (44.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (43.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (42.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (41.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (40.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (39.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (38.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (37.39989pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (36.39989pt too high) has occurred while \output is active []
+
+
+[11]
+\openout2 = `9_backmatter/declaration.aux'.
+
+ (./9_backmatter/declaration.tex [12
+
+]) (./thesis.aux
+(./0_frontmatter/abstract.aux) (./0_frontmatter/dedication.aux)
+(./0_frontmatter/acknowledgement.aux) (./0_frontmatter/glossary.aux)
+(./1_introduction/introduction.aux) (./2/aims.aux) (./3/XYZ.aux) (./4/XYZ.aux)
+(./5/XYZ.aux) (./6/XYZ.aux) (./7/discussion.aux) (./8/materials_methods.aux)
+(./9_backmatter/declaration.aux))
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 6734 strings out of 493849
+ 98894 string characters out of 1152846
+ 180170 words of memory out of 3000000
+ 9774 multiletter control sequences out of 15000+50000
+ 15432 words of font info for 57 fonts, out of 3000000 for 9000
+ 714 hyphenation exceptions out of 8191
+ 45i,11n,45p,423b,475s stack positions out of 5000i,500n,10000p,200000b,50000s
+
+Output written on thesis.dvi (26 pages, 41152 bytes).

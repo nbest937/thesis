@@ -14,14 +14,14 @@
 %:-------------------------- report or book -----------------------
 
 %If you want to use a Report style document then uncomment the following 3 lines and comment the below 8 book style lines:
-%\DeclareOption*{\PassOptionsToClass{\CurrentOption}{report}}
-%\ProcessOptions\relax
-%%\LoadClass[a4paper]{report}
-%\ifx\pdfoutput\undefined
-%   \LoadClass[dvips, a4paper]{report}
-%\else
-%   \LoadClass[pdftex, a4paper]{report}
-%\fi
+% \DeclareOption*{\PassOptionsToClass{\CurrentOption}{report}}
+% \ProcessOptions\relax
+% %\LoadClass[letterpaper]{report}
+% \ifx\pdfoutput\undefined
+%    \LoadClass[dvips, letterpaper]{report}
+% \else
+%    \LoadClass[pdftex, letterpaper]{report}
+% \fi
 
 %%Bibliography
 %%uncomment next line to change bibliography name to references for Report document class
@@ -31,9 +31,9 @@
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{book}}
 \ProcessOptions\relax
 \ifx\pdfoutput\undefined
-   \LoadClass[dvips, a4paper]{book}
+   \LoadClass[dvips, letterpaper]{book}
 \else
-   \LoadClass[pdftex, a4paper]{book}
+   \LoadClass[pdftex, letterpaper]{book}
 \fi
 
 
@@ -154,23 +154,47 @@
 
 %:-------------------------- page layout -----------------------
 
-%A4 settings
+% %A4 settings
+% \ifpdf
+%    \pdfpageheight=297mm
+%    \pdfpagewidth=210mm
+% \else
+%    \setlength{\paperheight}{297mm}
+%    \setlength{\paperwidth}{210mm}
+% \fi
+
+%US Letter settings
 \ifpdf
-   \pdfpageheight=297mm
-   \pdfpagewidth=210mm
+   \pdfpageheight=11in
+   \pdfpagewidth=8.5in
 \else
-   \setlength{\paperheight}{297mm}
-   \setlength{\paperwidth}{210mm}
+   \setlength{\paperheight}{11in}
+   \setlength{\paperwidth}{8.5in}
 \fi
 
 \setlength{\hoffset}{0.00cm}
 \setlength{\voffset}{0.00cm}
 
-%: Uncomment this secion for two-sided printing
+%: Uncomment this section for two-sided printing
 % ------------------------------
-\setlength{\oddsidemargin}{1.5cm}
-\setlength{\evensidemargin}{0cm}
-\setlength{\topmargin}{1mm}
+% \setlength{\oddsidemargin}{1.5cm}
+% \setlength{\evensidemargin}{0cm}
+% \setlength{\topmargin}{1mm}
+% \setlength{\headheight}{1.36cm}
+% \setlength{\headsep}{1.00cm}
+% \setlength{\textheight}{20.84cm}
+% \setlength{\textwidth}{14.5cm}
+% \setlength{\marginparsep}{1mm}
+% \setlength{\marginparwidth}{3cm}
+% \setlength{\footskip}{2.36cm}
+
+
+%: Uncomment this section for one-sided printing
+% taken from the original file, but with the first two lanes modified
+% ------------------------------
+\setlength{\evensidemargin}{0.5in}
+\setlength{\oddsidemargin}{0.5in}
+\setlength{\topmargin}{0in}
 \setlength{\headheight}{1.36cm}
 \setlength{\headsep}{1.00cm}
 \setlength{\textheight}{20.84cm}
@@ -178,21 +202,6 @@
 \setlength{\marginparsep}{1mm}
 \setlength{\marginparwidth}{3cm}
 \setlength{\footskip}{2.36cm}
-
-
-%: Uncomment this secion for one-sided printing
-% taken from the original file, but with the first two lanes modified
-% ------------------------------
-%\setlength{\evensidemargin}{1.9cm} % was 1.96cm in original
-%\setlength{\oddsidemargin}{-0.001cm} % was -0.54cm in original file
-%\setlength{\topmargin}{1mm}
-%\setlength{\headheight}{1.36cm}
-%\setlength{\headsep}{1.00cm}
-%\setlength{\textheight}{20.84cm}
-%\setlength{\textwidth}{14.5cm}
-%\setlength{\marginparsep}{1mm}
-%\setlength{\marginparwidth}{3cm}
-%\setlength{\footskip}{2.36cm}
 
 
 %: section below defines fancy page layout options
@@ -238,7 +247,7 @@
 % The name of your University
 \def\university#1{\gdef\@university{#1}}
 % Defining the crest
-\def\crest#1{\gdef\@crest{#1}}
+%\def\crest#1{\gdef\@crest{#1}}
 % Stating the city of birth for title page where needed; uncommented for use
 %\def\cityofbirth#1{\gdef\@cityofbirth{#1}}
 
@@ -258,9 +267,10 @@
     \thispagestyle{empty}
 %  \null\vfill
   \begin{center}
-    { \Huge {\bfseries {\@title}} \par}
-{\large \vspace*{35mm} {{\@crest} \par} \vspace*{25mm}}
-    {{\Large \@author} \par}
+    { \Large {\bfseries {\@title}} \par}
+    {\large \vspace*{35mm} \vspace*{25mm}}
+    % {\large \vspace*{35mm} {{\@crest} \par} \vspace*{25mm}}
+  {{\Large \@author} \par}
 %	\vspace*{1ex}
 %	{{\@cityofbirth} \par}    
 {\large 

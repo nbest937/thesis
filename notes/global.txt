@@ -1,0 +1,66 @@
+Pixels that are null in Aglands2000 have some cropland and mosaic in MLCT.
+
+r.mask mask_lower48_5min@GADM
+r.mapcalc ignored_a="eval(i=(2001_crop_5min+0.5*2001_mosaic_5min)*grid_5min_acres,if(isnull(cropland@aglands), if(i > 0, i, null())))"
+r.sum ignored_a
+
+Reading ignored_a...
+SUM = 96140162.208895
+[Raster MASK present]
+
+96.1 Ma!  This is based on the MLCT maps that mix the primary and secondary layers with A_s = 0.5
+
+
+Calculate area for A_s=0, no information from secondary type.
+
+g.region -p lower48 res=0:00:15
+r.mask mask_lower48_5min@GADM
+cat <<EOF | r.reclass input=2001_lct1@MCD12Q1 output=2001_mlct12_As00
+12 = 1
+* = 0
+EOF
+
+for lct_label in $(r.category map=2001_lct1_reclass@MCD12Q1 cats=0-17 fs=, \
+    | grep -v ',$'); do
+    lct=$(echo $lct_label | cut -d, -f1)
+    label=$(echo $lct_label | cut -d, -f2)
+    cat <<EOF | r.reclass --overwrite input=2001_lct1@MCD12Q1 output=2001_${label}_As00
+$lct = 1
+* = 0
+EOF
+done
+
+g.region -p res=0:00:15
+for label in $(r.category map=2001_lct1_reclass@MCD12Q1 cats=0-17 fs=, \
+    | grep -v ',$' | cut -d, -f2); do
+    r.mapcalc 2001_${label}_As05="2001_${label}@peel/100.0"
+done
+
+for map in $(g.mlist type=rast mapset=cusa patt=*_As0?_5min); do g.remove rast=$map; done
+
+g.region -p res=0:05
+for label in $(r.category map=2001_lct1_reclass@MCD12Q1 cats=0-17 fs=, | cut -d, -f2); do
+    r.resamp.stats input=2001_${label}_As00 output=2001_${label}_As00_5min method=average
+    r.resamp.stats input=2001_${label}_As05 output=2001_${label}_As05_5min method=average
+done
+
+
+r.mapcalc 2001_totcrop_As00_5min_a='(2001_crop_As00_5min +0.5 *2001_mosaic_As00_5min)*grid_5min_acres'
+r.mapcalc 2001_totcrop_As05_5min_a='(2001_crop_As05_5min +0.5 *2001_mosaic_As05_5min)*grid_5min_acres'
+
+GRASS 6.4.0 (global):~ > r.sum 2001_totcrop_As05_5min_a
+Reading 2001_totcrop_As05_5min_a...
+SUM = 495339133.234554
+[Raster MASK present]
+GRASS 6.4.0 (global):~ > r.sum 2001_totcrop_As00_5min_a
+Reading 2001_totcrop_As00_5min_a...
+SUM = 487847392.807251
+[Raster MASK present]
+
+GRASS 6.4.0 (global):~ > r.sum cropland_a@aglands
+Reading cropland_a@aglands...
+SUM = 446260986.237936
+[Raster MASK present]
+
+r.mapcalc 2001_totcrop_diff_5min='2001_crop_As05_5min +0.5 *2001_mosaic_As05_5min -2001_crop_As00_5min -0.5 *2001_mosaic_As00_5min'
+

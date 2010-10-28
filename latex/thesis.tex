@@ -12,7 +12,7 @@
 %: Style file for Latex
 % Most style definitions are in the external file PhDthesisPSnPDF.
 % In this template package, it can be found in ./Latex/Classes/
-\documentclass[twoside,11pt]{Latex/Classes/PhDthesisPSnPDF}
+\documentclass[oneside,11pt]{Latex/Classes/PhDthesisPSnPDF}
 
 
 %: Macro file for Latex
@@ -33,17 +33,17 @@
     \pdfinfo { /Title  (PhD and MPhil Thesis Classes)
                /Creator (TeX)
                /Producer (pdfTeX)
-               /Author (YourName your@email.net)
+               /Author (Neil Best nbest@alum.mit.edu)
                /CreationDate (D:YYYYMMDDhhmmss)  %format D:YYYYMMDDhhmmss
                /ModDate (D:YYYYMMDDhhmm)
-               /Subject (xyz)
-               /Keywords (add, your, keywords, here) }
+               /Subject (Land Use / Land Cover)
+               /Keywords (agriculture, United States) }
     \pdfcatalog { /PageMode (/UseOutlines)
                   /OpenAction (fitbh)  }
 \fi
 
 
-\title{Title of your thesis}
+\title{Synthesis of a complete land use / land cover data set for the conterminous United States emphasizing accuracy in area and distribution of agricultural activity}
 
 
 
@@ -51,29 +51,30 @@
 % The section below defines www links/email for author and institutions
 % They will appear on the title page of the PDF and can be clicked
 \ifpdf
-  \author{\href{mailto:your@email.net}{YourName}}
+  \author{\href{mailto:nbest@alum.mit.edu}{Neil A. Best}}
 %  \cityofbirth{born in XYZ} % uncomment this if your university requires this
 %  % If city of birth is required, also uncomment 2 sections in PhDthesisPSnPDF
 %  % Just search for the "city" and you'll find them.
-  \collegeordept{\href{http://www.something.net}{CollegeOrDepartment}}
-  \university{\href{http://www.something.net}{University}}
+  \collegeordept{\href{http://www.neiu.edu/~deptges/}{Department of
+      Geography \& Environmental Studies}}
+  \university{\href{http://www.neiu.edu}{Northeastern Illinois University}}
 
   % The crest is a graphics file of the logo of your research institution.
   % Place it in ./0_frontmatter/figures and specify the width
-  \crest{\includegraphics[width=4cm]{logo}}
+  %\crest{\includegraphics[width=4cm]{logo}}
   
 % If you are not creating a PDF then use the following. The default is PDF.
 \else
-  \author{YourName}
+  \author{Neil A. Best}
 %  \cityofbirth{born in XYZ}
-  \collegeordept{CollegeOrDept}
-  \university{University}
+  \collegeordept{Department of Geography \& Environmental Studies}
+  \university{Northeastern Illionois University}
   \crest{\includegraphics[width=4cm]{logo}}
 \fi
 
 %\renewcommand{\submittedtext}{change the default text here if needed}
-\degree{Philosophi\ae Doctor (PhD), DPhil,..}
-\degreedate{year month}
+\degree{Master of Arts in Geography \& Environmental Studies}
+\degreedate{December 2010}
 
 
 % ----------------------------------------------------------------------
@@ -92,7 +93,7 @@
 %\language{english}
 
 % sets line spacing
-\renewcommand\baselinestretch{1.2}
+\renewcommand\baselinestretch{2}
 \baselineskip=18pt plus1pt
 
 
@@ -105,18 +106,18 @@
 % Your research institution may require reviewer names, etc.
 % This cover back side is required by Dresden Med Fac; uncomment if needed.
 
-\newpage
-\vspace{10mm}
-1. Reviewer: Name
+% \newpage
+% \vspace{10mm}
+% 1. Reviewer: Name
 
-\vspace{10mm}
-2. Reviewer: 
+% \vspace{10mm}
+% 2. Reviewer: 
 
-\vspace{20mm}
-Day of the defense:
+% \vspace{20mm}
+% Day of the defense:
 
-\vspace{20mm}
-\hspace{70mm}Signature from head of PhD committee:
+% \vspace{20mm}
+% \hspace{70mm}Signature from head of PhD committee:
 
 
 
@@ -189,7 +190,7 @@ Day of the defense:
 \include{1_introduction/introduction}	% background information
 \include{2/aims}						% aims of the project
 
-\include{3/XYZ}			
+\include{3/analysis}			
 \include{4/XYZ}	
 \include{5/XYZ}
 \include{6/XYZ}
@@ -255,3 +256,8 @@ Day of the defense:
 
 
 \end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

@@ -163,10 +163,19 @@
    \setlength{\paperwidth}{210mm}
 \fi
 
+% %US Letter settings
+% \ifpdf
+%    \pdfpageheight=11in
+%    \pdfpagewidth=8.5in
+% \else
+%    \setlength{\paperheight}{11in}
+%    \setlength{\paperwidth}{8.5in}
+% \fi
+
 \setlength{\hoffset}{0.00cm}
 \setlength{\voffset}{0.00cm}
 
-%: Uncomment this secion for two-sided printing
+%: Uncomment this section for two-sided printing
 % ------------------------------
 \setlength{\oddsidemargin}{1.5cm}
 \setlength{\evensidemargin}{0cm}

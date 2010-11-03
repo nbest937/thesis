@@ -1,0 +1,144 @@
+\chapter{Thesis structure and text formatting}
+
+This chapter explains some of the basics for formatting text in \LaTeX.
+
+\section{Structuring the thesis}
+
+To help \LaTeX\ understand the structure of your thesis, and so make it
+possible for it to automatically generate a TOC you have to follow
+some formatting rules.
+
+\subsection{Chapter}
+
+Each chapter is started by a:
+\begin{verbatim}
+\chapter{Name of chapter}
+\end{verbatim}
+So in each $.tex$ file you include, always start with a
+\verb+\chapter{Whatever}+ line.
+
+\subsection{Sections}
+Sections, subsections and subsubsections are made like this:
+\begin{verbatim}
+\section{Name of section}
+\subsection{Name of subsection}
+\subsubsection{Name of subsubsection}
+\end{verbatim}
+
+\subsection{Numbering}
+The numbering of the chapters, sections etc. should be left to \LaTeX\
+and not you. You don't want to write stuff like:
+\verb+\chapter{1. Introduction}+ this should all be left to
+\LaTeX. The style of the numbering is set in the $thesis.tex$ file.
+
+\section{Formatting text}
+
+Here are the most basic ways of formatting text in \LaTeX:
+\begin{itemize}
+\item {\em Italic} is made like: \verb+{\it the text}+ or
+\verb+{\em the text}+.
+\item {\bf Bold} is made like: \verb+{\bf the text}+
+\item \underline{Underline} is made like: \verb+\underline{the text}+
+\end{itemize}
+
+To set the size of some text you can choose between:
+\begin{itemize}
+\item {\normalsize normal size} \verb+{\normalsize normal size}+
+\item {\large large} \verb+{\large large}+
+\item {\Large larger} \verb+{\Large larger}+
+\item {\LARGE larger still} \verb+{\LARGE larger still}+
+\item {\huge huge} \verb+{\huge huge}+
+\item {\Huge The hugest} \verb+{\Huge The hugest}+
+\item {\small small} \verb+{\small small}+
+\item {\footnotesize smaller than small} \verb+{\footnotesize smaller than small}+
+\item {\scriptsize smaller still} \verb+{\scriptsize smaller still}+
+\item {\tiny tiny} \verb+{\tiny tiny}+
+\end{itemize}
+
+
+\section{Lists}
+
+\subsection{Lists}
+
+You can make two kinds of lists in \LaTeX. Lists without or with
+numbering. Unnumbered lists are made like:
+
+\begin{verbatim}
+\begin{itemize}
+\item Red
+\item Green
+\item Blue 
+\end{itemize}
+\end{verbatim}
+
+\begin{itemize}
+\item Red
+\item Green
+\item Blue 
+\end{itemize}
+
+Numbered lists are made like:
+
+\begin{verbatim}
+\begin{enumerate}
+\item Metal Gear Solid
+\item System Shock
+\item International Karate
+\end{enumerate}
+\end{verbatim}
+
+\begin{enumerate}
+\item Metal Gear Solid
+\item System Shock
+\item International Karate
+\end{enumerate}
+
+The text after \verb+\item+ can be as long as you want and multiple
+lines are ok too.
+
+\section{Text alignment and various breaks}
+
+\subsection{Alignment}
+
+Alignment of text etc. is done like:
+
+\begin{verbatim}
+\begin{flushleft}
+This is left.
+\end{flushleft}
+\end{verbatim}
+
+\begin{flushleft}
+This is left.
+\end{flushleft}
+
+\begin{verbatim}
+\begin{flushright}
+This is right.
+\end{flushright}
+\end{verbatim}
+
+\begin{flushright}
+This is right.
+\end{flushright}
+
+\begin{verbatim}
+\begin{center}
+This is center.
+\end{center}
+\end{verbatim}
+
+\begin{center}
+This is center.
+\end{center}
+
+\subsection{Breaks and stuff}
+
+If you want to force a new line you can either write: \verb+\\+ or
+\verb+\newline+ 
+
+To get a new page, do: \verb+\newpage+ 
+
+For vertical spacing you have: \verb+\smallskip \medskip and \bigskip+ 
+
+If you don't want the beginning of a text indented use: \verb+\noindent+

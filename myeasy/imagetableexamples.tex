@@ -1,0 +1,63 @@
+\chapter{Images and tables}
+
+\section{Images}
+
+To include an image in the text is fairly easy.
+
+\begin{verbatim}
+\begin{center}
+\includegraphics{images/sinfest.png}
+\figcaption{Cute, cute girl from www.sinfest.net.}
+\end{center}
+\end{verbatim}
+
+\begin{center}
+\includegraphics{images/sinfest.png}
+\figcaption{Cute, cute girl from www.sinfest.net.}
+\end{center}
+
+Is is possible to scale the image by setting the width of it like
+this:
+\begin{verbatim}
+\includegraphics[width=\textwidth]{images/sinfest.png}
+\end{verbatim}
+and several other ways. In the example above the image will keep its
+constraints, and be scaled to be as wide as the documents text width.
+
+\section{Tables}
+
+Tables gets a bit more tricky in \LaTeX. What you do is decide the
+number of columns and then use a seperator character, $\&$, to delimit
+the different table cells. Example:
+\begin{verbatim}
+\begin{table}[tbph]
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+{\bf Name}&{\bf Surname}&{\bf Age}\\
+\hline
+Bobba&Fett&42\\
+\hline
+Yoda&&900\\
+\hline
+\end{tabular}
+\caption{Just these guys you know?}
+\end{center}
+\end{table}
+\end{verbatim}
+
+\begin{table}[tbph]
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+{\bf Name}&{\bf Surname}&{\bf Age}\\
+\hline
+Bobba&Fett&42\\
+\hline
+Yoda&&900\\
+\hline
+\end{tabular}
+\caption{Just these guys you know?}
+\end{center}
+\end{table}
+

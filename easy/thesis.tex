@@ -1,0 +1,80 @@
+% this is the main document for the thesis
+%
+% here we set the paper to be a4 and the font to be 11 points
+\documentclass[a4paper,11pt]{report}
+% here we include a lot of magic packages
+\usepackage[T1]{fontenc}
+\usepackage{makeidx}
+\usepackage{alltt}
+\usepackage{tabularx}
+\usepackage{moreverb}
+\usepackage{url}
+\usepackage{a4wide}
+\usepackage[pdftex]{graphicx}
+\usepackage{pslatex}
+\usepackage{mathptmx}
+\usepackage{amsmath}
+\usepackage{pstricks}
+% just to kick in revert/reload in acroread (on unix)
+\usepackage{hyperref}
+\begin{Form}\end{Form}
+
+% here we define a bold-italic command
+\newcommand{\bolit}[1] {\item[\textbf{#1}] \mbox{} \\}
+
+% here we define a new \figcaption{} command
+\makeatletter
+\newcommand\figcaption{\def\@captype{figure}\caption}
+\makeatother
+
+\title{Your title}
+\author{Your Name (your@email.adr)}
+
+\begin{document}
+\bibliographystyle{alpha}
+
+% the command below generates the title page (first page)
+\maketitle
+
+\begin{abstract}
+Here you explain in brief what the thesis is about. Typically only a
+couple of lines.
+\end{abstract}
+
+% the pages hereafter will be numbered I,II,III etc.
+\pagenumbering{roman}
+\small
+% the part below includes an acknowledgments chapter that will not be numbered
+\setcounter{secnumdepth}{-1}
+\include{acknowledgments}
+\setcounter{secnumdepth}{3}
+% here we get a TOC, a table of contents
+\tableofcontents
+% here we get a list of figures/images
+\listoffigures
+% and here tables
+\listoftables
+\normalsize
+\newpage
+% now we're back to 1,2,3,4...
+\pagenumbering{arabic}
+
+% we also have an introduction chapter that will not be numbered
+\setcounter{secnumdepth}{-1}
+\include{introduction}
+\setcounter{secnumdepth}{3}
+% insert chapters here!
+\include{latexexamples}
+\include{imagetableexamples}
+\include{refciteexamples}
+% and finally a conclusion chapter
+\include{conclusion}
+
+\appendix
+\include{glossary}
+
+% the citations we have made in the text are listed here
+\bibliography{books}
+\addcontentsline{toc}{chapter}{Bibliography}
+
+\end{document}

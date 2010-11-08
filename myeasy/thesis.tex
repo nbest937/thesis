@@ -1,20 +1,23 @@
-% this is the main document for the thesis
-%
-% here we set the paper to be a4 and the font to be 11 points
-\documentclass[a4paper,11pt]{report}
-% here we include a lot of magic packages
-\usepackage[T1]{fontenc}
-\usepackage{makeidx}
-\usepackage{alltt}
-\usepackage{tabularx}
-\usepackage{moreverb}
-\usepackage{url}
-\usepackage{a4wide}
-\usepackage[pdftex]{graphicx}
-\usepackage{pslatex}
-\usepackage{mathptmx}
-\usepackage{amsmath}
-\usepackage{pstricks}
+\documentclass[pdftex,letterpaper,11pt]{report}
+%\usepackage[letter]{geometry}
+
+%packages added to original template
+\usepackage{natbib}
+
+% packages originally included in template
+%\usepackage[T1]{fontenc}
+%\usepackage{makeidx}
+%\usepackage{makeindex}
+%\usepackage{alltt}
+%\usepackage{tabularx}
+% \usepackage{moreverb}
+% \usepackage{url}
+\usepackage[pstex]{graphicx}
+% \usepackage{pslatex}
+% \usepackage{mathptmx}
+% \usepackage{amsmath}
+% \usepackage{pstricks}
+
 % just to kick in revert/reload in acroread (on unix)
 \usepackage{hyperref}
 \begin{Form}\end{Form}
@@ -27,18 +30,18 @@
 \newcommand\figcaption{\def\@captype{figure}\caption}
 \makeatother
 
-\title{Your title}
-\author{Your Name (your@email.adr)}
+\title{Synthesis of a complete land use / land cover data set for the conterminous United States emphasizing accuracy in area and distribution of agricultural activity}
+% \author{\href{mailto:nbest@alum.mit.edu}{Neil A. Best}}
+\author{Neil A. Best}
 
 \begin{document}
-\bibliographystyle{alpha}
+\bibliographystyle{chicago}
 
 % the command below generates the title page (first page)
 \maketitle
 
 \begin{abstract}
-Here you explain in brief what the thesis is about. Typically only a
-couple of lines.
+This paper presents an effort to produce a new land cover data set for the conterminous United States that augments available agricultural land use data with other uses and covers to create a complete landscape characterization.  We start with the data set described in Ramankutty, et al., 2008, which improves on the spatial distributions of agricultural land indicated by the MODIS Land Cover Type and Global Land Cover 2000 data products on which it is based by incorporating agricultural census data as a ground truth constraint.  However, it provides no information regarding areas which were judged to have been misclassified.  We present a method for reconciling the Ramankutty data with the MODIS Land Cover Type map for 2001 and aspects of the higher-resolution 2001 National Landcover Database.  This result is subsequently merged with the data from Monfreda, et al., 2008 in order to further disaggregate cropland into commodity sub-classes.  We describe a prototype economic land use change model driven by land conversion costs, crop yield expectations, and climate change scenarios that requires this data for initialization.  We examine trends in other data sets to assess the accuracy of change in agricultural land area expressed in the MODIS time series after 2001.  This effort points a way forward to the eventual production of a global, annual time series of land cover/ land use maps featuring explicit disaggregation of croplands by commodity to be used in economic modeling of global agricultural production, trade, and consumption.
 \end{abstract}
 
 % the pages hereafter will be numbered I,II,III etc.

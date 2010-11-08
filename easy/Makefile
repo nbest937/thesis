@@ -1,7 +1,7 @@
-TEXFILES = $(wildcard *.tex)
+TEXFILES = *.tex
 EPS_DIR = eps
 IMAGE_DIR = images
-EPS := $(wildcard $(EPS_DIR)/*.eps)
+EPS := $(EPS_DIR)/*.eps
 PDF := $(patsubst $(EPS_DIR)/%.eps,$(IMAGE_DIR)/%.pdf,$(EPS))
 
 all: $(PDF) thesis.pdf

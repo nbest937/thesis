@@ -1,0 +1,13 @@
+
+\chapter{Analysis}
+\label{cha:analysis}
+
+The MLCT indicates 368.7 Ma (149.2 Mha) of cropland in the cUSA in 2001.  Assuming that 50\% of the cropland/natural vegetation mosaic is additional cropland area gives and additional 118.1 Ma (47.8 Mha) of agricultural land.  This gives a total area of  486.8 Ma (197.0 Mha) of total area directly associated with agricultural activity according to the IGBP classification used in the MLCT.
+
+Aglands2000 indicates roughly 446 Ma (181 Mha) of cropland.
+
+Pasture indicated by Aglands2000 appears to be a broader classification than that of the NLCD's pasture class because much of the grazing land east of the Mississippi river counted in the Aglands2000 pasture map is absent in the NLCD pasture class.
+
+Due to its greater resolution (30m) the NLCD is better suited at discerning developed areas in rural landscapes ranging from rural roads to farmsteads to small communities that do not show up in the MLCT data.  There is a total area of roughly 74 Ma (30 Mha) of development remaining after subtracting the MLCT urban class from all developed classes in the NLCD where the NLCD shows greater development after they have both been aggregated to the 5-arcmin grid.  Applying this area as an offset to the cropland area in Aglands2000 brings us closer to the expected acreage under cultivation in 2001, although this assumes that all of that development intersects with MLCT cropland area.
+
+% r.mapcalc nlcd_rural_dev@cusa='max(nlcd_urban_5min@nlcd-2001_urban_As00_5min@cusa,0)'

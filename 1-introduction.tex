@@ -1,0 +1,40 @@
+
+\chapter{Introduction}
+\label{cha:introduction}
+
+Recent years have seen a significant increase in the availability of
+global land cover data sets inclding Global Land Cover 2000 (GLC2000),
+MODIS Land Cover Type (MLCT), \marginpar{*fixme* \\ other global data
+  sets} something from 1994 based on AVHRR, . . .  MLCT stands out
+among these due to its spatial resolution, nominally 500m, and its
+distinction as a time series rather than a snapshot.  Economic models
+of land use and land conversion require information that describes a
+complete, albeit simplified, description of land cover and
+land-intensive econommic activity in order to produce meaningful
+statements and predictions about the evolution of land use patterns.
+``Complete'' in this context means that all cover types or uses for a
+given portion of land area are assigned a category in the model.
+However while MLCT does satisfy this condition of completeness it
+presents two new complications that we must first address.
+
+The first is that MLCT presents an embarassment of riches in terms of
+detail.  Regardless of its classification accuracy, which is discussed
+below, the 15-arcsecond resolution, nominally 500m, is simply too much
+information to be able to run the economic models in a reasonable
+amount of time even on world-class high-performance computing
+platforms.  \marginpar{Joshua: is this a fair justification for
+  reducing the resolution?}  A current standard resolution for global models of
+many types and global data sets is 5-arcminutes, which is equivalent
+to a 400:1 pixel count reduction.  Other data sets featured in this
+analysis use this resolution which is convenient for formulation.
+
+The second requirement for the new complete land cover data set that
+we wish to produce is that it provide greater information regarding
+agricultural activity.  MLCT presents a single class for cropland but
+we wish to further disaggregate the areas of agricultural production
+according to a few major commodities in order to incorporate greater
+detail of agronomic and commercial factors into the models.  As we
+will see, \citet{Monfreda2008} provides a wealth of data in this
+regard by harvested area and yield for 175 crops globally, but does
+not provide a complete land cover description.  
+

@@ -1,4 +1,7 @@
-\documentclass[draftthesis]{style/neiuthesis} \usepackage{natbib}
+\documentclass[draftthesis]{style/neiuthesis} 
+
+\usepackage{natbib}
+\usepackage[obeyDraft,prependcaption]{todonotes}
 
 \ifpdf  
     \pdfinfo { /Title  (Best MA G\&ES NEIU Thesis)
@@ -73,6 +76,9 @@ and left-justified
 Data), \citep{Monfreda2008}
 \item[Aglands2000] \citep{Ramankutty2008}
 \item [NLCD] National Land-Cover Database, 2001 \citep{Homer2004}
+\item[arcmin] minute of arc, 1/60th of a degree
+\item[arcsec] secondof arc, 1/60th of a minute, 1/3600th of a degree
+
 \end{symbollist*}
 
 %% Create a List of Symbols. The left column %% is 0.7 inch wide and
@@ -89,8 +95,9 @@ centered
 There are some papers that say some important stuff
 \citep{Ramankutty2008}
 
-\include{1-introduction}
-\include{2-analysis}
+\include{introduction}
+\include{data}
+\include{analysis}
 
 \chapter{Conclusions}
 

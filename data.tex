@@ -1,0 +1,73 @@
+
+\chapter{Data}
+\label{cha:data}
+
+This chapter presents some summary descriptions of the various data sets that are relevant to this analysis and further discussion on how they were manipulated.
+
+The general approach with the classified land cover data sets (MLCT, NLCD, CDL) is to reclassify their categories and aggregate the new classification to the 5-arcmin grid.  The purpose of the reclassification is to reduce the number of classes and have a uniform set of classes across data sets.  The challenge in this is that classification defintions are sometimes subtly different which makes direct comparison across data sets difficult.  In this process we convert classified maps whose pixels have discreet values to a stack of maps, one map per class, whose pixels have real number values on the interval [0,1] and are constrained to sum to unity for each pixel through the stack.
+
+\missingfigure{Generate a summary table of data sets (raster/tabular, resolution, citation)}
+
+\section{MODIS Land Cover Type (MLCT)}
+\label{sec:mlct}
+
+\subsection{Reclassification}
+\label{sec:mlct-reclass}
+
+\missingfigure{MLCT reclassification table}
+
+\subsection{Aggregation}
+\label{sec:mlct-aggr}
+
+
+
+\section{Agricultural Lands in the Year 2000 (Aglands2000)}
+\label{sec:aglands2000}
+
+\section{Major Land Uses (MLU)}
+\label{sec:mlu}
+
+
+\section{National Land-cover Database 2001 (NLCD)}
+\label{sec:nlcd}
+
+\subsection{Reclassification}
+\label{sec:nlcd-reclass}
+
+\missingfigure{NLCD reclassification table}
+
+\subsection{Aggregation}
+\label{sec:nlcd-aggr}
+
+
+\section{Cropland Data Layer (CDL)}
+\label{sec:cdl}
+
+\misingfigure{Table or chart showing CDL covereage for various years}
+
+\subsection{Reclassification}
+\label{sec:cdl-reclass}
+
+\missingfigure{CDL reclassification table}
+
+\subsection{Aggregation}
+\label{sec:cdl-aggr}
+
+
+\section{Harvested Area and Yields of 175 Crops (175crops2000)}
+\label{sec:175crops2000}
+
+\missingfigure{Table of crops and types reproduced from \citep{Monfreda2008}}
+
+\missingfigure{Summary table of crop aggregations for our model}
+
+\todo{Adress issue of smaller land mask for 175crops2000 and Aglands2000}
+
+
+\subsection{Reclassification}
+\label{sec:cdl-reclass}
+
+\missingfigure{CDL reclassification table}
+
+\subsection{Aggregation}
+\label{sec:cdl-aggr}

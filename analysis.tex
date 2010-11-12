@@ -11,3 +11,35 @@ Pasture indicated by Aglands2000 appears to be a broader classification than tha
 Due to its greater resolution (30m) the NLCD is better suited at discerning developed areas in rural landscapes ranging from rural roads to farmsteads to small communities that do not show up in the MLCT data.  There is a total area of roughly 74 Ma (30 Mha) of development remaining after subtracting the MLCT urban class from all developed classes in the NLCD where the NLCD shows greater development after they have both been aggregated to the 5-arcmin grid.  Applying this area as an offset to the cropland area in Aglands2000 brings us closer to the expected acreage under cultivation in 2001, although this assumes that all of that development intersects with MLCT cropland area.
 
 % r.mapcalc nlcd_rural_dev@cusa='max(nlcd_urban_5min@nlcd-2001_urban_As00_5min@cusa,0)'
+
+
+% query that summarizes MLCT land in cells outside of Aglands2000 mask
+
+select substring(map from '^2001_([a-z]+)') as cover, (sum /10^6)::numeric(5,2) as "Ma" from areas_global where mask ~ 'coastal' and map ~ 'As05' and map !~ 'tot'
+
+  cover  |  Ma
+---------+-------
+ barren  |  0.64
+ crop    |  1.03
+ forest  |  6.12
+ mosaic  |  1.88
+ open    |  0.79
+ shrub   |  2.67
+ urban   |  1.30
+ water   | 32.57
+ wetland |  3.93
+
+select sum("Ma") from (select substring(map from '^2001_([a-z]+)') as cover, (sum /10^6)::numeric(5,2) as "Ma" from areas_global where\
+ mask ~ 'coastal' and map ~ 'As05' and map !~ 'tot') as sub;
+  sum
+-------
+ 50.93
+
+
+select map,region,mask,(sum /10^6)::numeric(5,2) as "Ma" from areas_global where map ~ 'coastal';
+      map       | region  |          mask          |  Ma
+----------------+---------+------------------------+-------
+ mask_coastal_a | lower48 | mask_lower48_5min@GADM | 51.48
+
+
+\todo{What about natural grasslands?}

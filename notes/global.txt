@@ -26,7 +26,7 @@ for lct_label in $(r.category map=2001_lct1_reclass@MCD12Q1 cats=0-17 fs=, \
     | grep -v ',$'); do
     lct=$(echo $lct_label | cut -d, -f1)
     label=$(echo $lct_label | cut -d, -f2)
-    cat <<EOF | r.reclass --overwrite input=2001_lct1@MCD12Q1 output=2001_${label}_As00
+    cat <<EOF | r.reclass --overwrite input=2001_lct1_reclass@MCD12Q1 output=2001_${label}_As00
 $lct = 1
 * = 0
 EOF
@@ -38,12 +38,10 @@ for label in $(r.category map=2001_lct1_reclass@MCD12Q1 cats=0-17 fs=, \
     r.mapcalc 2001_${label}_As05="2001_${label}@peel/100.0"
 done
 
-for map in $(g.mlist type=rast mapset=cusa patt=*_As0?_5min); do g.remove rast=$map; done
-
 g.region -p res=0:05
 for label in $(r.category map=2001_lct1_reclass@MCD12Q1 cats=0-17 fs=, | cut -d, -f2); do
-    r.resamp.stats input=2001_${label}_As00 output=2001_${label}_As00_5min method=average
-    r.resamp.stats input=2001_${label}_As05 output=2001_${label}_As05_5min method=average
+    r.resamp.stats --o input=2001_${label}_As00 output=2001_${label}_As00_5min method=average
+    r.resamp.stats --o input=2001_${label}_As05 output=2001_${label}_As05_5min method=average
 done
 
 for label in $(r.category map=2001_lct1_reclass@MCD12Q1 cats=0-17 fs=, | cut -d, -f2); do
@@ -148,32 +146,55 @@ r.mask -o mask_lower48_5min@GADM
 # the mosaic variable below is the unassigned portion of the mosaic cover
 # considering that crop and open are already accounted for
 
-
-missing='missing = if( isnull( total@aglands), 1, 1 -total@aglands)'
+# (forest + forest /( forest +shrub +open) *mosaic /2)
 
 vars=$( cat <<EOF 
-  crop  = if( isnull( cropland@aglands), 2001_crop_As05_5min +0.5 *2001_mosaic_As05_5min, cropland@aglands),\
-  open  = if( isnull( pasture@aglands), 2001_open_As05_5min, pasture@aglands),\
+missing = 1 -total@aglands,\
+ mosaic = 2001_mosaic_As05_5min,\
+  crop  = if( isnull( missing), 2001_crop_As05_5min +mosaic /2, cropland@aglands),\
+  open  = if( isnull( missing), 2001_open_As05_5min, pasture@aglands),\
  forest = 2001_forest_As05_5min,\
   shrub = 2001_shrub_As05_5min,\
- mosaic = 2001_mosaic_As05_5min *if( crop, 0.5, 1) *( 1- if( isnull( total@aglands), 0, open /( forest +shrub +open)))
+forest2 = forest *( 1 + mosaic /2 /( forest +shrub +open)),\
+forest3 = if( isnull( forest2), forest +mosaic /6, forest2),\
+ shrub2 =  shrub *( 1 + mosaic /2 /( forest +shrub +open)),\
+ shrub3 = if( isnull( shrub2), shrub +mosaic /6, shrub2),\
+  open2 =   open *( 1 + if( isnull( missing), mosaic /2 /( forest +shrub +open))),\
+  open3 = if( isnull( open2), open +mosaic /6, open2),\
+ barren = 2001_barren_As05_5min,\
+  urban = 2001_urban_As05_5min,\
+  water = 2001_water_As05_5min,\
+wetland = 2001_wetland_As05_5min,\
+  other = forest3 +shrub3 +barren +urban +water +wetland,\
+missing2 = if( isnull( missing), 1 -crop -open3, missing)
 EOF
 )
 
 
-# mosaic = if( crop, 0.5, 1) * if( open && isnull( pasture@aglands), 1, (forest +shrub)/( forest +shrub +open)) *2001_mosaic_As05_5min,
-#r.mapcalc agc_open="eval( $vars, missing *open *(1 +if( crop, 0.5, 1) /(forest +shrub +open) *mosaic))"
-
-if(cropland@aglands,0.5*2001_mosaic_As05_5min*2001
-
-r.mapcalc  agc_forest="eval( $missing, $vars, missing *forest *( 1 +mosaic /( forest +shrub +open)))"
-r.mapcalc   agc_shrub="eval( $missing, $vars, missing  *shrub *( 1 +mosaic /( forest +shrub +open)))"
-r.mapcalc    agc_open="eval( $missing, $vars, open +if( isnull(total@aglands), mosaic *open /( forest +shrub +open),0))"   
-r.mapcalc    agc_crop="eval( $missing, $vars, crop)"
-r.mapcalc  agc_barren="eval( $missing, missing *2001_barren_As05_5min)"
-r.mapcalc   agc_urban="eval( $missing, missing *2001_urban_As05_5min)"
-r.mapcalc   agc_water="eval( $missing, missing *2001_water_As05_5min)"
-r.mapcalc agc_wetland="eval( $missing, missing *2001_wetland_As05_5min)"
+r.mapcalc agc_crop="eval( $vars, crop /if( other ==0, crop +open3, 1))"
+r.mapcalc agc_open="eval( $vars, open3 /if( other ==0, crop +open3, 1))"
+r.mapcalc  agc_forest="eval( $vars, forest3 /other *missing2)"
+r.mapcalc   agc_shrub="eval( $vars,  shrub3 /other *missing2)"
+r.mapcalc  agc_barren="eval( $vars,  barren /other *missing2)"
+r.mapcalc   agc_urban="eval( $vars,   urban /other *missing2)"
+r.mapcalc   agc_water="eval( $vars,   water /other *missing2)"
+r.mapcalc agc_wetland="eval( $vars, wetland /other *missing2)"
 
 r.series input=agc_forest,agc_shrub,agc_open,agc_crop,agc_barren,agc_urban,agc_water,agc_wetland output=agc_total method=sum --overwrite
+
+
+g.mlist mapset=cusa type=rast patt=agc_[^dt] -r | grep -v _a$
+# agc_barren
+# agc_crop
+# agc_forest
+# agc_open
+# agc_shrub
+# agc_urban
+# agc_water
+# agc_wetland
+
+
+for map in agc_barren agc_crop agc_forest agc_open agc_shrub agc_urban agc_water agc_wetland; do
+    r.mapcalc ${map}_a="${map} * grid_5min_acres";
+done
 

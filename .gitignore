@@ -16,3 +16,9 @@ thesis.pdf
 thesis.synctex.gz
 thesis.toc
 
+/analysis.rel
+/data.rel
+/data/.Rhistory
+/data/cusa.sqlite
+/introduction.rel
+/thesis.rel

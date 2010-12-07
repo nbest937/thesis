@@ -1,20 +1,34 @@
 % -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
-\SweaveOpts{ include=false, echo=false, engine=R}
+
+\SweaveOpts{ results=hide, include=FALSE, echo=FALSE, engine=R, keep.source=TRUE }
+%\SweaveOpts{ eps=FALSE, pdf=FALSE, png=TRUE }
+
+\graphicspath{ {analysis/} }
 
 \chapter{Analysis}
 \label{cha:analysis}
 
 <<analysis>>=
+setwd( "~/thesis/analysis")
+rm(list=ls())
+quartz.options( type="png")
+
 library( raster)
 library( rgdal)
 library( lattice)
 library( xtable)
 
 library( RColorBrewer)
-divTheme <- sp.theme(regions=list(col=colorRampPalette(brewer.pal(5,"BrBG"), space="Lab")(100)))
-seqTheme <- sp.theme(regions=list(col=colorRampPalette(brewer.pal(5,"YlGn"), space="Lab")(100)))
+divTheme <- sp.theme( 
+    regions= list(
+        col= colorRampPalette( brewer.pal( 5, "BrBG"), 
+          space= "Lab")(100)))
+seqTheme <- sp.theme(
+    regions= list(
+        col= colorRampPalette( brewer.pal( 5, "YlGn"),
+          space="Lab")(100)))
 
-db <- "cusa.sqlite"
+db <- "../data/cusa.sqlite"
 
                                         # list the subdatasets and split on equal sign
                                         # e.g. SUBDATASET_2_NAME=RASTERLITE:cusa.sqlite,table=agc_crop 
@@ -107,7 +121,7 @@ printAreas <- function( Ma) {
 print( xtable( areasDf, 
               caption= "Total Acreages by Map and Cover", 
               label= "tab:total",
-              digits= 1)
+              digits= 1))
 @ 
 
 The MLCT indicates \Sexpr{ printAreas( areasDf[ "As05", "crop"]) } of
@@ -120,8 +134,8 @@ of total area directly associated with
 agricultural activity according to the IGBP classification used in the
 MLCT.
 
-Aglands2000 indicates roughly \Sexpr{ printAreas( areasDf[ "ag",
-  "crop"]) } of cropland.
+Aglands2000 indicates roughly \Sexpr{ printAreas( areasDf[ "ag","crop"]) } 
+of cropland.
 
 Pasture indicated by Aglands2000 appears to be a broader
 classification than that of the NLCD's pasture class because much of
@@ -192,30 +206,30 @@ rmseAs05 <- rmseSummary( function(c) paste( "mlct_2001", c, "As05", sep="_"),
 ## t( rmseAs00)
 ## t( rmseAs05)
 
-print( xtable( rmseAgc, 
+print( xtable( t( rmseAgc), 
               caption= "Errors and Biases of Aglands Complete relative to NLCD",
               label= "tab:ebagc",
-              digits= c(2, -2, 0, 0)))
+              digits= c( 0, 2, -2, 0, 0)))
 
-print( xtable( rmseAs00, 
-              caption= "Errors and Biases of MLCT( A_s = 0.0) relative to NLCD",
+print( xtable( t( rmseAs00), 
+              caption= "Errors and Biases of MLCT, $A_s = 0.0$ relative to NLCD",
               label= "tab:ebmlct00",
-              digits= c(2, -2, 0, 0)))
+              digits= c( 0, 2, -2, 0, 0)))
 
-print( xtable( rmseAs05, 
-              caption= "Errors and Biases of MLCT( A_s = 0.5) relative to NLCD",
+print( xtable( t( rmseAs05), 
+              caption= "Errors and Biases of MLCT, $A_s = 0.5$ relative to NLCD",
               label= "tab:ebmlct05",
-              digits= c(2, -2, 0, 0)))
+              digits= c( 0, 2, -2, 0, 0)))
 @
 
 <<analysis>>=
-agcAvgAcres <-
-  sapply( paste( "agc_", covers, sep=""),
-         function( map) {
-           mapRast <- raster( as.spgdf( handle( map)))
-           return( cellStats( areaAcres( mapRast), sum)
-                  /( ncell( mapRast) - cellStats( mapRast, 'countNA')))
-         })
+## agcAvgAcres <-
+##   sapply( paste( "agc_", covers, sep=""),
+##          function( map) {
+##            mapRast <- raster( as.spgdf( handle( map)))
+##            return( cellStats( areaAcres( mapRast), sum)
+##                   /( ncell( mapRast) - cellStats( mapRast, 'countNA')))
+##          })
 
          
 ## getting ready to plot
@@ -229,17 +243,20 @@ attr( stackNlcd, "layernames") <-  covers
 stackDiff <- stackAgc -stackNlcd
 attr( stackDiff, "layernames") <-  covers
 
-trellis.par.set( seqTheme)
 @ 
 
 \begin{figure} 
 \begin{center} 
-<<analysis, fig=TRUE>>= 
-## fig:agc
+<<analysis>>= 
+## fig_agc
 spgdfAgc <- as.spgdf( stackAgc)
 names( spgdfAgc) <- layerNames( stackAgc)
-spplot( spgdfAgc)
+quartz( file="fig_agc.png")
+trellis.par.set( seqTheme)
+print( spplot( spgdfAgc))
+dev.off()
 @ 
+\includegraphics{fig_agc}
 \end{center} 
 \caption{Aglands Complete cover maps} 
 \label{fig:agc} 
@@ -247,12 +264,16 @@ spplot( spgdfAgc)
 
 \begin{figure} 
 \begin{center} 
-<<analysis, fig=TRUE>>= 
-## fig:nlcd
-spgdfNlcd <- as.spgdf( stackNlcd))
+<<analysis>>= 
+## fig_nlcd
+spgdfNlcd <- as.spgdf( stackNlcd)
 names( spgdfNlcd) <- layerNames( stackNlcd)
-spplot( spgdfNlcd)
+quartz( file="fig_nlcd.png")
+trellis.par.set( seqTheme)
+print( spplot( spgdfNlcd))
+dev.off()
 @ 
+\includegraphics{fig_nlcd}
 \end{center} 
 \caption{NLCD cover maps} 
 \label{fig:nlcd} 
@@ -260,12 +281,16 @@ spplot( spgdfNlcd)
 
 \begin{figure} 
 \begin{center} 
-<<analysis, fig=TRUE>>= 
-## fig:diff
+<<analysis>>=
+## fig_diff
 spgdfDiff <- as.spgdf( stackDiff)
 names( spgdfDiff) <- layerNames( stackDiff)
-spplot( spgdfDiff)
+quartz( file="fig_diff.png")
+trellis.par.set( divTheme)
+print( spplot( spgdfDiff))
+dev.off()
 @ 
+\includegraphics{fig_diff}
 \end{center} 
 \caption{Difference maps, Aglands Complete minus NLCD} 
 \label{fig:diff} 
@@ -273,21 +298,38 @@ spplot( spgdfDiff)
 
 \begin{figure} 
 \begin{center} 
-<<analysis, fig=TRUE>>=
+<<analysis>>=
 
 ## look for correlations across the difference maps
 
 corDiff <- cor( as.data.frame( as.spgdf( stackDiff))[,1:8])
-#levelplot(diffCor)
+colnames( corDiff) <- unlist( lapply( 
+    strsplit( colnames( corDiff), "\\."), 
+    function( x) return( x[ 2])))
+rownames( corDiff) <- unlist( lapply( 
+    strsplit( rownames( corDiff), "\\."), 
+    function( x) return( x[ 2])))
+ord <- order.dendrogram( as.dendrogram( hclust( dist( corDiff))))
 
-# cite Sarkar, sec. 6.2.3
+## fig_cordiff
+quartz( file="fig_cordiff.png")
 trellis.par.set( divTheme)
-ord <- order.dendrogram(as.dendrogram(hclust(dist(diffCor))))
-levelplot(diffCor[ord, ord], at=do.breaks(c(-1.01,1.01),20), xlab="", ylab="")
+print( levelplot( corDiff[ ord, ord], 
+                 at= do.breaks( c( -1.01, 1.01), 20), 
+                 xlab= "", ylab= ""))
+dev.off()
 @ 
+\includegraphics{fig_cordiff}
 \end{center} 
 \caption{Correlations across cover type in difference maps} 
 \label{fig:cordiff} 
 \end{figure} 
 
+The elements of the matrix have been reordered according to the
+clustering forumla given in \citet[sec. 6.2.3]{Sarkar2008} in order to
+achieve a degree of visual clustering among the correlation vectors.
 
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "thesis"
+%%% End: 

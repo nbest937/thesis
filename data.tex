@@ -2,9 +2,21 @@
 \chapter{Data}
 \label{cha:data}
 
-This chapter presents some summary descriptions of the various data sets that are relevant to this analysis and further discussion on how they were manipulated.
+This chapter presents some summary descriptions of the various data
+sets that are relevant to this analysis and further discussion on how
+they were manipulated.
 
-The general approach with the classified land cover data sets (MLCT, NLCD, CDL) is to reclassify their categories and aggregate the new classification to the 5-arcmin grid.  The purpose of the reclassification is to reduce the number of classes and have a uniform set of classes across data sets.  The challenge in this is that classification defintions are sometimes subtly different which makes direct comparison across data sets difficult.  In this process we convert classified maps whose pixels have discreet values to a stack of maps, one map per class, whose pixels have real number values on the interval [0,1] and are constrained to sum to unity for each pixel through the stack.
+The general approach with the classified land cover data sets (MLCT,
+NLCD, CDL) is to reclassify their categories and aggregate the new
+classification to the 5-arcmin grid.  The purpose of the
+reclassification is to reduce the number of classes and have a uniform
+set of classes across data sets.  The challenge in this is that
+classification defintions are sometimes subtly different which makes
+direct comparison across data sets difficult.  In this process we
+convert classified maps whose pixels have discreet values to a stack
+of maps, one map per class, whose pixels have real number values on
+the interval [0,1] and are constrained to sum to unity for each pixel
+through the stack.
 
 \missingfigure{Generate a summary table of data sets (raster/tabular, resolution, citation)}
 
@@ -19,6 +31,41 @@ The general approach with the classified land cover data sets (MLCT, NLCD, CDL) 
 \subsection{Aggregation}
 \label{sec:mlct-aggr}
 
+This product is pixelated at 500m resolution and uses the 17 IGBP land
+cover classes. The dataset consists of a primary classification, along
+with a measure of confidence up to 100\%, and a secondary
+classification.  According to the MODIS Land Cover Group, the primary
+class covers at least roughly 50-60\% of a given pixel $x$, and this
+percent is almost certainly a monotonically increasing function of the
+confidence measure $c$.  \todo{cite email from Friedl}.  For the
+purposes of this analysis we assume that this dependence is
+linear. Thus, for the primary and secondary cover types in a pixel:
+
+$$
+A_p(x) = A_{min} + (1 - A_{min}) c(x)
+$$
+$$
+A_s(x) = 1 - A_p(x)
+$$
+
+where $0.50 \le A_{min} \le 0.60$ is primarily chosen based on an
+interpretation of $c$.  Given that there are only a handful of
+examples of $c < 0.20$ (see figure XX for an example) \todo{crossref
+  histograms showing confidence distribution}, setting $A_{min} =
+0.50$ is both rational and prudent.  Certainly for a classification to
+be considered the primary it must represent a bare majority of the
+area covered by that pixel, and the distributions of confidences
+indicate that the vast majority of pixels contain greater than 60\% of
+their area in the primary under the rubric described above. The
+equations are simplified as follows by assuming this value for
+$A_{min}$.
+
+$$
+A_p(x) = \dfrac{1 + c}{2}
+$$
+$$
+A_s(x) = 1 - A_p(x) = \dfrac{1-c}{2}
+$$
 
 
 \section{Agricultural Lands in the Year 2000 (Aglands2000)}
@@ -43,7 +90,7 @@ The general approach with the classified land cover data sets (MLCT, NLCD, CDL) 
 \section{Cropland Data Layer (CDL)}
 \label{sec:cdl}
 
-\misingfigure{Table or chart showing CDL covereage for various years}
+\missingfigure{Table or chart showing CDL covereage for various years}
 
 \subsection{Reclassification}
 \label{sec:cdl-reclass}
@@ -71,3 +118,8 @@ The general approach with the classified land cover data sets (MLCT, NLCD, CDL) 
 
 \subsection{Aggregation}
 \label{sec:cdl-aggr}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "thesis"
+%%% End: 

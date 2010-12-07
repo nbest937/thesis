@@ -2,10 +2,14 @@
 \chapter{Introduction}
 \label{cha:introduction}
 
+\section{Objective}
+\label{sec:objective}
+
 Recent years have seen a significant increase in the availability of
-global land cover data sets inclding Global Land Cover 2000 (GLC2000),
-MODIS Land Cover Type (MLCT), \marginpar{*fixme* \\ other global data
-  sets} something from 1994 based on AVHRR, . . .  MLCT stands out
+global land cover data sets inclding the UMD Global Land Cover
+Classification product of 1998 \citep{Hansen2000}, Global Land Cover
+2000 (GLC2000) \todo{GLC2000 citation}, 
+MODIS Land Cover Type (MLCT) \todo{MLCT citation}.  MLCT stands out
 among these due to its spatial resolution, nominally 500m, and its
 distinction as a time series rather than a snapshot.  Economic models
 of land use and land conversion require information that describes a
@@ -22,10 +26,9 @@ detail.  Regardless of its classification accuracy, which is discussed
 below, the 15-arcsecond resolution, nominally 500m, is simply too much
 information to be able to run the economic models in a reasonable
 amount of time even on world-class high-performance computing
-platforms.  \marginpar{Joshua: is this a fair justification for
-  reducing the resolution?}  A current standard resolution for global models of
-many types and global data sets is 5-arcminutes, which is equivalent
-to a 400:1 pixel count reduction.  Other data sets featured in this
+platforms.  A current standard resolution for global models of many
+types and global data sets is 5-arcminutes, which is equivalent to a
+400:1 pixel count reduction.  Other data sets featured in this
 analysis use this resolution which is convenient for formulation.
 
 The second requirement for the new complete land cover data set that
@@ -38,3 +41,21 @@ will see, \citet{Monfreda2008} provides a wealth of data in this
 regard by harvested area and yield for 175 crops globally, but does
 not provide a complete land cover description.  
 
+\section{Tools}
+\label{sec:tools}
+
+A secondary objective of this paper is to demonstrate the capabilities
+of a set of open-source geospatial, analytical, and publishing
+software that includes \href{http://www.gdal.org/}{GDAL},
+\href{http://grass.osgeo.org/}{GRASS} \citep{GRASS},
+\href{http://www.r-project.org/}{R} \citep{R} , and
+\href{http://www.latex-project.org/}{\LaTeX} \citep{Lamport1994} .
+The last two members of this list are bridged by
+\href{http://www.stat.uni-muenchen.de/~leisch/Sweave/}{Sweave}
+\citep{Leisch2002} which allows embedding of analytical code written
+in the R language within a \LaTeX document so that one step towards
+producing a publication-quality PDF is running the analysis and
+injecting its results directly into the content of the paper,
+including tables, charts, and maps.  The underlying analysis code will
+appear as an appendix.  This is a demonstration of reproducible
+research as described in \citet{Gentleman2007}.

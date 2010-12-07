@@ -1,20 +1,34 @@
-\documentclass[draftthesis]{style/neiuthesis} 
+\documentclass[draftthesis]{neiuthesis} 
 
+\usepackage{amsmath}
+\usepackage{hyperref}
+\hypersetup{
+    pdftitle={MA G\&ES NEIU Thesis},%
+    pdfauthor={Neil Best <nbest@alum.mit.edu>},%
+    pdfsubject={land use / land cover},%
+    pdfkeywords={agriculture}{United States},%
+    pdffitwindow=true,%
+    pdfstartview={FitH}
+}
 \usepackage{natbib}
-\usepackage[obeyDraft,prependcaption]{todonotes}
+\usepackage[prependcaption]{todonotes} %[obeyDraft]
+%\usepackage{ifpdf}
+\usepackage{Sweave}
+%\usepackage[pdftex]{graphicx}
 
-\ifpdf  
-    \pdfinfo { /Title  (Best MA G\&ES NEIU Thesis)
-               /Creator (TeX)
-               /Producer (pdfTeX)
-               /Author (Neil Best nbest@alum.mit.edu)
-               /CreationDate (D:YYYYMMDDhhmmss)  %format D:YYYYMMDDhhmmss
-               /ModDate (D:YYYYMMDDhhmm)
-               /Subject (Land Use / Land Cover)
-               /Keywords (agriculture, United States) }
-    \pdfcatalog { /PageMode (/UseOutlines)
-                  /OpenAction (fitbh)  }
-\fi
+% \ifpdf  
+%     \pdfinfo { /Title  (Best MA G\&ES NEIU Thesis)
+%                /Creator (TeX)
+%                /Producer (pdfTeX)
+%                /Author (Neil Best nbest@alum.mit.edu)
+%                /CreationDate (D:YYYYMMDDhhmmss)  %format D:YYYYMMDDhhmmss
+%                /ModDate (D:YYYYMMDDhhmm)
+%                /Subject (Land Use / Land Cover)
+%                /Keywords (agriculture, United States) }
+%     \pdfcatalog { /PageMode (/UseOutlines)
+%                   /OpenAction (fitbh)  }
+% \fi
+
 
 \begin{document} \bibliographystyle{chicago}
 
@@ -78,14 +92,17 @@ Data), \citep{Monfreda2008}
 \item [NLCD] National Land-Cover Database, 2001 \citep{Homer2004}
 \item[arcmin] minute of arc, 1/60th of a degree
 \item[arcsec] secondof arc, 1/60th of a minute, 1/3600th of a degree
+\item[GRASS] Geographic Resources Analysis Support System, \url{http://grass.osgeo.org}
 
 \end{symbollist*}
 
-%% Create a List of Symbols. The left column %% is 0.7 inch wide and
-centered
+%% Create a List of Symbols. The left column 
+%% is 0.7 inch wide and centered
 \chapter{List of Symbols}
 
 \begin{symbollist}[0.7in]
+\item[$A_s$] Maximum sub-pixel fraction possible for secondary cover
+  given in MLCT base data
 \item[$\tau$] Time taken to drink one cup of coffee.
 \item[$\mu$g] Micrograms (of caffeine, generally).
 \end{symbollist}
@@ -94,6 +111,9 @@ centered
 
 There are some papers that say some important stuff
 \citep{Ramankutty2008}
+
+\todototoc
+\listoftodos
 
 \include{introduction}
 \include{data}

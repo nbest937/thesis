@@ -1,0 +1,186 @@
+
+\chapter{Data}
+\label{cha:data}
+
+This chapter presents some summary descriptions of the various data
+sets that are relevant to this analysis and further discussion on how
+they were manipulated.
+
+The general approach with the classified land cover data sets (MLCT,
+NLCD, CDL) is to reclassify their categories and aggregate the new
+classification to the 5-arcmin grid.  The purpose of the
+reclassification is to reduce the number of classes and have a uniform
+set of classes across data sets.  The challenge in this is that
+classification defintions are sometimes subtly different which makes
+direct comparison across data sets difficult.  In this process we
+convert classified maps whose pixels have discreet values to a stack
+of maps, one map per class, whose pixels have real number values on
+the interval [0,1] and are constrained to sum to unity for each pixel
+through the stack.
+
+\missingfigure{Generate a summary table of data sets (raster/tabular, resolution, citation)}
+
+\section{MODIS Land Cover Type (MLCT)}
+\label{sec:mlct}
+
+Steps that were completed outside the analytical environment:
+
+Mosaic MLCT tiles
+Reproject MLCT mosaic from sinusoidal projection to geographic coordinates
+Create 5 arcmin land mask
+
+\subsection{Reclassification}
+\label{sec:mlct-reclass}
+@ 
+<<data>>=
+setwd( "~/thesis/data")
+rm(list=ls())
+quartz.options( type="png")
+
+library( raster)
+library( rgdal)
+library( lattice)
+library( xtable)
+
+mlct <- new("GDALReadOnlyDataset", "2001_lct1.tif")
+
+mlctTheme <- sp.theme( 
+    regions= list(
+        col= getColorTable(mlct)[ getColorTable(mlct) != "#000000"]))
+
+#getColorTable( mlct)[1:17]))
+
+thumb <- crop( raster("2001_lct1.tif"), 
+               extent(-83.5, -(82+25/60), 42+55/60, 44+5/60))
+
+trellis.par.set( mlctTheme)
+spplot( as( thumb, "SpatialGridDataFrame"))
+
+## alternatively
+## image(thumb, col= getColorTable(mlct)[1:17])
+
+thumb <- list( pri= raster("thumb_2001_lct1.tif"),
+               sec= raster("thumb_2001_lct1_sec.tif"),
+               pct= raster("thumb_2001_lct1_pct.tif"))
+
+reclassMatrix <- matrix( c( 0,  0,  0,
+                            1,  5,  5,
+                            6,  8,  7,
+                            9, 10,  9,
+                           11, 11, 11,
+                           12, 12, 12,
+                           13, 13, 13,
+                           14, 14, 14,
+                           15, 16, 16),
+                        ncol=3, byrow=TRUE)
+
+reclass( thumb$pri, reclassMatrix, filename="thumb_2001_lct1_reclass.tif")
+reclass( thumb$sec, reclassMatrix, filename="thumb_2001_lct1_sec_reclass.tif")
+
+thumb$pri <- raster("thumb_2001_lct1_reclass.tif")
+thumb$sec <- raster("thumb_2001_lct1_sec_reclass.tif")
+
+reclassNames <- reclassMatrix[, 3]
+names( reclassNames) <- c("water", "forest", "shrub", "open", "mosaic", "crop", "urban", "wetland", "barren")
+
+
+
+@ %def 
+
+\missingfigure{MLCT reclassification table}
+
+\subsection{Aggregation}
+\label{sec:mlct-aggr}
+
+This product is pixelated at 500m resolution and uses the 17 IGBP land
+cover classes. The dataset consists of a primary classification, along
+with a measure of confidence up to 100\%, and a secondary
+classification.  According to the MODIS Land Cover Group, the primary
+class covers at least roughly 50-60\% of a given pixel $x$, and this
+percent is almost certainly a monotonically increasing function of the
+confidence measure $c$.  \todo{cite email from Friedl}.  For the
+purposes of this analysis we assume that this dependence is
+linear. Thus, for the primary and secondary cover types in a pixel:
+
+$$
+A_p(x) = A_{min} + (1 - A_{min}) c(x)
+$$
+$$
+A_s(x) = 1 - A_p(x)
+$$
+
+where $0.50 \le A_{min} \le 0.60$ is primarily chosen based on an
+interpretation of $c$.  Given that there are only a handful of
+examples of $c < 0.20$ (see figure XX for an example) \todo{crossref
+  histograms showing confidence distribution}, setting $A_{min} =
+0.50$ is both rational and prudent.  Certainly for a classification to
+be considered the primary it must represent a bare majority of the
+area covered by that pixel, and the distributions of confidences
+indicate that the vast majority of pixels contain greater than 60\% of
+their area in the primary under the rubric described above. The
+equations are simplified as follows by assuming this value for
+$A_{min}$.
+
+$$
+A_p(x) = \dfrac{1 + c}{2}
+$$
+$$
+A_s(x) = 1 - A_p(x) = \dfrac{1-c}{2}
+$$
+
+
+\section{Agricultural Lands in the Year 2000 (Aglands2000)}
+\label{sec:aglands2000}
+
+\section{Major Land Uses (MLU)}
+\label{sec:mlu}
+
+
+\section{National Land-cover Database 2001 (NLCD)}
+\label{sec:nlcd}
+
+\subsection{Reclassification}
+\label{sec:nlcd-reclass}
+
+\missingfigure{NLCD reclassification table}
+
+\subsection{Aggregation}
+\label{sec:nlcd-aggr}
+
+
+\section{Cropland Data Layer (CDL)}
+\label{sec:cdl}
+
+\missingfigure{Table or chart showing CDL covereage for various years}
+
+\subsection{Reclassification}
+\label{sec:cdl-reclass}
+
+\missingfigure{CDL reclassification table}
+
+\subsection{Aggregation}
+\label{sec:cdl-aggr}
+
+
+\section{Harvested Area and Yields of 175 Crops (175crops2000)}
+\label{sec:175crops2000}
+
+\missingfigure{Table of crops and types reproduced from \citep{Monfreda2008}}
+
+\missingfigure{Summary table of crop aggregations for our model}
+
+\todo{Adress issue of smaller land mask for 175crops2000 and Aglands2000}
+
+
+\subsection{Reclassification}
+\label{sec:cdl-reclass}
+
+\missingfigure{CDL reclassification table}
+
+\subsection{Aggregation}
+\label{sec:cdl-aggr}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "thesis"
+%%% End: 

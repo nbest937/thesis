@@ -56,7 +56,7 @@ library( raster)
 library( rgdal)
 library( lattice)
 library( xtable)
-library( Defaults)
+##library( Defaults)
 
 
 mlct <- new("GDALReadOnlyDataset", "2001_lct1.tif")
@@ -65,10 +65,18 @@ mlctTheme <- sp.theme(
     regions= list(
         col= getColorTable(mlct)[ getColorTable(mlct) != "#000000"]))
 
+mlct <- raster( "2001_lct1.tif")
+legend <- mlct@legend@colortable[mlct@legend@colortable != "#000000"]
+mlctTheme <- sp.theme(regions= list( col= legend))
+rm( legend)
+
 #getColorTable( mlct)[1:17]))
 
-thumb <- crop( raster("2001_lct1.tif"), 
-               extent(-83.5, -(82+25/60), 42+55/60, 44+5/60))
+## this works but it's slow
+##
+## thumb <- crop( raster("2001_lct1.tif"), 
+##                extent(-83.5, -(82+25/60), 42+55/60, 44+5/60))
+##
 
 trellis.par.set( mlctTheme)
 spplot( as( thumb, "SpatialGridDataFrame"))
@@ -76,20 +84,43 @@ spplot( as( thumb, "SpatialGridDataFrame"))
 ## alternatively
 ## image(thumb, col= getColorTable(mlct)[1:17])
 
-thumb <- list( pri= raster("thumb_2001_lct1.tif"),
-               sec= raster("thumb_2001_lct1_sec.tif"),
-               pct= raster("thumb_2001_lct1_pct.tif"))
 
 reclassMatrix <- matrix( c( 0,  0,  0,
                             1,  5,  5,
-                            6,  8,  7,
-                            9, 10,  9,
+                            6,  8,  8,
+                            9, 10, 10,
                            11, 11, 11,
                            12, 12, 12,
                            13, 13, 13,
                            14, 14, 14,
                            15, 16, 16),
                         ncol=3, byrow=TRUE)
+peelClasses <- reclassMatrix[, 3]
+
+reclassMatrix <- matrix( c( 0,  0,  0,
+                            1,  5,  1,
+                            6,  8,  2,
+                            9, 10,  3,
+                           11, 11,  4,
+                           12, 12,  5,
+                           13, 13,  6,
+                           14, 14,  7,
+                           15, 16,  8),
+                        ncol=3, byrow=TRUE)
+peelClasses <- reclassMatrix[, 2]
+
+names( peelClasses) <- c("water", "forest", "shrub", "open", "mosaic", "crop", "urban", "wetland", "barren")
+
+## these are subsets exported from GRASS
+
+thumb <- list( pri= raster("thumb_2001_lct1.tif"),
+               sec= raster("thumb_2001_lct1_sec.tif"),
+               pct= raster("thumb_2001_lct1_pct.tif"))
+
+legend <- thumb$pri@legend@colortable[thumb$pri@legend@colortable != "#000000"]
+igbpTheme <- sp.theme( regions= list( col= legend))
+peelTheme <- sp.theme( regions= list( col= legend[ peelClasses +1]))
+trellis.par.set( peelTheme)
 
 thumb$pri <- reclass( thumb$pri, reclassMatrix, 
                       filename= "thumb_2001_lct1_reclass.tif",
@@ -97,10 +128,22 @@ thumb$pri <- reclass( thumb$pri, reclassMatrix,
 thumb$sec <- reclass( thumb$sec, reclassMatrix, 
                       filename="thumb_2001_lct1_sec_reclass.tif",
                       overwrite= TRUE)
+                                        # same as
+##
+## thumb <- list( pri= raster("thumb_2001_lct1_reclass.tif"),
+##                sec= raster("thumb_2001_lct1_sec_reclass.tif"),
+##                pct= raster("thumb_2001_lct1_pct.tif"))
+##
+                                        # after having done the two previous 
+                                        # assignments, except no color table 
+                                        # is created by reclass
 
+thumbDf <- as( stack( thumb), "SpatialGridDataFrame")
+names(thumbDf@data) <- c("pri", "sec", "pct")
+thumbDf@data$pri <- factor(thumbDf@data$pri, levels=c(0:8), labels= names( peelClasses))
+thumbDf@data$sec <- factor(thumbDf@data$sec, levels=c(0:8), labels= names( peelClasses))
+thumbDfPlot <- spplot(thumbDf, c("pri", "sec"))
 
-reclassNames <- reclassMatrix[, 3]
-names( reclassNames) <- c("water", "forest", "shrub", "open", "mosaic", "crop", "urban", "wetland", "barren")
 
 primaryFraction <- function( mlct, ...) {
   overlayFunction <- function( pri, sec, pct) {
@@ -145,9 +188,10 @@ thumbFractions5min <-
                      overwrite=TRUE)
          })
 
-# myUnlist <- function( ...){ unlist( ..., use.names=FALSE)}
+myUnlist <- function( ...){ unlist( ..., use.names=FALSE)}
 
-setDefaults( unlist, use.names=FALSE)
+## causes an error
+#setDefaults( unlist, use.names=FALSE)
 
 thumbCheck <- 
   do.call( overlay, 

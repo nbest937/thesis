@@ -1,3 +1,6 @@
+% -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
+
+\SweaveOpts{ results=hide, include=FALSE, echo=FALSE, engine=R, keep.source=TRUE }
 
 \chapter{Data}
 \label{cha:data}
@@ -15,24 +18,36 @@ classification defintions are sometimes subtly different which makes
 direct comparison across data sets difficult.  In this process we
 convert classified maps whose pixels have discreet values to a stack
 of maps, one map per class, whose pixels have real number values on
-the interval [0,1] and are constrained to sum to unity for each pixel
-through the stack.
+the interval $[0,1]$ and are constrained to sum to unity for each
+pixel through the stack.  In short, the process converts two discrete,
+thematic variables and one continuous variable into a set of
+continuous variables representing fractional areas for the cover types in
+the siplified classification system.
 
 \missingfigure{Generate a summary table of data sets (raster/tabular, resolution, citation)}
 
 \section{MODIS Land Cover Type (MLCT)}
 \label{sec:mlct}
 
-Steps that were completed outside the analytical environment:
-
+\todo[inline, caption={Describe Steps that were completed outside the analytical environment}]{
 Mosaic MLCT tiles
 Reproject MLCT mosaic from sinusoidal projection to geographic coordinates
 Create 5 arcmin land mask
+}
+
+\todo[inline, caption={illustrate MLCT classification and aggregation
+  with a zoomed-in area}]{ My idea for this section is to describe the
+  process that we use to all three variables from the MLCT (primary
+  cover, secondary cover, confidence level) to cell fractions and
+  illustrate the steps with maps of a zoomed-in area so that it's easy
+  to see what is happening.  I have this worked out -- I just need to
+  add some figures to the document.}
+
 
 \subsection{Reclassification}
 \label{sec:mlct-reclass}
 @ 
-<<data>>=
+<<data, eval=FALSE>>=
 setwd( "~/thesis/data")
 rm(list=ls())
 quartz.options( type="png")
@@ -41,6 +56,8 @@ library( raster)
 library( rgdal)
 library( lattice)
 library( xtable)
+library( Defaults)
+
 
 mlct <- new("GDALReadOnlyDataset", "2001_lct1.tif")
 
@@ -74,16 +91,75 @@ reclassMatrix <- matrix( c( 0,  0,  0,
                            15, 16, 16),
                         ncol=3, byrow=TRUE)
 
-reclass( thumb$pri, reclassMatrix, filename="thumb_2001_lct1_reclass.tif")
-reclass( thumb$sec, reclassMatrix, filename="thumb_2001_lct1_sec_reclass.tif")
+thumb$pri <- reclass( thumb$pri, reclassMatrix, 
+                      filename= "thumb_2001_lct1_reclass.tif",
+                      overwrite= TRUE)
+thumb$sec <- reclass( thumb$sec, reclassMatrix, 
+                      filename="thumb_2001_lct1_sec_reclass.tif",
+                      overwrite= TRUE)
 
-thumb$pri <- raster("thumb_2001_lct1_reclass.tif")
-thumb$sec <- raster("thumb_2001_lct1_sec_reclass.tif")
 
 reclassNames <- reclassMatrix[, 3]
 names( reclassNames) <- c("water", "forest", "shrub", "open", "mosaic", "crop", "urban", "wetland", "barren")
 
+primaryFraction <- function( mlct, ...) {
+  overlayFunction <- function( pri, sec, pct) {
+    ifelse( is.na(pri), NA,
+           ifelse( is.na( sec), 1,
+                  ifelse( is.na( pct), 0.5,
+                         (1 +pct /100) /2)))
+  }
+  overlay( mlct$pri, mlct$sec, mlct$pct, fun= overlayFunction, ...)
+}
 
+thumb$Ap <- 
+  primaryFraction( thumb, 
+                  filename= "thumb_2001_pri_frac.tif", 
+                  overwrite=TRUE)
+
+reclassFractions <- function( mlct, class, ...) {
+  overlayFunction <- function( pri, sec, Ap) {
+    ifelse( is.na( pri), NA,
+            ifelse( pri ==class, Ap, 0)
+           +ifelse( !is.na(sec) & sec ==class, 1 -Ap, 0))
+  }
+  overlay( mlct$pri, mlct$sec, mlct$Ap, fun= overlayFunction, ...)
+}    
+
+thumbFractions <- 
+  sapply( names( reclassNames), 
+         function( cover) {
+           reclassFractions( thumb, reclassNames[[cover]], 
+                            filename= paste( "thumb_", cover, ".tif", sep=""),
+                            overwrite= TRUE)
+         })
+
+thumbFractions5min <-
+  sapply( names( reclassNames),
+         function( cover) {
+           aggregate( thumbFractions[[cover]], 
+                     fact=5/60/(15/60/60),
+                     fun=mean,
+                     expand=FALSE,
+                     filename= paste( "thumb", cover, "5min.tif", sep="_"),
+                     overwrite=TRUE)
+         })
+
+# myUnlist <- function( ...){ unlist( ..., use.names=FALSE)}
+
+setDefaults( unlist, use.names=FALSE)
+
+thumbCheck <- 
+  do.call( overlay, 
+          c( unlist( thumbFractions5min, use.names=FALSE), 
+            fun=sum))
+
+thumbStack <- 
+  do.call( stack, 
+          c( myUnlist( thumb), 
+             myUnlist( thumbFractions), 
+             thumbCheck))
+layerNames(thumbStack) <- c("pri", "sec", "pct", "Ap", names(reclassNames), "check")
 
 @ %def 
 
@@ -92,15 +168,22 @@ names( reclassNames) <- c("water", "forest", "shrub", "open", "mosaic", "crop", 
 \subsection{Aggregation}
 \label{sec:mlct-aggr}
 
-This product is pixelated at 500m resolution and uses the 17 IGBP land
-cover classes. The dataset consists of a primary classification, along
-with a measure of confidence up to 100\%, and a secondary
-classification.  According to the MODIS Land Cover Group, the primary
-class covers at least roughly 50-60\% of a given pixel $x$, and this
-percent is almost certainly a monotonically increasing function of the
-confidence measure $c$.  \todo{cite email from Friedl}.  For the
-purposes of this analysis we assume that this dependence is
-linear. Thus, for the primary and secondary cover types in a pixel:
+This product has a nominal resolution of 500m and uses the 17 IGBP
+land cover classes. The dataset consists of a primary classification,
+along with a measure of confidence up to 100\%, and a secondary
+classification.  The secondary cover type is given as the most like
+alternative to the primary type \citep{Friedl2010}, but for purposes
+of our analysis we are taking a more probabilistic view and
+incorporating all available information from the base data.  Because
+we are aggregating the data up to 5-arcmin resolution there is no
+expectation that the sub-pixel fractions at full resolution are
+spaitally specific, but in the aggregate the characterization will be
+nuanced by this additional information.  The primary class covers at
+least roughly 50-60\% of a given pixel $x$, and this percent is almost
+certainly a monotonically increasing function of the confidence
+measure $c$.  \todo{cite email from Friedl}.  For the purposes of this
+analysis we assume that this dependence is linear. Thus, for the
+primary and secondary cover types in a pixel:
 
 $$
 A_p(x) = A_{min} + (1 - A_{min}) c(x)
@@ -128,16 +211,99 @@ $$
 A_s(x) = 1 - A_p(x) = \dfrac{1-c}{2}
 $$
 
+Applying these formulae results in a map for each cover type where the
+pixel values are the sub-pixel areas on the interval $[0,1]$.
+Aggregating to a coarser resolution is a simple matter of calculating
+the mean of these values over the intersecting pixels at the original
+resoution.  Because the desired 5-arcmin resolution is a multiple of
+the original 15-arcsec resolution the pixels are perfectly nested,
+which is convenient for properly computing this mean.
+
+\todo[inline, caption={Describe effect of incorporating secondary
+  cover and confidence level}]{I have written and tested the code that
+  implements these equations.  The next steps here are to illustrate
+  the differences by class of the reclassification/aggregation process
+  versus using only the primary cover type.  The data set that results
+  from accepting the assumption of $A_{min} = 0.5$ is an input into the
+  analysis section.}
+
+\subsection{Elimination of mosaic class}
+\label{sec:elimination}
+
+The MLCT classification includes a type that is problematic for the
+economic models for which this data set is intended, the ``cropland /
+natural vegetation mosaic'' class.  This class is defined as a hybrid
+of cropland and some mixture of natural covers (forest, shrub, or
+open) with no single component exceeding 60\% \citep{Friedl2002} and
+croplands generally comprising 40-60\% of pixel area \todo{cite Friedl
+  email}. Being a hybrid of developed land use and natural land cover
+we wish to differentiate the cropland from the natural vegetation in
+order to calculate a more meaningful total for cropland area and
+thereby eliminate the mosaic class from the final tabulation.  In the
+present implementation of the reclassification and aggregation process
+we are making two very simple assumptions about the composition of
+area delineated as mosaic lands:
+
+\begin{enumerate}
+\item Mosaic land is 50\% cropland.
+\item The other 50\% is a blend of forest, open, and shrub in
+  proportion to the expression of those classes in the same 5-minute
+  cell.
+\item In the absence of such information we simply assume that the
+  natural component of the mosaic is an equal blend of all three.
+\end{enumerate}
+
+Both 5-arcmin data sets derived from the MLCT in this fashion
+overestimate cropland area relative to that indicated by Aglands2000,
+but the $A_{min} = 0.5$ variant better portrays the spatial variation
+judging from a simple root-mean-squared-error (RMSE)
+test. \todo{illustrate/demonstrate the RMSE test on the 5-arcmin MLCT
+  data sets}
 
 \section{Agricultural Lands in the Year 2000 (Aglands2000)}
 \label{sec:aglands2000}
 
+\citet{Ramankutty2008}
+
+  
+\todo[inline, caption={Describe Aglands2000 data set}]{Flesh out a
+  discussion of the merits of accepting Aglands2000 as ``truth'' for
+  cropland and pasture distribution due to its basis in agricultural
+  census statistics.  Discuss issues of
+  classification: pasture (managed for grazing), range land
+  (less-managed or unmanaged for grazing), and natural open land (no grazing).}
+
+  
 \section{Major Land Uses (MLU)}
 \label{sec:mlu}
+
+This is a tabular data set published by the Economic Research Service
+(ERS) at the USDA of land acreages by various uses and covers at a
+state level.  We hope to compare our results to this data on a
+state-by-state basis in order as a check and possibly incorporate some
+of its information as a refinement.
 
 
 \section{National Land-cover Database 2001 (NLCD)}
 \label{sec:nlcd}
+
+\citet{Homer2004}
+
+
+The NLCD gives a higer-resolution (30m) snapshot of land use / land
+cover circa 2001.  \todo{check whether/how urban, water, wetland are
+  informed with priors in NLCD}  Reclassifying and aggregating this
+data to 5-arcmin resolution in a fashion similar to that used for the
+MLCT is expected to give better estimations of aggregate area for
+detailed features like rural transportation networks and small stream
+and wetland features.  This will compensate for MLCT's bias against
+these finely detailed structures due to it's resolution.  It is the
+availability of this information that makes it difficult to apply this
+analysis beyond the United States without access to a comparable data
+set with global extents.  The analysis is restricted to the
+conterminous US because of the relative paucity of agricultural
+activity in Hawaii and Alaska.
+
 
 \subsection{Reclassification}
 \label{sec:nlcd-reclass}
@@ -147,11 +313,19 @@ $$
 \subsection{Aggregation}
 \label{sec:nlcd-aggr}
 
+The same code used for refactoring the MLCT when considering only the
+primary cover type can be applied here.
+
 
 \section{Cropland Data Layer (CDL)}
 \label{sec:cdl}
 
 \missingfigure{Table or chart showing CDL covereage for various years}
+
+The CDL is only available for a small number of states in 2001.  If
+time allows it might be good to compare what is available with our
+results as another independent evaluation against a higher-resolution
+data set.
 
 \subsection{Reclassification}
 \label{sec:cdl-reclass}
@@ -165,20 +339,26 @@ $$
 \section{Harvested Area and Yields of 175 Crops (175crops2000)}
 \label{sec:175crops2000}
 
+\citet{Monfreda2008}
+
 \missingfigure{Table of crops and types reproduced from \citep{Monfreda2008}}
 
 \missingfigure{Summary table of crop aggregations for our model}
 
 \todo{Adress issue of smaller land mask for 175crops2000 and Aglands2000}
 
+This data set will provide the information needed to disaggregate the
+cropland area taken from Aglands2000.  It is not possible to use this
+data directly because it reflects only harvested area and so ignores
+various types of ancillary agricultural land, rather it will provide
+proportions for the disaggregation at the grid cell level.  Rather
+than considering the full array of 175 crops we will consider only
+corn, soy, wheat, rice, and sugarcane individually, combine other
+cereals into their own class, and combine all remaining crops as a
+catch-all ``other'' category.  Field crops will be distinguished from
+orchard / plantation crops that would likely fall under areas
+classified by MLCT as forest or shrub in this step.
 
-\subsection{Reclassification}
-\label{sec:cdl-reclass}
-
-\missingfigure{CDL reclassification table}
-
-\subsection{Aggregation}
-\label{sec:cdl-aggr}
 
 %%% Local Variables: 
 %%% mode: latex

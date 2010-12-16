@@ -58,17 +58,26 @@ library( lattice)
 library( xtable)
 ##library( Defaults)
 
-
-mlct <- new("GDALReadOnlyDataset", "2001_lct1.tif")
-
-mlctTheme <- sp.theme( 
+library( RColorBrewer)
+divTheme <- sp.theme( 
     regions= list(
-        col= getColorTable(mlct)[ getColorTable(mlct) != "#000000"]))
+        col= colorRampPalette( brewer.pal( 5, "BrBG"), 
+          space= "Lab")(100)))
+seqTheme <- sp.theme(
+    regions= list(
+        col= colorRampPalette( brewer.pal( 5, "YlGn"),
+          space="Lab")(100)))
 
-mlct <- raster( "2001_lct1.tif")
-legend <- mlct@legend@colortable[mlct@legend@colortable != "#000000"]
-mlctTheme <- sp.theme(regions= list( col= legend))
-rm( legend)
+## mlct <- new("GDALReadOnlyDataset", "2001_lct1.tif")
+
+## mlctTheme <- sp.theme( 
+##     regions= list(
+##         col= getColorTable(mlct)[ getColorTable(mlct) != "#000000"]))
+
+## mlct <- raster( "2001_lct1.tif")
+## legend <- mlct@legend@colortable[mlct@legend@colortable != "#000000"]
+## mlctTheme <- sp.theme(regions= list( col= legend))
+## rm( legend)
 
 #getColorTable( mlct)[1:17]))
 
@@ -78,8 +87,8 @@ rm( legend)
 ##                extent(-83.5, -(82+25/60), 42+55/60, 44+5/60))
 ##
 
-trellis.par.set( mlctTheme)
-spplot( as( thumb, "SpatialGridDataFrame"))
+## trellis.par.set( mlctTheme)
+## spplot( as( thumb, "SpatialGridDataFrame"))
 
 ## alternatively
 ## image(thumb, col= getColorTable(mlct)[1:17])
@@ -107,8 +116,8 @@ reclassMatrix <- matrix( c( 0,  0,  0,
                            14, 14,  7,
                            15, 16,  8),
                         ncol=3, byrow=TRUE)
-peelClasses <- reclassMatrix[, 2]
 
+peelClasses <- reclassMatrix[, 3]
 names( peelClasses) <- c("water", "forest", "shrub", "open", "mosaic", "crop", "urban", "wetland", "barren")
 
 ## these are subsets exported from GRASS
@@ -119,8 +128,8 @@ thumb <- list( pri= raster("thumb_2001_lct1.tif"),
 
 legend <- thumb$pri@legend@colortable[thumb$pri@legend@colortable != "#000000"]
 igbpTheme <- sp.theme( regions= list( col= legend))
-peelTheme <- sp.theme( regions= list( col= legend[ peelClasses +1]))
-trellis.par.set( peelTheme)
+peelTheme <- sp.theme( regions= list( col= legend[ reclassMatrix[, 2] +1]))
+
 
 thumb$pri <- reclass( thumb$pri, reclassMatrix, 
                       filename= "thumb_2001_lct1_reclass.tif",
@@ -142,9 +151,87 @@ thumbDf <- as( stack( thumb), "SpatialGridDataFrame")
 names(thumbDf@data) <- c("pri", "sec", "pct")
 thumbDf@data$pri <- factor(thumbDf@data$pri, levels=c(0:8), labels= names( peelClasses))
 thumbDf@data$sec <- factor(thumbDf@data$sec, levels=c(0:8), labels= names( peelClasses))
-thumbDfPlot <- spplot(thumbDf, c("pri", "sec"))
+
+thumbDfPlot <- 
+  spplot(thumbDf, c("pri", "sec"), 
+         names.attr=c("Primary cover", "Secondary cover"), 
+         between= list( x=0.5))
+
+update( thumbDfPlot, )
+
+trellis.par.set( peelTheme)
+plot( thumbDfPlot, split= c(1,1,2,1), more=TRUE)
+trellis.par.set(sp.theme())
+plot( spplot(thumbDf, "pct"), split= c(2,1,2,1))
+
+trellis.par.set( peelTheme)
+plot( spplot( thumbDf, "pri",
+             main= "Primary cover",
+             colorkey= FALSE), 
+     panel.width= list( x=0.6, units= "npc"),
+     split= c( 1, 1, 3, 1), 
+     position= c( 0, 0.2, 1, 0.8),
+     more= TRUE)
+plot( spplot( thumbDf, "sec",
+             main= "Secondary cover",
+             colorkey= list( space= "right")), 
+     panel.width= list( x=0.6, units= "npc"),
+     split= c( 2, 1, 3, 1), 
+     position= c( 0, 0.2, 1, 0.8),
+     more= TRUE)
+trellis.par.set( seqTheme)
+plot( spplot( thumbDf, "pct",
+             main= "Classification confidence, %",
+             at= seq( 0, 100, by= 5),
+             cuts= 5), 
+     panel.width= list( x=0.6, units= "npc"),
+     position= c( 0, 0.2, 1, 0.8),
+     split= c( 3, 1, 3, 1))
 
 
+## panel.height= list( x=0.5 /mapasp( thumbDf), units= "npc"),
+
+## panel.height= list( x=0.75 *280 /260, units= "npc"),
+
+
+
+## trellis.par.set( peelTheme)
+## plot( thumbDfPlot, position= c(0,0,0.625,1), more=TRUE)
+
+## trellis.par.set( seqTheme)
+## plot( spplot( thumbDf, "pct", 
+##              names.attr="Confidence", 
+##              at=seq(0,100,by=5)), 
+##      position=c( 0.625,0,1,1))
+
+# forget the crazy lattice stuff
+
+trellis.par.set( peelTheme)
+spplot( thumbDf, "pri")
+
+spplot( thumbDf, "sec")
+
+trellis.par.set( seqTheme)
+spplot( thumbDf, "pct",
+       at= seq( 0, 100, by= 5),
+       cuts= 5)
+
+# what about ggplot2?
+
+library( ggplot2)
+p <- ggplot( data= data.frame(thumbDf)) + 
+  geom_tile( aes( x= s1, y= s2, fill= pri) ) + 
+  scale_fill_manual( values= peelTheme$regions$col, 
+                     breaks= names( peelClasses)) +
+  
+                                        # separate classes into subplots
+p + facet_wrap(~ pri, ncol= 3) + 
+  theme_bw() + 
+  opts( axis.text.x= theme_text( angle= 90))
+
+table(thumbDf@data$pri, thumbDf@data$sec)
+
+                                        # this assumes A_{min} = 0.5
 primaryFraction <- function( mlct, ...) {
   overlayFunction <- function( pri, sec, pct) {
     ifelse( is.na(pri), NA,
@@ -159,6 +246,11 @@ thumb$Ap <-
   primaryFraction( thumb, 
                   filename= "thumb_2001_pri_frac.tif", 
                   overwrite=TRUE)
+thumbDf <- as( stack( thumb), "SpatialGridDataFrame")
+
+names(thumbDf@data) <- c("pri", "sec", "pct", "Ap")
+thumbDf@data$pri <- factor(thumbDf@data$pri, levels=c(0:8), labels= names( peelClasses))
+thumbDf@data$sec <- factor(thumbDf@data$sec, levels=c(0:8), labels= names( peelClasses))
 
 reclassFractions <- function( mlct, class, ...) {
   overlayFunction <- function( pri, sec, Ap) {
@@ -169,24 +261,61 @@ reclassFractions <- function( mlct, class, ...) {
   overlay( mlct$pri, mlct$sec, mlct$Ap, fun= overlayFunction, ...)
 }    
 
+## A_{min} = 0.5
+
 thumbFractions <- 
-  sapply( names( reclassNames), 
+  sapply( names( peelClasses), 
          function( cover) {
-           reclassFractions( thumb, reclassNames[[cover]], 
+           reclassFractions( thumb, peelClasses[[ cover]], 
                             filename= paste( "thumb_", cover, ".tif", sep=""),
                             overwrite= TRUE)
          })
 
 thumbFractions5min <-
-  sapply( names( reclassNames),
+  sapply( names( peelClasses),
          function( cover) {
            aggregate( thumbFractions[[cover]], 
-                     fact=5/60/(15/60/60),
-                     fun=mean,
-                     expand=FALSE,
+                     fact= 5 /60 /( 15 /60 /60),
+                     fun= mean,
+                     expand= FALSE,
                      filename= paste( "thumb", cover, "5min.tif", sep="_"),
-                     overwrite=TRUE)
+                     overwrite= TRUE)
          })
+
+
+## A_{min} = 1.0, primary cover only
+
+ApUnity <- thumb$Ap
+values( ApUnity) <- 1
+
+thumbFractionsPrimary <- 
+  sapply( names( peelClasses),
+         function( cover) {
+           reclassFractions( list( pri= thumb$pri, 
+                                   sec= thumb$sec, 
+                                    Ap= ApUnity),
+                            peelClasses[[ cover]],
+                            filename= paste( "thumb", cover, "pri.tif", sep="_"),
+                            overwrite= TRUE)
+         })
+
+thumbFractionsPrimary5min <-
+  sapply( names( peelClasses),
+         function( cover) {
+           aggregate( thumbFractionsPrimary[[ cover]], 
+                     fact= 5 /60 /( 15 /60 /60),
+                     fun= mean,
+                     expand= FALSE,
+                     filename= paste( "thumb", cover, "pri_5min.tif", sep="_"),
+                     overwrite= TRUE)
+         })
+
+thumbDiff <- stack( thumbFractions5min) -stack( thumbFractionsPrimary5min)
+layerNames( thumbDiff) <- names( peelClasses)
+trellis.par.set( divTheme)
+min( minValue( thumbDiff))
+max( maxValue( thumbDiff))
+spplot( as( thumbDiff, "SpatialGridDataFrame"), at=seq( -0.1, 0.1, by= 0.02), cuts=10)
 
 myUnlist <- function( ...){ unlist( ..., use.names=FALSE)}
 
@@ -203,7 +332,7 @@ thumbStack <-
           c( myUnlist( thumb), 
              myUnlist( thumbFractions), 
              thumbCheck))
-layerNames(thumbStack) <- c("pri", "sec", "pct", "Ap", names(reclassNames), "check")
+layerNames(thumbStack) <- c("pri", "sec", "pct", "Ap", names(peelClasses), "check")
 
 @ %def 
 

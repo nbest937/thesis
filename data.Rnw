@@ -48,28 +48,30 @@ Create 5 arcmin land mask
 \label{sec:mlct-reclass}
 @ 
 <<data, eval=FALSE>>=
+
+source("~/thesis/R/peel.R")
 setwd( "~/thesis/data")
-rm(list=ls())
-quartz.options( type="png")
+##quartz.options( type="png")
 
-library( raster)
-library( rgdal)
-library( lattice)
-library( xtable)
-##library( Defaults)
+## divTheme <- sp.theme( 
+##     regions= list(
+##         col= colorRampPalette( brewer.pal( 5, "BrBG"), 
+##           space= "Lab")(100)))
 
-library( RColorBrewer)
-divTheme <- sp.theme( 
-    regions= list(
-        col= colorRampPalette( brewer.pal( 5, "BrBG"), 
-          space= "Lab")(100)))
-seqTheme <- sp.theme(
-    regions= list(
-        col= colorRampPalette( brewer.pal( 5, "YlGn"),
-          space="Lab")(100)))
+seqTheme <- colorRampPalette( brewer.pal( 5, "YlGn"),
+                             space="Lab")
 
-mlct <- new("GDALReadOnlyDataset", "2001_lct1.tif")
-igbpLegend <- getColorTable(mlct)[ getColorTable(mlct) != "#000000"]
+mlct <- raster("thumb_2001_lct1.tif")
+igbpLegend <- mlct@legend@colortable
+igbpLegend <- igbpLegend[ igbpLegend != "#000000"]
+rm(mlct)
+
+## just in case, save these for later
+##  paste( deparse( igbpLegend), collapse="")
+## igbpLegend <- c("#2041B3", "#006A0F", "#007C25", "#00A25B", "#00A125", "#069228", "#9E9668", "#C1C48F", "#85AA5B", "#B1B741", "#A4D07E", "#73ABAE", "#CCD253", "#D90000", "#9DE36E", "#B6B5C2", "#949494")"
+
+## paste( deparse( peelLegend), collapse="")
+## peelLegend <- c("#2041B3", "#069228", "#85AA5B", "#A4D07E", "#73ABAE", "#CCD253", "#D90000", "#9DE36E", "#949494")
 
 
 ## mlctTheme <- sp.theme( 
@@ -96,19 +98,6 @@ igbpLegend <- getColorTable(mlct)[ getColorTable(mlct) != "#000000"]
 ## image(thumb, col= getColorTable(mlct)[1:17])
 
 
-
-
-mlctList <- function( priFile, secFile, pctFile) {
-                                        # creates a list of raster objects
-                                        # stacking messes up the overlay functions
-  priRaster <- raster( priFile) 
-  mlct <- 
-    list( pri= priRaster,
-          sec= if( missing( secFile)) raster( priRaster) else raster( secFile),
-          pct= if( missing( pctFile)) raster( priRaster) else raster( pctFile))
-  sapply( mlct, setMinMax)
-}
-
 mlctReclassMatrix <- 
   matrix( c( 0,  0,  0,
              1,  5,  1,
@@ -126,167 +115,30 @@ names( peelClasses) <- c("water", "forest", "shrub", "open", "mosaic", "crop", "
 peelLegend <- igbpLegend[ mlctReclassMatrix[, 2] +1]
 
 
-mlctReclass <- function( mlct, reclassMatrix, ...) {
-                                        # replaces primary and secondary rasters
-                                        # but color tables are lost
-  reclassFilename <- function( r) {
-    parts <- unlist( strsplit( basename( filename( r)), ".", fixed=TRUE))
-    paste( parts[ 1], "_reclass.", parts[ 2], sep="")
-  }
-  mlct$pri <- reclass( mlct$pri, reclassMatrix, 
-                      filename= reclassFilename( mlct$pri), ...)
-  mlct$sec <- reclass( mlct$sec, reclassMatrix, 
-                      filename= reclassFilename( mlct$sec), ...)
-  mlct
-}
-
-primaryFraction <- function( mlct, Amin, primaryFractionFile, ...) {
-                                        # appends an A_p raster to the MLCT list 
-                                        # and returns the appended list
-  if( missing( primaryFractionFile))
-    primaryFractionFile <- 
-      paste( deparse( substitute( mlct)), "Amin", 
-            paste( Amin, "tif", sep= "."),
-            sep= "_")
-  overlayFunction <- function( pri, sec, pct) {
-    ifelse( is.na(pri), NA,
-           ifelse( is.na( sec), 1,
-                  ifelse( is.na( pct), Amin,
-                         Amin +( 1 -Amin) *pct /100)))
-  }
-  mlct$Amin <- Amin
-  mlct$Ap <- overlay( mlct$pri, mlct$sec, mlct$pct, 
-                     fun= overlayFunction,
-                     filename= primaryFractionFile,
-                     ...)
-  mlct
-}
-
-coverFractions <- function( mlct, ...) {
-  Amin <- mlct$Amin
-  fracs <- 
-    sapply( names( peelClasses),
-           function( cover) {
-             class <- peelClasses[[ cover]]
-             overlayFunction <- function( pri, sec, Ap) {
-               ifelse( is.na( pri), NA,
-                      ifelse( pri ==class, Ap, 0)
-                      +ifelse( !is.na(sec) & sec ==class, 1 -Ap, 0))
-             }
-             overlay( mlct$pri, mlct$sec, mlct$Ap, 
-                     fun= overlayFunction,
-                     filename= paste( deparse( substitute( mlct)), cover, "Amin", 
-                       paste( Amin, ".tif", sep=""),
-                       sep="_"), ...)
-           })
-  mlct$fracs <- 
-    do.call( brick, 
-            c( unlist( fracs, use.names=FALSE), 
-              filename= paste( deparse( substitute( mlct)), 
-                "Amin", mlct$Amin, "covers.tif", 
-                sep="_"),
-              ...))
-  layerNames( mlct$fracs) <- names( peelClasses)
-  mlct
-}
-
-  args <- list(...)
-  browser()
-
-aggregateFractions <- function( mlct, aggRes= 5/60, ...) {
-  mlct$agg <- 
-    aggregate( mlct$fracs, 
-              fact= aggRes /res(mlct$fracs),
-              fun= mean,
-              expand= FALSE,
-              filename= paste( deparse( substitute( mlct)), 
-                "Amin", mlct$Amin, "agg.tif", 
-            sep="_"),
-              ...)
-  layerNames( mlct$agg) <- names( peelClasses)
-  mlct
-}
-
-
 
 ## these are subsets exported from GRASS
 
 thumb <- mlctList( "thumb_2001_lct1.tif", 
                    "thumb_2001_lct1_sec.tif", 
                    "thumb_2001_lct1_pct.tif")
-thumb <- mlctReclass( thumb, mlctReclassMatrix, overwrite=TRUE)
-thumb <- primaryFraction( thumb, 0.5, overwrite=TRUE)
-thumb <- coverFractions( thumb, overwrite=TRUE)
-thumb <- aggregateFractions( thumb, overwrite=TRUE)
+thumb  <- mlctReclass( thumb, mlctReclassMatrix, overwrite=TRUE)
+thumb  <- primaryFraction( thumb, 0.5, overwrite=TRUE)
+thumb1 <- primaryFraction( thumb, 1.0, overwrite=TRUE)
+thumb  <- coverFractions( thumb, overwrite=TRUE)
+thumb1 <- coverFractions( thumb1, overwrite=TRUE)
 
-## calculate the fractions for A_{min}=1.0 from scratch
-
-## thumbPri <- 
-##   aggregateFractions(
-##     coverFractions(
-##       primaryFraction(
-##         mlctReclass( 
-##           mlctList( "thumb_2001_lct1.tif", 
-##                     "thumb_2001_lct1_sec.tif", 
-##                     "thumb_2001_lct1_pct.tif"),
-##           mlctReclassMatrix),
-##         1.0)))
-
-## alternatively, just reuse the existing data 
-## loading and reclassifying the data are redundant
-
-thumbPri <- 
-  aggregateFractions(
-    coverFractions(
-      primaryFraction( thumb, 1.0)))
+thumb  <- aggregateFractions( thumb, overwrite=TRUE)
+thumb1 <- aggregateFractions( thumb1, overwrite=TRUE)
+thumb  <- decomposeMosaic( thumb, overwrite=TRUE)
+thumb1 <- decomposeMosaic( thumb1, overwrite=TRUE)
 
 
-## just in case, save these for later
-##  paste( deparse( igbpLegend), collapse="")
-## igbpLegend <- c("#2041B3", "#006A0F", "#007C25", "#00A25B", "#00A125", "#069228", "#9E9668", "#C1C48F", "#85AA5B", "#B1B741", "#A4D07E", "#73ABAE", "#CCD253", "#D90000", "#9DE36E", "#B6B5C2", "#949494")"
-
-## paste( deparse( peelLegend), collapse="")
-## peelLegend <- c("#2041B3", "#069228", "#85AA5B", "#A4D07E", "#73ABAE", "#CCD253", "#D90000", "#9DE36E", "#949494")
+## shouldn't this be a check on the mosaic decomposition? 
+## expected to sum to 0
+cellStats( overlay( thumb$delta, fun=sum), stat='sum')
 
 
-thumbDf <- as( stack( thumb), "SpatialGridDataFrame")
-names(thumbDf@data) <- c("pri", "sec", "pct")
-thumbDf@data$pri <- factor(thumbDf@data$pri, levels=c(0:8), labels= names( peelClasses))
-thumbDf@data$sec <- factor(thumbDf@data$sec, levels=c(0:8), labels= names( peelClasses))
-
-# what about ggplot2?
-
-library( ggplot2)
-
-p <- ggplot( data= as.data.frame( as( sampleRegular( thumb$pri, ncell(thumb$pri)*0.05, asRaster=TRUE), "SpatialGridDataFrame")))
-
-ggplotRaster <- function( r, frac) {
-  df <- data.frame( as( sampleRegular( r, ncell( r)*frac, 
-                                      asRaster=TRUE), 
-                       "SpatialGridDataFrame"))
-  ggplot( data= df) +
-    scale_x_continuous( expand= c( 0,0)) +
-    scale_y_continuous( expand= c( 0,0)) +
-    opts( panel.grid.minor = theme_blank(),
-         panel.grid.major = theme_blank(),
-         panel.background = theme_blank(),
-         axis.title.x = theme_blank(), 
-         axis.title.y = theme_blank()) 
-}
-
-
-peelMap <- function( r, frac) {
-  p <- ggplotRaster( r, frac)
-  p$data$values <- factor( p$data$values, 
-                          levels= peelClasses, 
-                          labels= names( peelClasses))
-  p +
-    geom_tile( aes( x= s1, y= s2, 
-                    fill= values)) + 
-    scale_fill_manual( "",
-                      values= peelLegend, 
-                      breaks= names( peelClasses))
-}
+p <- ggplotRaster( thumb$delta, 1)
                                         # separate classes into subplots
 p + facet_wrap(~ pri, ncol= 3) + 
   theme_bw() + 
@@ -295,55 +147,7 @@ p + facet_wrap(~ pri, ncol= 3) +
 table(thumbDf@data$pri, thumbDf@data$sec)
 
 
-
-
-thumbDf <- as( stack( thumb), "SpatialGridDataFrame")
-
-names(thumbDf@data) <- c("pri", "sec", "pct", "Ap")
-thumbDf@data$pri <- factor(thumbDf@data$pri, levels=c(0:8), labels= names( peelClasses))
-thumbDf@data$sec <- factor(thumbDf@data$sec, levels=c(0:8), labels= names( peelClasses))
-
-
-
-
-## A_{min} = 1.0, primary cover only
-
-ApUnity <- thumb$Ap
-values( ApUnity) <- 1
-
-thumbFractionsPrimary <- 
-  sapply( names( peelClasses),
-         function( cover) {
-           reclassFractions( list( pri= thumb$pri, 
-                                   sec= thumb$sec, 
-                                    Ap= ApUnity),
-                            peelClasses[[ cover]],
-                            filename= paste( "thumb", cover, "pri.tif", sep="_"),
-                            overwrite= TRUE)
-         })
-
-thumbFractionsPrimary5min <-
-  sapply( names( peelClasses),
-         function( cover) {
-           aggregate( thumbFractionsPrimary[[ cover]], 
-                     fact= 5 /60 /( 15 /60 /60),
-                     fun= mean,
-                     expand= FALSE,
-                     filename= paste( "thumb", cover, "pri_5min.tif", sep="_"),
-                     overwrite= TRUE)
-         })
-
-thumbDiff <- stack( thumbFractions5min) -stack( thumbFractionsPrimary5min)
-layerNames( thumbDiff) <- names( peelClasses)
-trellis.par.set( divTheme)
-min( minValue( thumbDiff))
-max( maxValue( thumbDiff))
-spplot( as( thumbDiff, "SpatialGridDataFrame"), at=seq( -0.1, 0.1, by= 0.02), cuts=10)
-
-myUnlist <- function( ...){ unlist( ..., use.names=FALSE)}
-
-## causes an error
-#setDefaults( unlist, use.names=FALSE)
+coverMaps( thumb$agg, 1)
 
 thumbCheck <- 
   do.call( overlay, 

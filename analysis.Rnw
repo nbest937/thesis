@@ -329,6 +329,11 @@ The elements of the matrix have been reordered according to the
 clustering forumla given in \citet[sec. 6.2.3]{Sarkar2008} in order to
 achieve a degree of visual clustering among the correlation vectors.
 
+@ 
+<<analysis>>=
+setwd( "~/thesis")
+@ %def 
+
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "thesis"

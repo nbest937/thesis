@@ -2,11 +2,11 @@ library( raster)
 ##library( rgdal)
 ##library( lattice)
 library( ggplot2)
-library( reshape2)
+##library( reshape2)
 library( xtable)
 ##library( Defaults)
 
-library( RColorBrewer)
+##library( RColorBrewer)
 
 
 mlctList <- function( priFile, secFile, pctFile) {
@@ -31,12 +31,14 @@ mlctReclass <- function( mlct, reclassMatrix, ...) {
   }
   mlct$pri <- reclass( mlct$pri, reclassMatrix, 
                       filename= reclassFilename( mlct$pri), ...)
-  mlct$sec <- reclass( mlct$sec, reclassMatrix, 
-                      filename= reclassFilename( mlct$sec), ...)
+  if( "sec" %in% names( mlct)) {
+    mlct$sec <- reclass( mlct$sec, reclassMatrix, 
+                        filename= reclassFilename( mlct$sec), ...)
+  }
   mlct
 }
 
-primaryFraction <- function( mlct, Amin, primaryFractionFile, ...) {
+primaryFraction <- function( mlct, primaryFractionFile, Amin=1.0, ...) {
                                         # appends an A_p raster to the MLCT list 
                                         # and returns the appended list
   if( missing( primaryFractionFile))
@@ -60,7 +62,7 @@ primaryFraction <- function( mlct, Amin, primaryFractionFile, ...) {
 
 coverFractions <- function( mlct, ...) {
   Amin <- mlct$Amin
-  fracs <- 
+  fracs <- if( Amin < 1.0) {
     sapply( names( peelClasses),
            function( cover) {
              class <- peelClasses[[ cover]]
@@ -75,12 +77,27 @@ coverFractions <- function( mlct, ...) {
                        paste( Amin, ".tif", sep=""),
                        sep="_"), ...)
            })
+  } else {
+    sapply( names( peelClasses),
+           function( cover) {
+             class <- peelClasses[[ cover]]
+             calc( mlct$pri,
+                  function( pri) {
+                    ifelse( is.na( pri), NA,
+                           ifelse( pri ==class, 1, 0))
+                  })
+           })
+  }
   mlct$fracs <- 
     do.call( brick, 
             c( unlist( fracs, use.names=FALSE), 
-              filename= paste( deparse( substitute( mlct)), 
-                "Amin", mlct$Amin, "fracs.tif", 
-                sep="_"),
+              filename= if( Amin < 1)
+                paste( deparse( substitute( mlct)), 
+                      "Amin", mlct$Amin, "fracs.tif", 
+                      sep="_")
+                else
+                paste( deparse( substitute( mlct)), 
+                      "fracs.tif", sep="_"),
               ...))
   layerNames( mlct$fracs) <- names( peelClasses)
   mlct
@@ -90,12 +107,16 @@ coverFractions <- function( mlct, ...) {
 aggregateFractions <- function( mlct, aggRes= 5/60, ...) {
   mlct$agg <- 
     aggregate( mlct$fracs, 
-              fact= aggRes /res(mlct$fracs),
+              fact= as.integer( round( aggRes /res(mlct$fracs))),
               fun= mean,
               expand= FALSE,
-              filename= paste( deparse( substitute( mlct)), 
-                "Amin", mlct$Amin, "agg.tif", 
-                sep="_"),
+              filename= if( Amin < 1)
+                paste( deparse( substitute( mlct)), 
+                      "Amin", mlct$Amin, "agg.tif", 
+                      sep="_")
+                else
+                paste( deparse( substitute( mlct)), 
+                      "agg.tif", sep="_"),
               ...)
   layerNames( mlct$agg) <- names( peelClasses)
   mlct
@@ -181,15 +202,18 @@ ggplotRaster <- function( r, samp) {
   df <- data.frame( as( sampleRegular( r, ncell( r)*samp, 
                                       asRaster=TRUE), 
                        "SpatialGridDataFrame"))
-  names(df)[ 1:length( layerNames( r))] <- layerNames( r)
+  ## names(df)[ 1:length( layerNames( r))] <- layerNames( r)
   ggplot( data= df) +
+    geom_tile( aes( x= s1, y= s2, fill= values)) +
+    theme_bw() +
     scale_x_continuous( expand= c( 0,0)) +
     scale_y_continuous( expand= c( 0,0)) +
-    opts( panel.grid.minor = theme_blank(),
-         panel.grid.major = theme_blank(),
-         panel.background = theme_blank(),
-         axis.title.x = theme_blank(), 
-         axis.title.y = theme_blank()) 
+    opts( panel.grid.minor= theme_blank(),
+          panel.grid.major= theme_blank(),
+          panel.background= theme_blank(),
+              axis.title.x= theme_blank(),
+               axis.text.x= theme_text( angle= 90, hjust=1),
+              axis.title.y= theme_blank()) 
 }
 
 

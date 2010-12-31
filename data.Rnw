@@ -2,55 +2,12 @@
 
 \SweaveOpts{ results=hide, include=FALSE, echo=FALSE, engine=R, keep.source=TRUE }
 
-\chapter{Data}
-\label{cha:data}
-
-This chapter presents some summary descriptions of the various data
-sets that are relevant to this analysis and further discussion on how
-they were manipulated.
-
-The general approach with the classified land cover data sets (MLCT,
-NLCD, CDL) is to reclassify their categories and aggregate the new
-classification to the 5-arcmin grid.  The purpose of the
-reclassification is to reduce the number of classes and have a uniform
-set of classes across data sets.  The challenge in this is that
-classification defintions are sometimes subtly different which makes
-direct comparison across data sets difficult.  In this process we
-convert classified maps whose pixels have discreet values to a stack
-of maps, one map per class, whose pixels have real number values on
-the interval $[0,1]$ and are constrained to sum to unity for each
-pixel through the stack.  In short, the process converts two discrete,
-thematic variables and one continuous variable into a set of
-continuous variables representing fractional areas for the cover types in
-the siplified classification system.
-
-\missingfigure{Generate a summary table of data sets (raster/tabular, resolution, citation)}
-
-\section{MODIS Land Cover Type (MLCT)}
-\label{sec:mlct}
-
-\todo[inline, caption={Describe Steps that were completed outside the analytical environment}]{
-Mosaic MLCT tiles
-Reproject MLCT mosaic from sinusoidal projection to geographic coordinates
-Create 5 arcmin land mask
-}
-
-\todo[inline, caption={illustrate MLCT classification and aggregation
-  with a zoomed-in area}]{ My idea for this section is to describe the
-  process that we use to all three variables from the MLCT (primary
-  cover, secondary cover, confidence level) to cell fractions and
-  illustrate the steps with maps of a zoomed-in area so that it's easy
-  to see what is happening.  I have this worked out -- I just need to
-  add some figures to the document.}
-
-
-\subsection{Reclassification}
-\label{sec:mlct-reclass}
 @ 
 <<data, eval=FALSE>>=
 
 source("~/thesis/R/peel.R")
 setwd( "~/thesis/data")
+
 ##quartz.options( type="png")
 
 ## divTheme <- sp.theme( 
@@ -61,9 +18,8 @@ setwd( "~/thesis/data")
 seqTheme <- colorRampPalette( brewer.pal( 5, "YlGn"),
                              space="Lab")
 
+
 mlct <- raster("thumb_2001_lct1.tif")
-igbpLegend <- mlct@legend@colortable
-igbpLegend <- igbpLegend[ igbpLegend != "#000000"]
 rm(mlct)
 
 ## just in case, save these for later
@@ -96,7 +52,89 @@ rm(mlct)
 
 ## alternatively
 ## image(thumb, col= getColorTable(mlct)[1:17])
+@ 
 
+\chapter{Data}
+\label{cha:data}
+
+This chapter presents some summary descriptions of the various data
+sets that are relevant to this analysis and further discussion on how
+they were manipulated.
+
+The general approach with the classified land cover data sets (MLCT,
+NLCD, CDL) is to reclassify their categories and aggregate the new
+classification to the 5-arcmin grid.  The purpose of the
+reclassification is to reduce the number of classes and have a uniform
+set of classes across data sets.  The challenge in this is that
+classification defintions are sometimes subtly different which makes
+direct comparison across data sets difficult.  In this process we
+convert classified maps whose pixels have discrete values to a stack
+of maps, one map per class, whose pixels have real number values on
+the interval $[0,1]$ and are constrained to sum to unity for each
+pixel through the stack.  In the general case of the MLCT data product
+the process converts two discrete, thematic variables and one
+continuous variable, those being a primary covery type, a secondary
+cover type, and classification confidence level respectively, into a
+set of continuous variables representing fractional areas for the
+cover types in the siplified classification system.  In other cases
+the process is simplified by considering only a primary thematic layer
+and performing the aggregation without a secondary cover type or
+confidence level by which to relate them.
+
+\missingfigure{Generate a summary table of data sets (raster/tabular, resolution, citation)}
+
+\section{MODIS Land Cover Type (MLCT)}
+\label{sec:mlct}
+
+In preparation for this analysis we prepared the 2001 MLCT data by patching
+together the tiles as delivered in the equal-area sinusoidal
+projection, reprojecting that mosaic to geographic coordinates, and
+extracting a subset for the conterminous United States (cUSA).  The
+subset is defined as the set of 5-arcmin grid cells that intersect
+with the cUSA polygon in the Global Administrative Areas (GADM) vector
+data set, which includes the water bodies on the American side of the
+international border across the Great Lakes, but does not extend to
+oceanic waters beyond the coastal grid cells that intersect with the
+land mass.  
+
+The expectation is that the analytical approach developed here will be
+applied globally in the future.
+
+To illustrate the process of converting the MLCT data from its
+original representation we are including maps of an area of
+southeastern Michigan to show greater detail through each step of the
+process.  We chose this region for its diversity of land covers and
+uses, diveristy of agricultural commodities across its significant
+cropland area, and its familiarity to our principal author, being his
+brthplace.  In this section we will demonstrate the process of
+converting the MLCT data from its native form, consisting of primary
+cover type, classification confidence for the primary cover, and
+secondary (alternate) cover type at 15-arcsec resolution, to a stack
+of cover fractions at 5-arcmin resolution using the simplified
+cover/use classification specified by the PEEL model. 
+
+<<data>>=
+
+thumb <- mlctList( "thumb_2001_lct1.tif", 
+                   "thumb_2001_lct1_sec.tif", 
+                   "thumb_2001_lct1_pct.tif")
+
+igbpLegend <- thumb$pri@legend@colortable
+igbpLegend <- igbpLegend[ igbpLegend != "#000000"]
+
+@ 
+\subsection{Reclassification}
+\label{sec:mlct-reclass}
+
+The following table shows the mapping of the IGBP classes used in the
+original MLCT data to the simplified classification designed for the
+PEEL model.
+
+\missingfigure{MLCT reclassification table}
+
+
+@ 
+<<data, eval=TRUE>>=
 
 mlctReclassMatrix <- 
   matrix( c( 0,  0,  0,
@@ -114,56 +152,236 @@ peelClasses <- mlctReclassMatrix[, 3]
 names( peelClasses) <- c("water", "forest", "shrub", "open", "mosaic", "crop", "urban", "wetland", "barren")
 peelLegend <- igbpLegend[ mlctReclassMatrix[, 2] +1]
 
-
-
-## these are subsets exported from GRASS
-
-thumb <- mlctList( "thumb_2001_lct1.tif", 
-                   "thumb_2001_lct1_sec.tif", 
-                   "thumb_2001_lct1_pct.tif")
 thumb  <- mlctReclass( thumb, mlctReclassMatrix, overwrite=TRUE)
-thumb  <- primaryFraction( thumb, 0.5, overwrite=TRUE)
-thumb1 <- primaryFraction( thumb, 1.0, overwrite=TRUE)
-thumb  <- coverFractions( thumb, overwrite=TRUE)
-thumb1 <- coverFractions( thumb1, overwrite=TRUE)
 
-thumb  <- aggregateFractions( thumb, overwrite=TRUE)
-thumb1 <- aggregateFractions( thumb1, overwrite=TRUE)
-thumb  <- decomposeMosaic( thumb, overwrite=TRUE)
-thumb1 <- decomposeMosaic( thumb1, overwrite=TRUE)
+thumbPlots <- list( pri= peelMap( thumb$pri, 0.4),
+                    sec= peelMap( thumb$sec, 0.4))
+
+thumbPlots$pct <- ggplotRaster( thumb$pct, 0.4) + 
+scale_fill_gradientn( "% confidence", colours=rev( seqTheme( 5)), 
+                     limits= c( 100, 0),
+                     breaks= seq( 100, 0, by= -20))
+  
+## this brewer scale doesn't work for some reason
+## wrote to ggplot2 Google Group
+
+##  scale_fill_brewer( "", palette="YlGn", limits= c( 0,100), breaks= seq(0,100,by=20))
+
+## this scale is okay but the palette wasn't quite right
+##  scale_fill_continuous( "", limits= c( 0, 100), low= "yellow", high= "green")
+@ 
+
+The following figures show the result of reclassifying the MLCT data
+for our detailed study area along with the confidence level given for
+the primay classification.
+
+\begin{figure} 
+\begin{center}
+  
+<<data>>= 
+## fig_thumb_pri_reclass
+quartz( file="fig_thumb_pri_reclass.png")
+print( thumbPlots$pri)
+dev.off()
+
+@ 
+
+\includegraphics{fig_thumb_pri_reclass}
+\end{center} 
+\caption{MLCT primary cover reclassified detail} 
+\label{fig:thumb_pri_reclass} 
+\end{figure} 
 
 
-## shouldn't this be a check on the mosaic decomposition? 
-## expected to sum to 0
-cellStats( overlay( thumb$delta, fun=sum), stat='sum')
+\begin{figure} 
+\begin{center}
+  
+<<data>>= 
+## fig_thumb_sec_reclass
+quartz( file="fig_thumb_sec_reclass.png")
+print( thumbPlot$sec)
+dev.off()
+
+@ 
+
+\includegraphics{fig_thumb_sec_reclass}
+\end{center} 
+\caption{MLCT secondary cover reclassified detail} 
+\label{fig:thumb_sec_reclass} 
+\end{figure} 
 
 
-p <- ggplotRaster( thumb$delta, 1)
-                                        # separate classes into subplots
-p + facet_wrap(~ pri, ncol= 3) + 
-  theme_bw() + 
-  opts( axis.text.x= theme_text( angle= 90, hjust=1))
+\begin{figure} 
+\begin{center}
+  
+<<data>>= 
+## fig_thumb_pct
+quartz( file="fig_thumb_pct.png")
+print( thumbPlot$pct)
+dev.off()
 
-table(thumbDf@data$pri, thumbDf@data$sec)
+@ 
+
+\includegraphics{fig_thumb_pct}
+\end{center} 
+\caption{MLCT primary cover classification confidence} 
+\label{fig:thumb_pct} 
+\end{figure} 
+
+It is easier to see the relative proportions of the primary and
+secondary cover types if we map them separately.  These maps show that
+this region is dominated by cropland and wetland with scattered
+forests and towns.  Shrub, mosaic, barren, and open covers are found
+sparsely along the shore of Lake Huron.  The urban center of Port
+Huron is visible in the southeast corner.
+
+\begin{figure} 
+\begin{center}
+  
+<<data>>= 
+## fig_thumb_pri_facet
+quartz( file="fig_thumb_pri_facet.png")
+print( thumbPlots$pri + facet_wrap(~ values))
+dev.off()
+
+@ 
+
+\includegraphics{fig_thumb_pri_facet}
+\end{center} 
+\caption{MLCT primary covers shown separately} 
+\label{fig:thumb_pri_reclass} 
+\end{figure} 
 
 
-coverMaps( thumb$agg, 1)
+\begin{figure} 
+\begin{center}
+  
+<<data>>= 
+## fig_thumb_sec_facet
+quartz( file="fig_thumb_sec_facet.png")
+print( thumbPlots$sec + facet_wrap(~ values))
+dev.off()
 
-thumbCheck <- 
-  do.call( overlay, 
-          c( unlist( thumbFractions5min, use.names=FALSE), 
-            fun=sum))
+@ 
 
-thumbStack <- 
-  do.call( stack, 
-          c( myUnlist( thumb), 
-             myUnlist( thumbFractions), 
-             thumbCheck))
-layerNames(thumbStack) <- c("pri", "sec", "pct", "Ap", names(peelClasses), "check")
+\includegraphics{fig_thumb_sec_facet}
+\end{center} 
+\caption{MLCT secondary covers shown separately} 
+\label{fig:thumb_pri_reclass} 
+\end{figure} 
 
-@ %def 
+We repeat this operation for the entire data set.
 
-\missingfigure{MLCT reclassification table}
+@
+<<data, eval=FALSE>>=
+## repeat for cUSA
+
+mlct <- mlctList( "2001_lct1.tif", 
+                  "2001_lct1_sec.tif", 
+                  "2001_lct1_pct.tif")
+mlct  <- mlctReclass( mlct, mlctReclassMatrix, overwrite=TRUE, progress="text")
+
+mlctPlots <- list( pri= peelMap( mlct$pri, 0.01),
+                    sec= peelMap( mlct$sec, 0.01))
+
+mlctPlots$pct <- ggplotRaster( mlct$pct, 0.01) + 
+  scale_fill_gradientn( "% confidence", colours=rev( seqTheme( 5)), 
+                       limits= c( 100, 0),
+                       breaks= seq( 100, 0, by= -20))
+@ 
+
+\begin{figure} 
+\begin{center}
+
+@
+<<data>>= 
+## fig_mlct_pri_reclass
+quartz( file="fig_mlct_pri_reclass.png")
+print( mlctPlots$pri)
+dev.off()
+
+@ 
+
+\includegraphics{fig_mlct_pri_reclass}
+\end{center} 
+\caption{MLCT primary cover reclassified detail} 
+\label{fig:mlct_pri_reclass} 
+\end{figure} 
+
+
+\begin{figure} 
+\begin{center}
+  
+<<data>>= 
+## fig_mlct_sec_reclass
+quartz( file="fig_mlct_sec_reclass.png")
+print( mlctPlot$sec)
+dev.off()
+
+@ 
+
+\includegraphics{fig_mlct_sec_reclass}
+\end{center} 
+\caption{MLCT secondary cover reclassified detail} 
+\label{fig:mlct_sec_reclass} 
+\end{figure} 
+
+
+\begin{figure} 
+\begin{center}
+  
+<<data>>= 
+## fig_mlct_pct
+quartz( file="fig_mlct_pct.png")
+print( mlctPlot$pct)
+dev.off()
+
+@ 
+
+\includegraphics{fig_mlct_pct}
+\end{center} 
+\caption{MLCT primary cover classification confidence} 
+\label{fig:mlct_pct} 
+\end{figure} 
+
+\todo{Describe characteristics of MLCT reclass maps and confidence at
+  cUSA extents}
+
+\begin{figure} 
+\begin{center}
+  
+<<data>>= 
+## fig_mlct_pri_facet
+quartz( file="fig_mlct_pri_facet.png")
+print( mlctPlots$pri + facet_wrap(~ values))
+dev.off()
+
+@ 
+
+\includegraphics{fig_mlct_pri_facet}
+\end{center} 
+\caption{MLCT primary covers shown separately} 
+\label{fig:mlct_pri_reclass} 
+\end{figure} 
+
+
+\begin{figure} 
+\begin{center}
+  
+<<data>>= 
+## fig_mlct_sec_facet
+quartz( file="fig_mlct_sec_facet.png")
+print( mlctPlots$sec + facet_wrap(~ values))
+dev.off()
+
+@ 
+
+\includegraphics{fig_mlct_sec_facet}
+\end{center} 
+\caption{MLCT secondary covers shown separately} 
+\label{fig:mlct_pri_reclass} 
+\end{figure} 
+
 
 \subsection{Aggregation}
 \label{sec:mlct-aggr}
@@ -171,7 +389,7 @@ layerNames(thumbStack) <- c("pri", "sec", "pct", "Ap", names(peelClasses), "chec
 This product has a nominal resolution of 500m and uses the 17 IGBP
 land cover classes. The dataset consists of a primary classification,
 along with a measure of confidence up to 100\%, and a secondary
-classification.  The secondary cover type is given as the most like
+classification.  The secondary cover type is given as the most likely
 alternative to the primary type \citep{Friedl2010}, but for purposes
 of our analysis we are taking a more probabilistic view and
 incorporating all available information from the base data.  Because
@@ -218,6 +436,60 @@ the mean of these values over the intersecting pixels at the original
 resoution.  Because the desired 5-arcmin resolution is a multiple of
 the original 15-arcsec resolution the pixels are perfectly nested,
 which is convenient for properly computing this mean.
+
+<<data>>=
+ 
+thumb  <- primaryFraction( thumb, 0.5, overwrite=TRUE)
+thumb1 <- primaryFraction( thumb, 1.0, overwrite=TRUE)
+thumb  <- coverFractions( thumb, overwrite=TRUE)
+thumb1 <- coverFractions( thumb1, overwrite=TRUE)
+thumb  <- aggregateFractions( thumb, overwrite=TRUE)
+thumb1 <- aggregateFractions( thumb1, overwrite=TRUE)
+thumb  <- decomposeMosaic( thumb, overwrite=TRUE)
+thumb1 <- decomposeMosaic( thumb1, overwrite=TRUE)
+
+
+## shouldn't this be a check on the mosaic decomposition? 
+## expected to sum to 0
+cellStats( overlay( thumb$delta, fun=sum), stat='sum')
+
+
+p <- ggplotRaster( thumb$delta, 1)
+                                        # separate classes into subplots
+p + facet_wrap(~ pri, ncol= 3) + 
+  theme_bw() + 
+  opts( axis.text.x= theme_text( angle= 90, hjust=1))
+
+table(thumbDf@data$pri, thumbDf@data$sec)
+
+
+coverMaps( thumb$agg, 1)
+
+thumbCheck <- 
+  do.call( overlay, 
+          c( unlist( thumbFractions5min, use.names=FALSE), 
+            fun=sum))
+
+thumbStack <- 
+  do.call( stack, 
+          c( myUnlist( thumb), 
+             myUnlist( thumbFractions), 
+             thumbCheck))
+layerNames(thumbStack) <- c("pri", "sec", "pct", "Ap", names(peelClasses), "check")
+
+
+## repeat for cUSA
+
+mlct <- mlctList( "2001_lct1.tif", 
+                   "2001_lct1_sec.tif", 
+                   "2001_lct1_pct.tif")
+mlct  <- mlctReclass( mlct, mlctReclassMatrix, overwrite=TRUE)
+mlct  <- primaryFraction( mlct, 0.5, overwrite=TRUE)
+mlct  <- coverFractions( mlct, overwrite=TRUE)
+mlct  <- aggregateFractions( mlct, overwrite=TRUE)
+mlct  <- decomposeMosaic( mlct, overwrite=TRUE)
+@ %def 
+
 
 \todo[inline, caption={Describe effect of incorporating secondary
   cover and confidence level}]{I have written and tested the code that
@@ -309,6 +581,45 @@ activity in Hawaii and Alaska.
 \label{sec:nlcd-reclass}
 
 \missingfigure{NLCD reclassification table}
+
+@ 
+<<data, eval=FALSE>>=
+
+## nlcd <- mlctList( "nlcd2001.bil")
+## Error in FUN(X[[2L]], ...) : 
+##   no, or not enough, values associated with this Layer
+## thought it was caused by setMinMax() but could not reproduce
+## maybe caused by sleep/suspend?
+
+nlcd <- list( pri=raster( "nlcd2001.bil"))
+nlcd <- sapply( nlcd, setMinMax)
+
+nlcdReclassMatrix <- 
+  matrix( c( 11,  11,  0,               # water
+             98,  99,  0,
+             41,  43,  1,               # forest
+             51,  52,  2,               # shrub
+             94,  94,  2,
+             71,  74,  3,               # open
+             81,  81,  3,
+             90,  93,  4,               # wetland
+             95,  97,  4,
+             82,  82,  5,               # crop
+             21,  24,  6,               # urban
+                                        # no mosaic
+             12,  12,  8,               # barren
+             31,  32,  8),
+         ncol=3, byrow=TRUE)
+
+nlcd <- mlctReclass( nlcd, nlcdReclassMatrix, format="EHdr", overwrite=TRUE)
+
+nlcd$Amin <- 1
+nlcd <- coverFractions( nlcd, format="EHdr", overwrite=TRUE)
+nlcd <- aggregateFractions( nlcd, format="EHdr", overwrite=TRUE)
+
+
+
+@ %def 
 
 \subsection{Aggregation}
 \label{sec:nlcd-aggr}

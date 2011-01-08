@@ -2,6 +2,14 @@
 
 
 
+
+
+
+
+
+\graphicspath{ {data/} }
+
+
 \chapter{Data}
 \label{cha:data}
 
@@ -16,38 +24,193 @@ reclassification is to reduce the number of classes and have a uniform
 set of classes across data sets.  The challenge in this is that
 classification defintions are sometimes subtly different which makes
 direct comparison across data sets difficult.  In this process we
-convert classified maps whose pixels have discreet values to a stack
+convert classified maps whose pixels have discrete values to a stack
 of maps, one map per class, whose pixels have real number values on
 the interval $[0,1]$ and are constrained to sum to unity for each
-pixel through the stack.  In short, the process converts two discrete,
-thematic variables and one continuous variable into a set of
-continuous variables representing fractional areas for the cover types in
-the siplified classification system.
+pixel through the stack.  In the general case of the MLCT data product
+the process converts two discrete, thematic variables and one
+continuous variable, those being a primary covery type, a secondary
+cover type, and classification confidence level respectively, into a
+set of continuous variables representing fractional areas for the
+cover types in the siplified classification system.  In other cases
+the process is simplified by considering only a primary thematic layer
+and performing the aggregation without a secondary cover type or
+confidence level by which to relate them.
 
 \missingfigure{Generate a summary table of data sets (raster/tabular, resolution, citation)}
 
 \section{MODIS Land Cover Type (MLCT)}
 \label{sec:mlct}
 
-\todo[inline, caption={Describe Steps that were completed outside the analytical environment}]{
-Mosaic MLCT tiles
-Reproject MLCT mosaic from sinusoidal projection to geographic coordinates
-Create 5 arcmin land mask
-}
+In preparation for this analysis we prepared the 2001 MLCT data by patching
+together the tiles as delivered in the equal-area sinusoidal
+projection, reprojecting that mosaic to geographic coordinates, and
+extracting a subset for the conterminous United States (cUSA).  The
+subset is defined as the set of 5-arcmin grid cells that intersect
+with the cUSA polygon in the Global Administrative Areas (GADM) vector
+data set, which includes the water bodies on the American side of the
+international border across the Great Lakes, but does not extend to
+oceanic waters beyond the coastal grid cells that intersect with the
+land mass.  
 
-\todo[inline, caption={illustrate MLCT classification and aggregation
-  with a zoomed-in area}]{ My idea for this section is to describe the
-  process that we use to all three variables from the MLCT (primary
-  cover, secondary cover, confidence level) to cell fractions and
-  illustrate the steps with maps of a zoomed-in area so that it's easy
-  to see what is happening.  I have this worked out -- I just need to
-  add some figures to the document.}
+The expectation is that the analytical approach developed here will be
+applied globally in the future.
 
+To illustrate the process of converting the MLCT data from its
+original representation we are including maps of an area of
+southeastern Michigan to show greater detail through each step of the
+process.  We chose this region for its diversity of land covers and
+uses, diveristy of agricultural commodities across its significant
+cropland area, and its familiarity to our principal author, being his
+brthplace.  In this section we will demonstrate the process of
+converting the MLCT data from its native form, consisting of primary
+cover type, classification confidence for the primary cover, and
+secondary (alternate) cover type at 15-arcsec resolution, to a stack
+of cover fractions at 5-arcmin resolution using the simplified
+cover/use classification specified by the PEEL model. 
 
 \subsection{Reclassification}
 \label{sec:mlct-reclass}
 
+The following table shows the mapping of the IGBP classes used in the
+original MLCT data to the simplified classification designed for the
+PEEL model.
+
 \missingfigure{MLCT reclassification table}
+
+
+
+\subsubsection{Detail Area}
+\label{sec:reclass-detail-area}
+
+
+The following figures show the result of reclassifying the MLCT data
+for our detailed study area along with the confidence level given for
+the primay classification.
+
+\begin{figure} 
+\begin{center}
+  
+
+\includegraphics{fig_thumb_pri_reclass}
+\end{center} 
+\caption{MLCT primary cover reclassified detail} 
+\label{fig:thumb_pri_reclass} 
+\end{figure} 
+
+
+\begin{figure} 
+\begin{center}
+  
+
+\includegraphics{fig_thumb_sec_reclass}
+\end{center} 
+\caption{MLCT secondary cover reclassified detail} 
+\label{fig:thumb_sec_reclass} 
+\end{figure} 
+
+
+\begin{figure} 
+\begin{center}
+  
+
+\includegraphics{fig_thumb_pct}
+\end{center} 
+\caption{MLCT primary cover classification confidence} 
+\label{fig:thumb_pct} 
+\end{figure} 
+
+It is easier to see the relative proportions of the primary and
+secondary cover types if we map them separately.  These maps show that
+this region is dominated by the cropland and cropland/natural
+vegetation mosaic cover types with scattered forests and towns.
+Shrub, wetland, barren, and open covers are found sparsely along the
+shore of Lake Huron.  The urban center of Port Huron is visible in the
+southeast corner.
+
+\begin{figure} 
+\begin{center}
+  
+
+\includegraphics{fig_thumb_pri_facet}
+\end{center} 
+\caption{MLCT primary covers shown separately, detail} 
+\label{fig:thumb_pri_reclass} 
+\end{figure} 
+
+
+\begin{figure} 
+\begin{center}
+  
+
+\includegraphics{fig_thumb_sec_facet}
+\end{center} 
+\caption{MLCT secondary covers shown separately, detail} 
+\label{fig:thumb_pri_reclass} 
+\end{figure} 
+
+\subsubsection{Analysis Area}
+\label{sec:reclass-analysis-area}
+
+We repeat this operation for the entire data set.
+
+
+\begin{figure} 
+\begin{center}
+
+
+\includegraphics{fig_mlct_pri_reclass}
+\end{center} 
+\caption{MLCT primary cover reclassified} 
+\label{fig:mlct_pri_reclass} 
+\end{figure} 
+
+
+\begin{figure} 
+\begin{center}
+  
+
+\includegraphics{fig_mlct_sec_reclass}
+\end{center} 
+\caption{MLCT secondary cover reclassified} 
+\label{fig:mlct_sec_reclass} 
+\end{figure} 
+
+
+\begin{figure} 
+\begin{center}
+  
+
+\includegraphics{fig_mlct_pct}
+\end{center} 
+\caption{MLCT primary cover classification confidence} 
+\label{fig:mlct_pct} 
+\end{figure} 
+
+\todo{Describe characteristics of MLCT reclass maps and confidence at
+  cUSA extents}
+
+\begin{figure} 
+\begin{center}
+  
+
+\includegraphics{fig_mlct_pri_facet}
+\end{center} 
+\caption{MLCT primary covers shown separately} 
+\label{fig:mlct_pri_reclass} 
+\end{figure} 
+
+
+\begin{figure} 
+\begin{center}
+  
+
+\includegraphics{fig_mlct_sec_facet}
+\end{center} 
+\caption{MLCT secondary covers shown separately} 
+\label{fig:mlct_pri_reclass} 
+\end{figure} 
+
 
 \subsection{Aggregation}
 \label{sec:mlct-aggr}
@@ -55,7 +218,7 @@ Create 5 arcmin land mask
 This product has a nominal resolution of 500m and uses the 17 IGBP
 land cover classes. The dataset consists of a primary classification,
 along with a measure of confidence up to 100\%, and a secondary
-classification.  The secondary cover type is given as the most like
+classification.  The secondary cover type is given as the most likely
 alternative to the primary type \citep{Friedl2010}, but for purposes
 of our analysis we are taking a more probabilistic view and
 incorporating all available information from the base data.  Because
@@ -96,22 +259,105 @@ A_s(x) = 1 - A_p(x) = \dfrac{1-c}{2}
 $$
 
 Applying these formulae results in a map for each cover type where the
-pixel values are the sub-pixel areas on the interval $[0,1]$.
-Aggregating to a coarser resolution is a simple matter of calculating
-the mean of these values over the intersecting pixels at the original
-resoution.  Because the desired 5-arcmin resolution is a multiple of
-the original 15-arcsec resolution the pixels are perfectly nested,
-which is convenient for properly computing this mean.
+pixel values are the sub-pixel areas on the interval $[0,1]$.  The map
+of the fraction of the primary cover type is visually equivalent to
+that of the classification confidence level because the former is
+simply a linear scaling and offset of the latter.  
 
-\todo[inline, caption={Describe effect of incorporating secondary
-  cover and confidence level}]{I have written and tested the code that
-  implements these equations.  The next steps here are to illustrate
-  the differences by class of the reclassification/aggregation process
-  versus using only the primary cover type.  The data set that results
-  from accepting the assumption of $A_{min} = 0.5$ is an input into the
-  analysis section.}
+By way of comparison we also consider the trivial case of settimg
+$A_{min} = 1$ which indicates that the secondary cover is ignored
+altogether and the primary cover is taken to represent 100\% of the
+pixel area.
 
-\subsection{Elimination of mosaic class}
+Computationally the process of converting the reclassified maps to
+sub-pixel fractions at the desired 5-arcmin resolution is a three-step
+process.  First we calculate the fraction of the primary cover type as
+a function of the classification confidence as described above.  Next,
+a sub-pixel fraction for each cover type is calculated at full
+resolution, recognizing that the primary and secondary classes may be
+identical after the reclassification, such as cases where the original
+data indicated two different type of forests.  Aggregating to a
+coarser resolution is a simple matter of calculating the mean of these
+values over the intersecting pixels at the original resoution.
+Because the desired 5-arcmin resolution is a multiple of the original
+15-arcsec resolution the pixels are perfectly nested, which is
+convenient for properly computing this mean.
+
+\subsubsection{Detail Area}
+\label{sec:agg-detail-area}
+
+
+\begin{figure} 
+\begin{center}
+  
+
+\includegraphics{fig_thumb_fracs}
+\end{center} 
+\caption{Sub-pixel fractions at original resolution for $A_{min}=0.5$}
+\label{fig:thumb_fracs}
+\end{figure} 
+
+\begin{figure} 
+\begin{center}
+  
+
+\includegraphics{fig_thumb_fracs}
+\end{center} 
+\caption{Sub-pixel fractions at original resolution for $A_{min}=1$}
+\label{fig:thumb_fracs}
+\end{figure} 
+
+
+\begin{figure} 
+\begin{center}
+  
+
+\includegraphics{fig_thumb_agg}
+\end{center} 
+\caption{Aggregated sub-pixel fractions for $A_{min}=0.5$}
+\label{fig:thumb_agg}
+\end{figure} 
+
+\begin{figure} 
+\begin{center}
+  
+
+\includegraphics{fig_thumb_agg}
+\end{center} 
+\caption{Aggreagted sub-pixel fractions for $A_{min}=1$}
+\label{fig:thumb_fracs}
+\end{figure} 
+
+
+Before proceeding further it is interesting to inspect the differences
+between the aggregated maps for the chosen values of $A_{min}$.
+
+
+\begin{figure} 
+\begin{center}
+  
+
+\includegraphics{fig_thumb_agg_diff}
+\end{center} 
+\caption{ Difference of aggregated sub-pixel fractions}
+\label{fig:thumb_agg_diff}
+\end{figure} 
+
+Positive values indicate that $A_{min} = 0.5$ resulted in a greater
+fraction.  The main message from this chart is that considering the
+secondary cover class results in greater mixture between the crop and
+mosaic classes because cropland is reduced in the north of the detail
+area where it was dominant in the primary land cover type, and
+simlarly for mosaic in the south.  The relative suitability of these
+choices for $A_{min}$ is discussed in a later section. \todo{ cross ref
+  analysis section where aggregated MLCT crop is campared to Aglands}
+
+\subsubsection{Analysis Area}
+\label{sec:agg-analysis-area}
+
+\todo{ move cUSA aggregation to sec:agg-analysis-area}
+
+\subsection{Mosaic decomposition}
 \label{sec:elimination}
 
 The MLCT classification includes a type that is problematic for the
@@ -136,6 +382,47 @@ area delineated as mosaic lands:
 \item In the absence of such information we simply assume that the
   natural component of the mosaic is an equal blend of all three.
 \end{enumerate}
+
+
+
+\begin{figure} 
+\begin{center}
+  
+
+
+\includegraphics{fig_thumb_nomos}
+\end{center} 
+\caption{Aggregated cover fractions after mosaic decomposition, $A_{min}=0.5$}
+\label{fig:thumb_nomos}
+\end{figure} 
+
+\begin{figure} 
+\begin{center}
+  
+
+
+\includegraphics{fig_thumb1_nomos}
+\end{center} 
+\caption{Aggregated cover fractions after mosaic decomposition, $A_{min}=1.0$}
+\label{fig:thumb1_nomos}
+\end{figure} 
+
+\begin{figure} 
+\begin{center}
+  
+
+\includegraphics{fig_thumb_nomos_diff}
+\end{center} 
+\caption{Differences of sub-pixel fractions after mosaic
+  decomposition, positive when $f(A_{min} = 0.5)$ is greater}
+\label{fig:thumb_diff}
+\end{figure} 
+
+\todo{Expect something to be wrong with no-mosaic plots when this
+  section gets sweaved (``swoven''?)}
+
+
+
 
 Both 5-arcmin data sets derived from the MLCT in this fashion
 overestimate cropland area relative to that indicated by Aglands2000,
@@ -188,17 +475,23 @@ set with global extents.  The analysis is restricted to the
 conterminous US because of the relative paucity of agricultural
 activity in Hawaii and Alaska.
 
+As with the MLCT the process of reclassification and aggregation is
+performed for both the detail region and the complete region.
 
 \subsection{Reclassification}
 \label{sec:nlcd-reclass}
 
 \missingfigure{NLCD reclassification table}
 
+
 \subsection{Aggregation}
 \label{sec:nlcd-aggr}
 
 The same code used for refactoring the MLCT when considering only the
 primary cover type can be applied here.
+
+Repeating this process for the entire study area is computationally
+expensive due to the NLCD's high resolution.
 
 
 \section{Cropland Data Layer (CDL)}

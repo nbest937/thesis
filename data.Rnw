@@ -1,57 +1,27 @@
 % -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
 
-\SweaveOpts{ results=hide, include=FALSE, echo=FALSE, engine=R, keep.source=TRUE }
+\SweaveOpts{ results=hide}
+\SweaveOpts{ include=FALSE}
+\SweaveOpts{ echo=FALSE}
+\SweaveOpts{ engine=R}
+\SweaveOpts{ keep.source=TRUE}
+\SweaveOpts{ eval=TRUE }
+
+\graphicspath{ {data/} }
 
 @ 
-<<data, eval=FALSE>>=
+<<initialize, eval=TRUE>>=
 
+                                        # load helper functions
+                                        # code will appear in appendix
 source("~/thesis/R/peel.R")
+
 setwd( "~/thesis/data")
+quartz.options( type="png")
 
-##quartz.options( type="png")
+overwriteRasters <- FALSE
+overwriteFigures <- FALSE
 
-## divTheme <- sp.theme( 
-##     regions= list(
-##         col= colorRampPalette( brewer.pal( 5, "BrBG"), 
-##           space= "Lab")(100)))
-
-seqTheme <- colorRampPalette( brewer.pal( 5, "YlGn"),
-                             space="Lab")
-
-
-mlct <- raster("thumb_2001_lct1.tif")
-rm(mlct)
-
-## just in case, save these for later
-##  paste( deparse( igbpLegend), collapse="")
-## igbpLegend <- c("#2041B3", "#006A0F", "#007C25", "#00A25B", "#00A125", "#069228", "#9E9668", "#C1C48F", "#85AA5B", "#B1B741", "#A4D07E", "#73ABAE", "#CCD253", "#D90000", "#9DE36E", "#B6B5C2", "#949494")"
-
-## paste( deparse( peelLegend), collapse="")
-## peelLegend <- c("#2041B3", "#069228", "#85AA5B", "#A4D07E", "#73ABAE", "#CCD253", "#D90000", "#9DE36E", "#949494")
-
-
-## mlctTheme <- sp.theme( 
-##     regions= list(
-##         col= getColorTable(mlct)[ getColorTable(mlct) != "#000000"]))
-
-## mlct <- raster( "2001_lct1.tif")
-## legend <- mlct@legend@colortable[mlct@legend@colortable != "#000000"]
-## mlctTheme <- sp.theme(regions= list( col= legend))
-## rm( legend)
-
-#getColorTable( mlct)[1:17]))
-
-## this works but it's slow
-##
-## thumb <- crop( raster("2001_lct1.tif"), 
-##                extent(-83.5, -(82+25/60), 42+55/60, 44+5/60))
-##
-
-## trellis.par.set( mlctTheme)
-## spplot( as( thumb, "SpatialGridDataFrame"))
-
-## alternatively
-## image(thumb, col= getColorTable(mlct)[1:17])
 @ 
 
 \chapter{Data}
@@ -113,7 +83,15 @@ secondary (alternate) cover type at 15-arcsec resolution, to a stack
 of cover fractions at 5-arcmin resolution using the simplified
 cover/use classification specified by the PEEL model. 
 
-<<data>>=
+<<thumb>>=
+
+## this works but it's slow
+##
+## thumb <- crop( raster("2001_lct1.tif"), 
+##                extent(-83.5, -(82+25/60), 42+55/60, 44+5/60))
+##
+
+## these are subsets exported from GRASS
 
 thumb <- mlctList( "thumb_2001_lct1.tif", 
                    "thumb_2001_lct1_sec.tif", 
@@ -121,6 +99,10 @@ thumb <- mlctList( "thumb_2001_lct1.tif",
 
 igbpLegend <- thumb$pri@legend@colortable
 igbpLegend <- igbpLegend[ igbpLegend != "#000000"]
+
+## just in case, save these for later
+##  paste( deparse( igbpLegend), collapse="")
+## igbpLegend <- c("#2041B3", "#006A0F", "#007C25", "#00A25B", "#00A125", "#069228", "#9E9668", "#C1C48F", "#85AA5B", "#B1B741", "#A4D07E", "#73ABAE", "#CCD253", "#D90000", "#9DE36E", "#B6B5C2", "#949494")"
 
 @ 
 \subsection{Reclassification}
@@ -134,7 +116,7 @@ PEEL model.
 
 
 @ 
-<<data, eval=TRUE>>=
+<<mlct-reclass>>=
 
 mlctReclassMatrix <- 
   matrix( c( 0,  0,  0,
@@ -149,27 +131,43 @@ mlctReclassMatrix <-
          ncol=3, byrow=TRUE)
 
 peelClasses <- mlctReclassMatrix[, 3]
-names( peelClasses) <- c("water", "forest", "shrub", "open", "mosaic", "crop", "urban", "wetland", "barren")
+names( peelClasses) <- c("water", "forest", "shrub", "open", "wetland", "crop", "urban", "mosaic", "barren")
 peelLegend <- igbpLegend[ mlctReclassMatrix[, 2] +1]
 
-thumb  <- mlctReclass( thumb, mlctReclassMatrix, overwrite=TRUE)
+
+## just in case, save these for later
+## paste( deparse( peelLegend), collapse="")
+## peelLegend <- c("#2041B3", "#069228", "#85AA5B", "#A4D07E", "#73ABAE", "#CCD253", "#D90000", "#9DE36E", "#949494")
+
+thumb <- mlctReclass( thumb, mlctReclassMatrix, overwrite= overwriteRasters)
 
 thumbPlots <- list( pri= peelMap( thumb$pri, 0.4),
                     sec= peelMap( thumb$sec, 0.4))
 
-thumbPlots$pct <- ggplotRaster( thumb$pct, 0.4) + 
-scale_fill_gradientn( "% confidence", colours=rev( seqTheme( 5)), 
-                     limits= c( 100, 0),
-                     breaks= seq( 100, 0, by= -20))
+## thumbPlots$pct <- ggplotRaster( thumb$pct, 0.4) + 
+## scale_fill_gradientn( "% confidence", colours=rev( seqTheme( 5)), 
+##                      limits= c( 100, 0),
+##                      breaks= seq( 100, 0, by= -20))
   
 ## this brewer scale doesn't work for some reason
 ## wrote to ggplot2 Google Group
 
 ##  scale_fill_brewer( "", palette="YlGn", limits= c( 0,100), breaks= seq(0,100,by=20))
 
+## TEST ME ##
+thumbPlots$pct <- ggplotRaster( thumb$pct, 0.4) + 
+  scale_fill_gradientn( "% confidence", 
+                       colours= rev( brewer.pal( 7, "YlGn")), 
+                       limits= c( 100, 0),
+                       breaks= seq( 100, 0, by= -20))
+
 ## this scale is okay but the palette wasn't quite right
 ##  scale_fill_continuous( "", limits= c( 0, 100), low= "yellow", high= "green")
 @ 
+
+\subsubsection{Detail Area}
+\label{sec:reclass-detail-area}
+
 
 The following figures show the result of reclassifying the MLCT data
 for our detailed study area along with the confidence level given for
@@ -178,11 +176,12 @@ the primay classification.
 \begin{figure} 
 \begin{center}
   
-<<data>>= 
-## fig_thumb_pri_reclass
-quartz( file="fig_thumb_pri_reclass.png")
-print( thumbPlots$pri)
-dev.off()
+<<fig_thumb_pri_reclass>>= 
+if( overwriteFigures) {
+  quartz( file="fig_thumb_pri_reclass.png")
+  print( thumbPlots$pri)
+  dev.off()
+}
 
 @ 
 
@@ -196,11 +195,13 @@ dev.off()
 \begin{figure} 
 \begin{center}
   
-<<data>>= 
-## fig_thumb_sec_reclass
-quartz( file="fig_thumb_sec_reclass.png")
-print( thumbPlot$sec)
-dev.off()
+<<fig_thumb_sec_reclass>>= 
+
+if( overwriteFigures) {
+  quartz( file="fig_thumb_sec_reclass.png")
+  print( thumbPlots$sec)
+  dev.off()
+}
 
 @ 
 
@@ -214,11 +215,13 @@ dev.off()
 \begin{figure} 
 \begin{center}
   
-<<data>>= 
-## fig_thumb_pct
-quartz( file="fig_thumb_pct.png")
-print( thumbPlot$pct)
-dev.off()
+<<fig_thumb_pct>>= 
+
+if( overwriteFigures) {
+  quartz( file="fig_thumb_pct.png")
+  print( thumbPlots$pct)
+  dev.off()
+}
 
 @ 
 
@@ -230,25 +233,30 @@ dev.off()
 
 It is easier to see the relative proportions of the primary and
 secondary cover types if we map them separately.  These maps show that
-this region is dominated by cropland and wetland with scattered
-forests and towns.  Shrub, mosaic, barren, and open covers are found
-sparsely along the shore of Lake Huron.  The urban center of Port
-Huron is visible in the southeast corner.
+this region is dominated by the cropland and cropland/natural
+vegetation mosaic cover types with scattered forests and towns.
+Shrub, wetland, barren, and open covers are found sparsely along the
+shore of Lake Huron.  The urban center of Port Huron is visible in the
+southeast corner.
 
 \begin{figure} 
 \begin{center}
   
-<<data>>= 
-## fig_thumb_pri_facet
-quartz( file="fig_thumb_pri_facet.png")
-print( thumbPlots$pri + facet_wrap(~ values))
-dev.off()
+<<fig_thumb_pri_facet>>= 
+
+if( overwriteFigures) {
+  quartz( file="fig_thumb_pri_facet.png")
+  print( thumbPlots$pri + 
+        facet_wrap(~ values) + 
+        opts( legend.position= "none"))
+  dev.off()
+}
 
 @ 
 
 \includegraphics{fig_thumb_pri_facet}
 \end{center} 
-\caption{MLCT primary covers shown separately} 
+\caption{MLCT primary covers shown separately, detail} 
 \label{fig:thumb_pri_reclass} 
 \end{figure} 
 
@@ -256,36 +264,43 @@ dev.off()
 \begin{figure} 
 \begin{center}
   
-<<data>>= 
-## fig_thumb_sec_facet
-quartz( file="fig_thumb_sec_facet.png")
-print( thumbPlots$sec + facet_wrap(~ values))
-dev.off()
+<<fig_thumb_sec_facet>>= 
+
+if( overwriteFigures) {
+  quartz( file="fig_thumb_sec_facet.png")
+  print( thumbPlots$sec + 
+        facet_wrap(~ values) +
+        opts( legend.position= "none"))
+  dev.off()
+}
 
 @ 
 
 \includegraphics{fig_thumb_sec_facet}
 \end{center} 
-\caption{MLCT secondary covers shown separately} 
+\caption{MLCT secondary covers shown separately, detail} 
 \label{fig:thumb_pri_reclass} 
 \end{figure} 
+
+\subsubsection{Analysis Area}
+\label{sec:reclass-analysis-area}
 
 We repeat this operation for the entire data set.
 
 @
-<<data, eval=FALSE>>=
+<<mlct, eval=TRUE>>=
 ## repeat for cUSA
 
 mlct <- mlctList( "2001_lct1.tif", 
                   "2001_lct1_sec.tif", 
                   "2001_lct1_pct.tif")
-mlct  <- mlctReclass( mlct, mlctReclassMatrix, overwrite=TRUE, progress="text")
+mlct  <- mlctReclass( mlct, mlctReclassMatrix, overwrite= overwriteRasters)
 
 mlctPlots <- list( pri= peelMap( mlct$pri, 0.01),
                     sec= peelMap( mlct$sec, 0.01))
 
 mlctPlots$pct <- ggplotRaster( mlct$pct, 0.01) + 
-  scale_fill_gradientn( "% confidence", colours=rev( seqTheme( 5)), 
+  scale_fill_gradientn( "% confidence", colours=rev( brewer.pal( 7, "YlGn")), 
                        limits= c( 100, 0),
                        breaks= seq( 100, 0, by= -20))
 @ 
@@ -294,17 +309,19 @@ mlctPlots$pct <- ggplotRaster( mlct$pct, 0.01) +
 \begin{center}
 
 @
-<<data>>= 
-## fig_mlct_pri_reclass
-quartz( file="fig_mlct_pri_reclass.png")
-print( mlctPlots$pri)
-dev.off()
+<<fig_mlct_pri_reclass>>= 
+
+if( overwriteFigures) {
+  quartz( file="fig_mlct_pri_reclass.png")
+  print( mlctPlots$pri + coord_equal())
+  dev.off()
+}
 
 @ 
 
 \includegraphics{fig_mlct_pri_reclass}
 \end{center} 
-\caption{MLCT primary cover reclassified detail} 
+\caption{MLCT primary cover reclassified} 
 \label{fig:mlct_pri_reclass} 
 \end{figure} 
 
@@ -312,17 +329,19 @@ dev.off()
 \begin{figure} 
 \begin{center}
   
-<<data>>= 
-## fig_mlct_sec_reclass
-quartz( file="fig_mlct_sec_reclass.png")
-print( mlctPlot$sec)
-dev.off()
+<<fig_mlct_sec_reclass>>= 
+
+if( overwriteFigures) {
+  quartz( file="fig_mlct_sec_reclass.png")
+  print( mlctPlots$sec + coord_equal())
+  dev.off()
+}
 
 @ 
 
 \includegraphics{fig_mlct_sec_reclass}
 \end{center} 
-\caption{MLCT secondary cover reclassified detail} 
+\caption{MLCT secondary cover reclassified} 
 \label{fig:mlct_sec_reclass} 
 \end{figure} 
 
@@ -330,11 +349,13 @@ dev.off()
 \begin{figure} 
 \begin{center}
   
-<<data>>= 
-## fig_mlct_pct
-quartz( file="fig_mlct_pct.png")
-print( mlctPlot$pct)
-dev.off()
+<<fig_mlct_pct>>= 
+
+if( overwriteFigures) {
+  quartz( file="fig_mlct_pct.png")
+  print( mlctPlots$pct + coord_equal())
+  dev.off()
+}
 
 @ 
 
@@ -350,11 +371,16 @@ dev.off()
 \begin{figure} 
 \begin{center}
   
-<<data>>= 
-## fig_mlct_pri_facet
-quartz( file="fig_mlct_pri_facet.png")
-print( mlctPlots$pri + facet_wrap(~ values))
-dev.off()
+<<fig_mlct_pri_facet>>= 
+
+if( overwriteFigures) {
+  quartz( file="fig_mlct_pri_facet.png")
+  print( mlctPlots$pri + 
+        facet_wrap(~ values) + 
+        coord_equal() +
+        opts( legend.position= "none"))
+  dev.off()
+}
 
 @ 
 
@@ -368,11 +394,18 @@ dev.off()
 \begin{figure} 
 \begin{center}
   
-<<data>>= 
-## fig_mlct_sec_facet
-quartz( file="fig_mlct_sec_facet.png")
-print( mlctPlots$sec + facet_wrap(~ values))
-dev.off()
+<<fig_mlct_sec_facet>>= 
+
+if( overwriteFigures) {
+  quartz( file="fig_mlct_sec_facet.png")
+                                        # had to remove some NAs from the data
+  mlctPlots$sec$data <- mlctPlots$sec$data[ !is.na(mlctPlots$sec$data$values),]
+  print( mlctPlots$sec + 
+        facet_wrap(~ values) + 
+        coord_equal() +
+        opts( legend.position= "none"))
+  dev.off()
+}
 
 @ 
 
@@ -430,76 +463,185 @@ A_s(x) = 1 - A_p(x) = \dfrac{1-c}{2}
 $$
 
 Applying these formulae results in a map for each cover type where the
-pixel values are the sub-pixel areas on the interval $[0,1]$.
-Aggregating to a coarser resolution is a simple matter of calculating
-the mean of these values over the intersecting pixels at the original
-resoution.  Because the desired 5-arcmin resolution is a multiple of
-the original 15-arcsec resolution the pixels are perfectly nested,
-which is convenient for properly computing this mean.
+pixel values are the sub-pixel areas on the interval $[0,1]$.  The map
+of the fraction of the primary cover type is visually equivalent to
+that of the classification confidence level because the former is
+simply a linear scaling and offset of the latter.  
 
-<<data>>=
- 
-thumb  <- primaryFraction( thumb, 0.5, overwrite=TRUE)
-thumb1 <- primaryFraction( thumb, 1.0, overwrite=TRUE)
-thumb  <- coverFractions( thumb, overwrite=TRUE)
-thumb1 <- coverFractions( thumb1, overwrite=TRUE)
-thumb  <- aggregateFractions( thumb, overwrite=TRUE)
-thumb1 <- aggregateFractions( thumb1, overwrite=TRUE)
-thumb  <- decomposeMosaic( thumb, overwrite=TRUE)
-thumb1 <- decomposeMosaic( thumb1, overwrite=TRUE)
+By way of comparison we also consider the trivial case of settimg
+$A_{min} = 1$ which indicates that the secondary cover is ignored
+altogether and the primary cover is taken to represent 100\% of the
+pixel area.
+
+Computationally the process of converting the reclassified maps to
+sub-pixel fractions at the desired 5-arcmin resolution is a three-step
+process.  First we calculate the fraction of the primary cover type as
+a function of the classification confidence as described above.  Next,
+a sub-pixel fraction for each cover type is calculated at full
+resolution, recognizing that the primary and secondary classes may be
+identical after the reclassification, such as cases where the original
+data indicated two different type of forests.  Aggregating to a
+coarser resolution is a simple matter of calculating the mean of these
+values over the intersecting pixels at the original resoution.
+Because the desired 5-arcmin resolution is a multiple of the original
+15-arcsec resolution the pixels are perfectly nested, which is
+convenient for properly computing this mean.
+
+\subsubsection{Detail Area}
+\label{sec:agg-detail-area}
+
+@
+<<thumbPlots>>=
+
+## calculate cover fractions and aggregate for detail area
+
+thumb  <- primaryFraction( thumb, Amin=0.5, overwrite= overwriteRasters)
+thumb1 <- primaryFraction( thumb, Amin=1.0, overwrite= overwriteRasters)
+thumb  <- coverFractions( thumb, overwrite= overwriteRasters)
+thumb1 <- coverFractions( thumb1, overwrite= overwriteRasters)
+thumb  <- aggregateFractions( thumb, overwrite= overwriteRasters)
+thumb1 <- aggregateFractions( thumb1, overwrite= overwriteRasters)
+
+thumbPlots <- list( fracs= coverMaps( thumb$fracs, 0.4),
+                   agg= coverMaps( thumb$agg, 1))
+thumbPlots1 <- list( fracs= coverMaps( thumb1$fracs, 0.4),
+                   agg= coverMaps( thumb1$agg, 1))
+
+@ 
+
+\begin{figure} 
+\begin{center}
+  
+<<fig_thumb_fracs>>= 
+
+if( overwriteFigures) {
+  quartz( file="fig_thumb_fracs.png")
+  print( thumbPlots$fracs)
+  dev.off()
+}
+
+@ 
+
+\includegraphics{fig_thumb_fracs}
+\end{center} 
+\caption{Sub-pixel fractions at original resolution for $A_{min}=0.5$}
+\label{fig:thumb_fracs}
+\end{figure} 
+
+\begin{figure} 
+\begin{center}
+  
+<<fig_thumb1_fracs>>= 
+
+if( overwriteFigures) {
+  quartz( file="fig_thumb1_fracs.png")
+  print( thumbPlots1$fracs)
+  dev.off()
+}
+
+@ 
+
+\includegraphics{fig_thumb_fracs}
+\end{center} 
+\caption{Sub-pixel fractions at original resolution for $A_{min}=1$}
+\label{fig:thumb_fracs}
+\end{figure} 
 
 
-## shouldn't this be a check on the mosaic decomposition? 
-## expected to sum to 0
-cellStats( overlay( thumb$delta, fun=sum), stat='sum')
+\begin{figure} 
+\begin{center}
+  
+<<fig_thumb_agg>>= 
+
+if( overwriteFigures) {
+  quartz( file="fig_thumb_agg.png")
+  print( thumbPlots$agg)
+  dev.off()
+}
+
+@ 
+
+\includegraphics{fig_thumb_agg}
+\end{center} 
+\caption{Aggregated sub-pixel fractions for $A_{min}=0.5$}
+\label{fig:thumb_agg}
+\end{figure} 
+
+\begin{figure} 
+\begin{center}
+  
+<<fig_thumb1_agg>>= 
+
+if( overwriteFigures) {
+  quartz( file="fig_thumb1_agg.png")
+  print( thumbPlots1$agg)
+  dev.off()
+}
+
+@ 
+
+\includegraphics{fig_thumb_agg}
+\end{center} 
+\caption{Aggreagted sub-pixel fractions for $A_{min}=1$}
+\label{fig:thumb_fracs}
+\end{figure} 
 
 
-p <- ggplotRaster( thumb$delta, 1)
-                                        # separate classes into subplots
-p + facet_wrap(~ pri, ncol= 3) + 
-  theme_bw() + 
-  opts( axis.text.x= theme_text( angle= 90, hjust=1))
+Before proceeding further it is interesting to inspect the differences
+between the aggregated maps for the chosen values of $A_{min}$.
 
-table(thumbDf@data$pri, thumbDf@data$sec)
+<<thumbAggDiff>>=
 
+thumbAggDiff <- 
+  if( overwriteRasters) {
+    overlay( thumb$agg, thumb1$agg, 
+            fun= function( t, t1) t -t1, 
+            filename= "thumb_agg_diff.tif", 
+            overwrite= TRUE)
+  } else brick( "thumb_agg_diff.tif")
+layerNames( thumbAggDiff) <- layerNames( thumb$agg)
 
-coverMaps( thumb$agg, 1)
+thumbAggDiffPlot <- coverMaps( thumbAggDiff) + 
+  scale_fill_gradientn( "diff", colours= rev( brewer.pal( 11, "BrBG")), 
+                         limits= c( 0.1, -0.1),
+                         breaks= seq( 0.1, -0.1, by= -0.02))
 
-thumbCheck <- 
-  do.call( overlay, 
-          c( unlist( thumbFractions5min, use.names=FALSE), 
-            fun=sum))
+@ 
 
-thumbStack <- 
-  do.call( stack, 
-          c( myUnlist( thumb), 
-             myUnlist( thumbFractions), 
-             thumbCheck))
-layerNames(thumbStack) <- c("pri", "sec", "pct", "Ap", names(peelClasses), "check")
+\begin{figure} 
+\begin{center}
+  
+<<fig_thumb_agg_diff>>= 
 
+if( overwriteFigures || TRUE) {
+  quartz( file="fig_thumb_agg_diff.png")
+  print( thumbAggDiffPlot)
+  dev.off()
+}
 
-## repeat for cUSA
+@ 
 
-mlct <- mlctList( "2001_lct1.tif", 
-                   "2001_lct1_sec.tif", 
-                   "2001_lct1_pct.tif")
-mlct  <- mlctReclass( mlct, mlctReclassMatrix, overwrite=TRUE)
-mlct  <- primaryFraction( mlct, 0.5, overwrite=TRUE)
-mlct  <- coverFractions( mlct, overwrite=TRUE)
-mlct  <- aggregateFractions( mlct, overwrite=TRUE)
-mlct  <- decomposeMosaic( mlct, overwrite=TRUE)
-@ %def 
+\includegraphics{fig_thumb_agg_diff}
+\end{center} 
+\caption{ Difference of aggregated sub-pixel fractions}
+\label{fig:thumb_agg_diff}
+\end{figure} 
 
+Positive values indicate that $A_{min} = 0.5$ resulted in a greater
+fraction.  The main message from this chart is that considering the
+secondary cover class results in greater mixture between the crop and
+mosaic classes because cropland is reduced in the north of the detail
+area where it was dominant in the primary land cover type, and
+simlarly for mosaic in the south.  The relative suitability of these
+choices for $A_{min}$ is discussed in a later section. \todo{ cross ref
+  analysis section where aggregated MLCT crop is campared to Aglands}
 
-\todo[inline, caption={Describe effect of incorporating secondary
-  cover and confidence level}]{I have written and tested the code that
-  implements these equations.  The next steps here are to illustrate
-  the differences by class of the reclassification/aggregation process
-  versus using only the primary cover type.  The data set that results
-  from accepting the assumption of $A_{min} = 0.5$ is an input into the
-  analysis section.}
+\subsubsection{Analysis Area}
+\label{sec:agg-analysis-area}
 
-\subsection{Elimination of mosaic class}
+\todo{ move cUSA aggregation to sec:agg-analysis-area}
+
+\subsection{Mosaic decomposition}
 \label{sec:elimination}
 
 The MLCT classification includes a type that is problematic for the
@@ -524,6 +666,120 @@ area delineated as mosaic lands:
 \item In the absence of such information we simply assume that the
   natural component of the mosaic is an equal blend of all three.
 \end{enumerate}
+
+
+<<thumbNomos>>=
+
+thumb  <- decomposeMosaic( thumb, overwrite= overwriteRasters)
+thumb1 <- decomposeMosaic( thumb1, overwrite= overwriteRasters)
+
+thumbPlots$nomos <- coverMaps( thumb$agg, 1)  
+thumbPlots1$nomos <- coverMaps( thumb1$agg, 1)  
+
+thumbNomosDiff <- 
+  if( overwriteRasters) {
+    overlay( thumb$agg, thumb1$agg, 
+            fun= function( t, t1) t -t1, 
+            filename= "thumb_nomos_diff.tif", 
+            overwrite= TRUE)
+  } else brick( "thumb_nomos_diff.tif")
+layerNames( thumbNomosDiff) <- layerNames( thumb$agg)
+
+thumbNomosDiffPlot <- coverMaps( thumbNomosDiff) + 
+  scale_fill_gradientn( "diff", colours= rev( brewer.pal( 11, "BrBG")), 
+                         limits= c( 0.32, -0.32),
+                         ## breaks= { b <- c( 0.3, 0.15, 0.075, 0.075/2, 0.075/4)
+                         ##           c( b, 0, rev( -b))
+                         ##         })
+                         breaks= { b <- c( 0.01, 0.02, 0.04, 0.08, 0.16, 0.32)
+                                   c( rev( b), 0, -b)
+                                 })
+
+@ %def 
+
+\begin{figure} 
+\begin{center}
+  
+<<fig_thumb_nomos>>= 
+
+if( overwriteFigures) {
+  quartz( file="fig_thumb_nomos.png")
+  print( thumbPlots$nomos)
+  dev.off()
+}
+
+@ 
+
+
+\includegraphics{fig_thumb_nomos}
+\end{center} 
+\caption{Aggregated cover fractions after mosaic decomposition, $A_{min}=0.5$}
+\label{fig:thumb_nomos}
+\end{figure} 
+
+\begin{figure} 
+\begin{center}
+  
+<<fig_thumb1_nomos>>= 
+
+if( overwriteFigures) {
+  quartz( file="fig_thumb1_nomos.png")
+  print( thumbPlots1$nomos)
+  dev.off()
+}
+
+@ 
+
+
+\includegraphics{fig_thumb1_nomos}
+\end{center} 
+\caption{Aggregated cover fractions after mosaic decomposition, $A_{min}=1.0$}
+\label{fig:thumb1_nomos}
+\end{figure} 
+
+\begin{figure} 
+\begin{center}
+  
+<<fig_thumb_nomos_diff>>= 
+
+if( overwriteFigures  || TRUE) {
+  quartz( file="fig_thumb_nomos_diff.png")
+  print( thumbNomosDiffPlot)
+  dev.off()
+}
+
+@ 
+
+\includegraphics{fig_thumb_nomos_diff}
+\end{center} 
+\caption{Differences of sub-pixel fractions after mosaic
+  decomposition, positive when $f(A_{min} = 0.5)$ is greater}
+\label{fig:thumb_diff}
+\end{figure} 
+
+\todo{Expect something to be wrong with no-mosaic plots when this
+  section gets sweaved (``swoven''?)}
+
+
+
+<<mlct1, eval=TRUE>>=
+
+mlct  <- primaryFraction( mlct, Amin= 0.5, overwrite= overwriteRasters)
+mlct  <- coverFractions( mlct, overwrite= overwriteRasters)
+mlct  <- aggregateFractions( mlct, overwrite= overwriteRasters)
+mlct  <- decomposeMosaic( mlct, overwrite= overwriteRasters)
+
+mlct1  <- primaryFraction( mlct, Amin=1.0, overwrite= overwriteRasters)
+mlct1  <- coverFractions( mlct1, overwrite= overwriteRasters)
+mlct1  <- aggregateFractions( mlct1, overwrite= overwriteRasters)
+mlct1  <- decomposeMosaic( mlct1, overwrite= overwriteRasters)
+
+## might be useful to cross-tabulate the primary and secondary
+## frequencies for the cUSA
+
+## table(thumbDf@data$pri, thumbDf@data$sec)
+
+@ 
 
 Both 5-arcmin data sets derived from the MLCT in this fashion
 overestimate cropland area relative to that indicated by Aglands2000,
@@ -576,23 +832,26 @@ set with global extents.  The analysis is restricted to the
 conterminous US because of the relative paucity of agricultural
 activity in Hawaii and Alaska.
 
+As with the MLCT the process of reclassification and aggregation is
+performed for both the detail region and the complete region.
 
+<<nlcd, eval=FALSE>>=
+
+thumbNlcd <- list( pri=raster( "thumb_nlcd2001.tif"))
+thumbNlcd <- sapply( thumbNlcd, setMinMax)
+
+nlcd <- list( pri=raster( "nlcd2001.bil"))
+nlcd <- sapply( nlcd, setMinMax)
+
+@ 
 \subsection{Reclassification}
 \label{sec:nlcd-reclass}
 
 \missingfigure{NLCD reclassification table}
 
 @ 
-<<data, eval=FALSE>>=
+<<nlcd-reclass, eval=FALSE>>=
 
-## nlcd <- mlctList( "nlcd2001.bil")
-## Error in FUN(X[[2L]], ...) : 
-##   no, or not enough, values associated with this Layer
-## thought it was caused by setMinMax() but could not reproduce
-## maybe caused by sleep/suspend?
-
-nlcd <- list( pri=raster( "nlcd2001.bil"))
-nlcd <- sapply( nlcd, setMinMax)
 
 nlcdReclassMatrix <- 
   matrix( c( 11,  11,  0,               # water
@@ -611,12 +870,16 @@ nlcdReclassMatrix <-
              31,  32,  8),
          ncol=3, byrow=TRUE)
 
-nlcd <- mlctReclass( nlcd, nlcdReclassMatrix, format="EHdr", overwrite=TRUE)
 
-nlcd$Amin <- 1
-nlcd <- coverFractions( nlcd, format="EHdr", overwrite=TRUE)
-nlcd <- aggregateFractions( nlcd, format="EHdr", overwrite=TRUE)
 
+thumbNlcd <- mlctReclass( thumbNlcd, nlcdReclassMatrix, overwrite=TRUE)
+
+thumbNlcdPlot <- peelMap(thumbNlcd$pri, 0.05)
+
+
+thumbNlcd$Amin <- 1
+thumbNlcd <- coverFractions( thumbNlcd, overwrite=TRUE, progress="text")
+thumbNlcd <- aggregateFractions( thumbNlcd, overwrite=TRUE, progress="text")
 
 
 @ %def 
@@ -627,6 +890,16 @@ nlcd <- aggregateFractions( nlcd, format="EHdr", overwrite=TRUE)
 The same code used for refactoring the MLCT when considering only the
 primary cover type can be applied here.
 
+Repeating this process for the entire study area is computationally
+expensive due to the NLCD's high resolution.
+
+@ 
+<<nlcd-aggr, eval=FALSE>>=
+nlcd <- mlctReclass( nlcd, nlcdReclassMatrix, format="EHdr", overwrite=TRUE)
+nlcd$Amin <- 1
+nlcd <- coverFractions( nlcd, format="EHdr", overwrite=TRUE)
+nlcd <- aggregateFractions( nlcd, format="EHdr", overwrite=TRUE)
+@ %def 
 
 \section{Cropland Data Layer (CDL)}
 \label{sec:cdl}

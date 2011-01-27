@@ -27,7 +27,7 @@ mlctReclass <- function( mlct, reclassMatrix, overwrite=FALSE, ...) {
                                         # but color tables are lost
   reclassFilename <- function( r) {
     parts <- unlist( strsplit( basename( filename( r)), ".", fixed=TRUE))
-    paste( parts[ 1], "_reclass.", parts[ 2], sep="")
+    paste( parts[ 1], "_reclass.tif", sep="")
   }
   if( overwrite) {
     mlct$pri <- reclass( mlct$pri, reclassMatrix, 
@@ -74,59 +74,100 @@ primaryFraction <- function( mlct, Amin=1.0, overwrite=FALSE, ...) {
   mlct
 }
 
-coverFractions <- function( mlct, overwrite= FALSE, ...) {
+primaryOnlyFracsFun <-
+  function( mosaic) {
+    function( pri) {
+      v <- rep( ifelse( is.na( pri), NA, 0), times= length( peelClasses))
+      if( !is.na( pri)) v[ pri +1] <- 1
+      if( mosaic) v else v[ names( peelClasses) != "mosaic"]
+    }
+  }
+
+    ## if( mosaic) b
+    ## else b[ ,peelClasses[ names( peelClasses) != "mosaic"] +1]
+
+    ##   res <- matrix( 0, nrow= length( pri), ncol= cols)
+    ##   res[ is.na( pri),] <- rep( NA, times= cols)
+      
+      
+    ## aaply( pri, 1,
+    ##       function( x) {
+    ##         ifelse( is.na( x), NA,
+    ##                ifelse( x == pri, 1, 0))
+    ##       })}
+
+coverFractions <- function( mlct, mosaic= TRUE, overwrite= FALSE, ...)  {
   Amin <- mlct$Amin
+  mlctName <- deparse( substitute( mlct))
+  classes <- peelClasses[ if( mosaic) 1:length(peelClasses)
+                          else names( peelClasses) != "mosaic"]
   fracsBrickFile <-
     if( Amin < 1)
-      paste( deparse( substitute( mlct)), 
+      paste( mlctName,
             "Amin", mlct$Amin, "fracs.tif", 
             sep="_")
     else
-      paste( deparse( substitute( mlct)), 
+      paste( mlctName, 
             "fracs.tif", sep="_")
   if( overwrite) {
-    fracs <- if( Amin < 1.0) {
-      sapply( names( peelClasses),
-             function( cover) {
-               class <- peelClasses[[ cover]]
-               overlayFunction <- function( pri, sec, Ap) {
-                 ifelse( is.na( pri), NA,
-                        ifelse( pri ==class, Ap, 0)
-                        +ifelse( !is.na(sec) & sec ==class, 1 -Ap, 0))
-               }
-               overlay( mlct$pri, mlct$sec, mlct$Ap, 
-                       fun= overlayFunction,
-                       filename= paste( deparse( substitute( mlct)), cover, "Amin", 
-                         paste( Amin, ".tif", sep=""),
-                         sep="_"),
-                       overwite= TRUE, ...)
-             })
+    if( Amin < 1.0) {
+      fracs <-
+        sapply( names( classes),
+               function( cover) {
+                 class <- classes[[ cover]]
+                 overlayFunction <- function( pri, sec, Ap) {
+                   ifelse( is.na( pri), NA,
+                          ifelse( pri ==class, Ap, 0)
+                          +ifelse( !is.na(sec) & sec ==class, 1 -Ap, 0))
+                 }
+                 overlay( mlct$pri, mlct$sec, mlct$Ap, 
+                         fun= overlayFunction,
+                         filename= paste( mlctName, cover, "Amin", 
+                           paste( Amin, ".tif", sep=""),
+                           sep="_"),
+                         overwite= TRUE, ...)
+               })
     } else {
-      sapply( names( peelClasses),
-             function( cover) {
-               class <- peelClasses[[ cover]]
-               calc( mlct$pri,
-                    function( pri) {
-                      ifelse( is.na( pri), NA,
-                             ifelse( pri ==class, 1, 0))
-                    },
-                    filename= paste(
-                      deparse( substitute( mlct)),
-                      paste( cover, ".tif", sep=""),
-                      sep="_"),
-                    overwrite= TRUE, ...)
-             })
+      mlct$fracs <-
+        sapply( names( classes),
+               function( cover) {
+                 class <- classes[[ cover]]
+                 calc( mlct$pri,
+                      function( pri) {
+                        ifelse( is.na( pri), NA,
+                               ifelse( pri ==class, 1, 0))
+                      },
+                      filename= paste(
+                        mlctName,
+                        paste( cover, ".tif", sep=""),
+                        sep="_"),
+                      overwrite= TRUE, ...)
+               })
+    ##   mlct$fracs <-
+    ##     calc( stack( mlct$pri),
+    ##          fun= primaryOnlyFracsFun( mosaic),
+    ##          filename= fracsBrickFile,  # paste("calc", fracsBrickFile, sep= "_"),
+    ##          overwrite= TRUE, ...)
+    ##                                     # call to stack() is work-around needed until raster 1.7-27
+    ##                                     # still using it in 1.7-29 to avoid "Error in .local(x, fun, ...) : function 'fun' returns more than one value"
+    ##                                     # but still get
+    ##                                     #      "Error in v[, i] : incorrect number of dimensions
+    ##                                     #       In addition: Warning message: In compare(rasters) :
+    ##                                     #       There should be at least 2 Raster* objects to compare"
+    ##                                     #
+    ##                                     # going back to sapply() approach
     }
     mlct$fracs <- 
       do.call( brick, 
-              c( unlist( fracs, use.names=FALSE), 
+              c( unlist( mlct$fracs, use.names=FALSE), 
                 filename= fracsBrickFile,
                 overwrite= TRUE,
                 ...))
+
   } else {
     mlct$fracs <- brick( fracsBrickFile)
   }
-  layerNames( mlct$fracs) <- names( peelClasses)
+  layerNames( mlct$fracs) <- names( classes)
   mlct
 }
 
@@ -150,7 +191,7 @@ aggregateFractions <- function( mlct, aggRes= 5/60, overwrite= FALSE, ...) {
                 overwrite= TRUE, ...)
     else
       brick( aggBrickFile)
-  layerNames( mlct$agg) <- names( peelClasses)
+  layerNames( mlct$agg) <- layerNames( mlct$fracs)
   mlct
 }
 
@@ -224,11 +265,11 @@ decomposeMosaic <- function( mlct, overwrite= FALSE, ...) {
             overwrite= overwrite, ...)
      mlct$delta <-
       brick(
-            peelBrickLayer( newAgg, "forest") -peelBrickLayer( mlct$agg, "forest"),
-            peelBrickLayer( newAgg, "shrub") -peelBrickLayer( mlct$agg, "shrub"),
-            peelBrickLayer( newAgg, "open") -peelBrickLayer( mlct$agg, "open"),
+            peelBrickLayer( mlct$nomos, "forest") -peelBrickLayer( mlct$agg, "forest"),
+            peelBrickLayer( mlct$nomos, "shrub") -peelBrickLayer( mlct$agg, "shrub"),
+            peelBrickLayer( mlct$nomos, "open") -peelBrickLayer( mlct$agg, "open"),
             0 -peelBrickLayer( mlct$agg, "mosaic"),
-            peelBrickLayer( newAgg, "crop") -peelBrickLayer( mlct$agg, "crop"),
+            peelBrickLayer( mlct$nomos, "crop") -peelBrickLayer( mlct$agg, "crop"),
             filename= deltaBrickFile,
             overwrite= overwrite, ...)
   } else {

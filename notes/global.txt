@@ -171,14 +171,14 @@ EOF
 )
 
 
-r.mapcalc agc_crop="eval( $vars, crop /if( other ==0, crop +open3, 1))"
-r.mapcalc agc_open="eval( $vars, open3 /if( other ==0, crop +open3, 1))"
-r.mapcalc  agc_forest="eval( $vars, forest3 /other *missing2)"
-r.mapcalc   agc_shrub="eval( $vars,  shrub3 /other *missing2)"
-r.mapcalc  agc_barren="eval( $vars,  barren /other *missing2)"
-r.mapcalc   agc_urban="eval( $vars,   urban /other *missing2)"
-r.mapcalc   agc_water="eval( $vars,   water /other *missing2)"
-r.mapcalc agc_wetland="eval( $vars, wetland /other *missing2)"
+r.mapcalc    agc_crop="eval( $vars,  crop /if( other ==0, crop +open3, 1))"
+r.mapcalc    agc_open="eval( $vars, open3 /if( other ==0, crop +open3, 1))"
+r.mapcalc  agc_forest="eval( $vars, if( other, forest3 /other *missing2))"
+r.mapcalc   agc_shrub="eval( $vars, if( other,  shrub3 /other *missing2))"
+r.mapcalc  agc_barren="eval( $vars, if( other,  barren /other *missing2))"
+r.mapcalc   agc_urban="eval( $vars, if( other,   urban /other *missing2))"
+r.mapcalc   agc_water="eval( $vars, if( other,   water /other *missing2))"
+r.mapcalc agc_wetland="eval( $vars, if( other, wetland /other *missing2))"
 
 r.series input=agc_forest,agc_shrub,agc_open,agc_crop,agc_barren,agc_urban,agc_water,agc_wetland output=agc_total method=sum --overwrite
 

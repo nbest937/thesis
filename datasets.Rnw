@@ -7,7 +7,7 @@
 \SweaveOpts{ keep.source=TRUE}
 \SweaveOpts{ eval=FALSE }
 
-\graphicspath{ {data/} }
+\graphicspath{ {datasets/} }
 
 @ 
 <<initialize, eval=TRUE>>=
@@ -119,26 +119,6 @@ PEEL model.
 @ 
 <<mlct-reclass>>=
 
-mlctReclassMatrix <- 
-  matrix( c( 0,  0,  0,
-             1,  5,  1,
-             6,  8,  2,
-             9, 10,  3,
-            11, 11,  4,
-            12, 12,  5,
-            13, 13,  6,
-            14, 14,  7,
-            15, 16,  8),
-         ncol=3, byrow=TRUE)
-peelClasses <- mlctReclassMatrix[, 3]
-names( peelClasses) <- c("water", "forest", "shrub", "open", "wetland", "crop", "urban", "mosaic", "barren")
-
-peelLegend <- igbpLegend[ mlctReclassMatrix[, 2] +1]
-
-
-## just in case, save these for later
-## paste( deparse( peelLegend), collapse="")
-## peelLegend <- c("#2041B3", "#069228", "#85AA5B", "#A4D07E", "#73ABAE", "#CCD253", "#D90000", "#9DE36E", "#949494")
 
 thumb <- mlctReclass( thumb, mlctReclassMatrix, overwrite= overwriteRasters)
 
@@ -849,9 +829,10 @@ thumbNlcd <- sapply( thumbNlcd, setMinMax)
 ##                             progress="text")
 ## thumbNlcd$pri <- thumbNlcdResamp
 
-nlcd <- list( pri=raster( "nlcd2001.tif"))
+setwd("~/thesis/data/nlcd")
+nlcd <- list( pri=raster( "nlcd_geo.tif"))
 
-nlcd <- sapply( nlcd, setMinMax)
+#nlcd <- sapply( nlcd, setMinMax)
 
 @ 
 \subsection{Reclassification}
@@ -863,26 +844,10 @@ nlcd <- sapply( nlcd, setMinMax)
 <<nlcd-reclass, eval=FALSE>>=
 
 
-nlcdReclassMatrix <- 
-  matrix( c( 11,  11,  0,               # water
-             98,  99,  0,
-             41,  43,  1,               # forest
-             51,  52,  2,               # shrub
-             94,  94,  2,
-             71,  74,  3,               # open
-             81,  81,  3,
-             90,  93,  4,               # wetland
-             95,  97,  4,
-             82,  82,  5,               # crop
-             21,  24,  6,               # urban
-                                        # no mosaic
-             12,  12,  8,               # barren
-             31,  32,  8),
-         ncol=3, byrow=TRUE)
 
 
 
-thumbNlcd <- mlctReclass( thumbNlcd, nlcdReclassMatrix, overwrite= overwriteRasters)
+thumbNlcd <- mlctReclass( thumbNlcd, nlcdReclassMatrix, overwrite= overwriteRasters, progress="text")
 
 thumbNlcdPlot <- peelMap(thumbNlcd$pri, 0.05)
 
@@ -955,7 +920,7 @@ nlcd <- aggregateFractions( nlcd, format="EHdr", overwrite=TRUE)
 
 nlcd <- mlctReclass( nlcd, nlcdReclassMatrix, overwrite= overwriteRasters, progress="text")
 nlcd$Amin <- 1
-nlcd <- coverFractions( nlcd, mosaic= FALSE, overwrite= overwriteRasters, progress="text")
+nlcd <- coverFractions( nlcd, mosaic= FALSE, overwrite= overwriteRasters || TRUE)
 nlcd <- aggregateFractions( nlcd, overwrite=TRUE, progress="text")
 
 @ %def 
@@ -975,7 +940,7 @@ data set.
 
 blah blah blah
 
-%  gdalbuildvrt -tr  0.0002777778 0.0002777778 -te -124.8333 24.5 -66.91667 49.33333 cdl_2001.vrt $(find . -name "*2001*")
+%  gdalbuildvrt -tr 0.0002777778 0.0002777778 -te -124.8333 24.5 -66.91667 49.33333 cdl_2001.vrt $(find . -name "*2001*")
 
 @ 
 <<cdl>>=

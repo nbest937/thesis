@@ -1,0 +1,4 @@
+image from http://datagateway.nrcs.usda.gov/Catalog/GatewayStatusMaps/NASS_CDL.jpg
+
+product description at http://datagateway.nrcs.usda.gov/Catalog/ProductDescription/NASS_CDL.html
+

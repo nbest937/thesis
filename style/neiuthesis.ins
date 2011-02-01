@@ -1,0 +1,14 @@
+\def\batchfile{neiuthesis.ins}
+\input docstrip.tex
+
+\keepsilent
+\askforoverwritefalse
+
+\declarepreamble\none
+\endpreamble
+
+\generate{\file{neiuthesis.sty}{\from{neiuthesis.dtx}{package}}
+          \file{neiuthesis.cls}{\from{neiuthesis.dtx}{class}}
+          \usepreamble\none
+          \file{thesis-ex.tex}{\from{neiuthesis.dtx}{example}}
+}

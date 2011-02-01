@@ -1,0 +1,104 @@
+create table nbest.areas (
+    location varchar,
+    mapset varchar,
+    map varchar,
+    id0 int,
+    id1 int,
+    class int,
+    lw int,
+    "m^2" real);
+
+
+eval $(g.gisenv -s)
+cd ~/thesis/
+echo 'location,mapset,map,id0,lw,class,"m^2"' > mcd12q1_areas.csv
+for year in {2001..2008}; do
+    for area in $(r.stats -Na nv= fs=, input=gadm0@GADM,${year}_lct1_reclass,${year}_qc_lw); do
+        id0=$(echo $area | cut -f 1 -d ,)
+        class=$(echo $area | cut -f 2 -d ,)
+        lw=$(echo $area | cut -f 3 -d ,)
+        m2=$(echo $area | cut -f 4 -d ,)
+        echo $LOCATION_NAME,$MAPSET,${year}_lct1_reclass,$id0,$class,$lw,$m2
+    done
+done >> mcd12q1_areas.csv
+
+psql -h db -d cim -c '\copy nbest.areas (location,mapset,map,id0,class,lw,"m^2") from mcd12q1_areas.csv csv header'
+
+
+-- Add up all of the cropland in the cUSA by year.
+
+select substring( map from '^....') as year,
+    cast( sum( "m^2") /10^10 as numeric(5,2)) as "Mha",
+    cast( sum("m^2")/10000*2.47105381/10^6 as numeric(5,2)) as "Ma"
+from areas
+where class = 12 and id0=234
+group by 1 order by 1;
+
+/*    
+year,Mha,Ma
+2001,149.20,368.68
+2002,146.33,361.59
+2004,137.05,338.65
+2005,141.16,348.81
+2006,139.24,344.08
+2007,139.37,344.38
+2008,137.83,340.59
+(7 rows)
+*/
+
+
+-- Add up half of all mosaic land in the cUSA by year
+    
+select substring( map from '^....') as year,
+    cast( 0.5 *sum( "m^2") /10^10 as numeric(5,2)) as "Mha",
+    cast( 0.5 *sum("m^2")/10000*2.47105381/10^6 as numeric(5,2)) as "Ma"
+from areas
+where class = 14 and id0=234
+group by 1 order by 1;
+
+/*
+year,Mha,Ma
+2001,47.81,118.14
+2002,50.30,124.29
+2004,55.30,136.65
+2005,54.16,133.84
+2006,53.88,133.14
+2007,53.69,132.67
+2008,52.69,130.19
+(7 rows)
+*/
+
+
+# in modis location
+eval $(g.gisenv -s)
+r.mapcalc cropland_m2="cropland*ewres()*nsres()"
+r.mapcalc pasture_m2="pasture*ewres()*nsres()"
+eval $(r.univar -g cropland_m2)
+SQL="insert into nbest.areas (location,mapset,map,id0,\"m^2\") values ('$LOCATION_NAME','$MAPSET','cropland_m2',234,$sum)"
+psql -h db -d cim -c "$SQL"
+
+eval $(r.univar -g pasture_m2)
+SQL="insert into nbest.areas (location,mapset,map,id0,\"m^2\") values ('$LOCATION_NAME','$MAPSET','pasture_m2',234,$sum)"
+psql -h db -d cim -c "$SQL"
+
+select map,
+    cast( "m^2" /10^10 as numeric(5,2)) as "Mha",
+    cast( "m^2" /10000*2.47105381/10^6 as numeric(5,2)) as "Ma"
+from areas
+where mapset = 'aglands';
+
+/*
+map,Mha,Ma
+cropland_m2,180.31,445.55
+pasture_m2,224.96,555.90
+(2 rows)
+*/
+
+Although the 5-min cell mask reprojected to the "modis" location extends beyond national boundaries slightly show that the effect is negligible:
+
+> r.stats -Nacp gadm0@GADM
+41 3689300089.011220 17187   0.02%
+143 2791606892.278982 13005   0.01%
+234 7936330180856.628906 36972245  36.93%
+[Raster MASK present]
+

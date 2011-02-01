@@ -1,0 +1,340 @@
+% -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
+
+\SweaveOpts{ results=hide, include=FALSE, echo=FALSE, engine=R, keep.source=TRUE }
+%\SweaveOpts{ eps=FALSE, pdf=FALSE, png=TRUE }
+
+\graphicspath{ {analysis/} }
+
+\chapter{Analysis}
+\label{cha:analysis}
+
+<<analysis>>=
+setwd( "~/thesis/analysis")
+rm(list=ls())
+quartz.options( type="png")
+
+library( raster)
+library( rgdal)
+library( lattice)
+library( xtable)
+
+library( RColorBrewer)
+divTheme <- sp.theme( 
+    regions= list(
+        col= colorRampPalette( brewer.pal( 5, "BrBG"), 
+          space= "Lab")(100)))
+seqTheme <- sp.theme(
+    regions= list(
+        col= colorRampPalette( brewer.pal( 5, "YlGn"),
+          space="Lab")(100)))
+
+db <- "../data/cusa.sqlite"
+
+                                        # list the subdatasets and split on equal sign
+                                        # e.g. SUBDATASET_2_NAME=RASTERLITE:cusa.sqlite,table=agc_crop 
+maps <- function() {
+  unlist( lapply( strsplit( grep( "NAME",
+                                attr( GDALinfo( db, silent=TRUE),
+                                     "subdsmdata"),
+                                value=T),
+                           "="),
+                 function(x) return(x[3])))
+}
+
+
+covers <- unlist( lapply( strsplit( maps()[ grep( "^agc", maps())], "_"),
+                         function(x) return( x[2])))
+
+                                        # arg: map name string
+                                        # res: fully-qualified DSN in db
+dataset  <- function( s) {
+  return( paste( "RASTERLITE:", db, ",table=", s,
+                sep=""))
+}
+
+                                        # arg: map name string
+                                        # res: rgdal handle
+handle <- function(map) {
+  return( new( "GDALReadOnlyDataset", dataset( map)))
+}
+
+                                        # arg: rgdal handle
+                                        # res: spatial grid data frame
+as.spgdf <- function( handle) {
+  result <- as( handle, "SpatialGridDataFrame")
+  #names( result) <- names( handle)
+  return( result)
+}
+
+#nlcdCrop <- raster( as.spgdf( handle( "nlcd_crop")))
+#agcCrop <-  raster( as.spgdf( handle( "agc_crop")))
+
+
+grepHandles <- function( regex) 
+  return( sapply( maps()[ grep( regex, maps())],
+                 handle))
+
+stackHandles <- function( handles) {
+  result <- stack( sapply( handles, function(x) raster( as.spgdf( x))))
+  attr( result, "layernames") <- names( handles)
+  return( result)
+}
+
+areaAcres <- function( rast) {
+  result <- rast *area( rast) *247.105381
+  attr( result, "layernames") <- attr( rast, "layernames")
+  return( result)
+}
+
+## calculate areas in millions of acres (Ma)
+areas <- sapply( list( ag="^ag_", As00="As00$", As05="As05$", agc="^agc", nlcd="^nlcd"),
+                 function( re) return( cellStats( areaAcres( stackHandles( grepHandles( re))), 
+                                                 sum) 
+                                      /10 ^6))
+names(areas$ag) <- c("crop", "open")
+names(areas$As00) <- sort( c(covers, "mosaic"))
+names(areas$As05) <- sort( c(covers, "mosaic"))
+names(areas$agc) <- covers
+names(areas$nlcd) <- covers
+
+## merge the resulting structure into a data frame
+
+areasDf <- merge( t( unlist( areas$As00)), 
+                  t( unlist( areas$As05)), 
+                  all=TRUE, sort=FALSE)
+areasDf <- merge( areasDf, t( unlist( areas$ag)), 
+                 all=TRUE, sort=FALSE)
+areasDf <- merge( areasDf, t( unlist( areas$agc)), 
+                 all=TRUE, sort=FALSE)
+areasDf <- merge( areasDf, t( unlist( areas$nlcd)), 
+                 all=TRUE, sort=FALSE)
+rownames(areasDf) <- c( "As00", "As05", "ag", "agc", "nlcd")
+
+
+printAreas <- function( Ma) {
+  return( paste( round( Ma, digits=1), "Ma (", round( Ma *0.404685642, digits=1), "Mha)", sep=""))
+}
+
+@ 
+
+<<analysis, results=tex>>=
+print( xtable( areasDf, 
+              caption= "Total Acreages by Map and Cover", 
+              label= "tab:total",
+              digits= 1))
+@ 
+
+The MLCT indicates \Sexpr{ printAreas( areasDf[ "As05", "crop"]) } of
+cropland in the cUSA in 2001. Assuming that 50\% of the
+cropland/natural vegetation mosaic is additional cropland area gives
+an additional \Sexpr{ printAreas( areasDf[ "As05", "mosaic"] *0.5) }
+of agricultural land. This gives a total area of 
+\Sexpr{ printAreas(areasDf[ "As05", "crop"] +areasDf[ "As05", "mosaic"] *0.5) }
+of total area directly associated with
+agricultural activity according to the IGBP classification used in the
+MLCT.
+
+Aglands2000 indicates roughly \Sexpr{ printAreas( areasDf[ "ag","crop"]) } 
+of cropland.
+
+Pasture indicated by Aglands2000 appears to be a broader
+classification than that of the NLCD's pasture class because much of
+the grazing land east of the Mississippi river counted in the
+Aglands2000 pasture map is absent in the NLCD pasture class.
+
+Due to its greater resolution (30m) the NLCD is better suited at
+discerning developed areas in rural landscapes ranging from rural
+roads to farmsteads to small communities that do not show up in the
+MLCT data. There is a total area of roughly 74 Ma (30 Mha) of
+development remaining after subtracting the MLCT urban class from all
+developed classes in the NLCD where the NLCD shows greater development
+after they have both been aggregated to the 5-arcmin grid. Applying
+this area as an offset to the cropland area in Aglands2000 brings us
+closer to the expected acreage under cultivation in 2001, although
+this assumes that all of that development intersects with MLCT
+cropland area.
+@ 
+
+<<analysis>>=
+
+# calculate RMSE/bias summaries
+# comparing everything to NLCD
+
+rmseRast <- function(obsRast, predRast) {
+  sqErr <- overlay( obsRast, predRast,
+                   fun=function( obs, pred) return(( obs -pred) ^2))
+  return( sqrt( cellStats( sqErr, 'mean')))
+}
+
+biasRast <- function(obsRast, predRast) {
+  err <- overlay( obsRast, predRast,
+                   fun=function( obs, pred) return( obs -pred))
+  return( cellStats( err, 'mean'))
+}
+
+
+  
+rmseSummary <- function( obsNameFun, predNameFun) {
+  sapply( covers,
+         function( c) {
+           obsRast  <- raster( as.spgdf( handle( obsNameFun(c))))
+           predRast <- raster( as.spgdf( handle( predNameFun(c))))
+           if( extent( obsRast) != extent( predRast)) {
+             intExt <- intersectExtent( obsRast, predRast)
+             obsRast <- crop( obsRast, intExt)
+             predRast <- crop( predRast, intExt)
+           }
+           return( c( rmse_frac= rmseRast( obsRast, predRast),
+                      bias_frac= biasRast( obsRast, predRast),
+                     rmse_acres= rmseRast( areaAcres(obsRast), areaAcres( predRast)),
+                     bias_acres= biasRast( areaAcres(obsRast), areaAcres( predRast))))
+         })
+}
+
+rmseAgc <- rmseSummary( function(c) paste(  "agc", c, sep="_"),
+                        function(c) paste( "nlcd", c, sep="_"))
+
+rmseAs00 <- rmseSummary( function(c) paste( "mlct_2001", c, "As00", sep="_"),
+                         function(c) paste( "nlcd", c, sep="_"))
+
+rmseAs05 <- rmseSummary( function(c) paste( "mlct_2001", c, "As05", sep="_"),
+                         function(c) paste( "nlcd", c, sep="_"))
+@ 
+
+<<analysis, results=tex>>=
+## t( rmseAgc)
+## t( rmseAs00)
+## t( rmseAs05)
+
+print( xtable( t( rmseAgc), 
+              caption= "Errors and Biases of Aglands Complete relative to NLCD",
+              label= "tab:ebagc",
+              digits= c( 0, 2, -2, 0, 0)))
+
+print( xtable( t( rmseAs00), 
+              caption= "Errors and Biases of MLCT, $A_s = 0.0$ relative to NLCD",
+              label= "tab:ebmlct00",
+              digits= c( 0, 2, -2, 0, 0)))
+
+print( xtable( t( rmseAs05), 
+              caption= "Errors and Biases of MLCT, $A_s = 0.5$ relative to NLCD",
+              label= "tab:ebmlct05",
+              digits= c( 0, 2, -2, 0, 0)))
+@
+
+<<analysis>>=
+## agcAvgAcres <-
+##   sapply( paste( "agc_", covers, sep=""),
+##          function( map) {
+##            mapRast <- raster( as.spgdf( handle( map)))
+##            return( cellStats( areaAcres( mapRast), sum)
+##                   /( ncell( mapRast) - cellStats( mapRast, 'countNA')))
+##          })
+
+         
+## getting ready to plot
+
+stackAgc <- stackHandles( grepHandles(  "^agc"))
+attr( stackAgc, "layernames") <-  covers
+
+stackNlcd <- stackHandles( grepHandles( "^nlcd"))
+attr( stackNlcd, "layernames") <-  covers
+
+stackDiff <- stackAgc -stackNlcd
+attr( stackDiff, "layernames") <-  covers
+
+@ 
+
+\begin{figure} 
+\begin{center} 
+<<analysis>>= 
+## fig_agc
+spgdfAgc <- as.spgdf( stackAgc)
+names( spgdfAgc) <- layerNames( stackAgc)
+quartz( file="fig_agc.png")
+trellis.par.set( seqTheme)
+print( spplot( spgdfAgc))
+dev.off()
+@ 
+\includegraphics{fig_agc}
+\end{center} 
+\caption{Aglands Complete cover maps} 
+\label{fig:agc} 
+\end{figure} 
+
+\begin{figure} 
+\begin{center} 
+<<analysis>>= 
+## fig_nlcd
+spgdfNlcd <- as.spgdf( stackNlcd)
+names( spgdfNlcd) <- layerNames( stackNlcd)
+quartz( file="fig_nlcd.png")
+trellis.par.set( seqTheme)
+print( spplot( spgdfNlcd))
+dev.off()
+@ 
+\includegraphics{fig_nlcd}
+\end{center} 
+\caption{NLCD cover maps} 
+\label{fig:nlcd} 
+\end{figure} 
+
+\begin{figure} 
+\begin{center} 
+<<analysis>>=
+## fig_diff
+spgdfDiff <- as.spgdf( stackDiff)
+names( spgdfDiff) <- layerNames( stackDiff)
+quartz( file="fig_diff.png")
+trellis.par.set( divTheme)
+print( spplot( spgdfDiff))
+dev.off()
+@ 
+\includegraphics{fig_diff}
+\end{center} 
+\caption{Difference maps, Aglands Complete minus NLCD} 
+\label{fig:diff} 
+\end{figure} 
+
+\begin{figure} 
+\begin{center} 
+<<analysis>>=
+
+## look for correlations across the difference maps
+
+corDiff <- cor( as.data.frame( as.spgdf( stackDiff))[,1:8])
+colnames( corDiff) <- unlist( lapply( 
+    strsplit( colnames( corDiff), "\\."), 
+    function( x) return( x[ 2])))
+rownames( corDiff) <- unlist( lapply( 
+    strsplit( rownames( corDiff), "\\."), 
+    function( x) return( x[ 2])))
+ord <- order.dendrogram( as.dendrogram( hclust( dist( corDiff))))
+
+## fig_cordiff
+quartz( file="fig_cordiff.png")
+trellis.par.set( divTheme)
+print( levelplot( corDiff[ ord, ord], 
+                 at= do.breaks( c( -1.01, 1.01), 20), 
+                 xlab= "", ylab= ""))
+dev.off()
+@ 
+\includegraphics{fig_cordiff}
+\end{center} 
+\caption{Correlations across cover type in difference maps} 
+\label{fig:cordiff} 
+\end{figure} 
+
+The elements of the matrix have been reordered according to the
+clustering forumla given in \citet[sec. 6.2.3]{Sarkar2008} in order to
+achieve a degree of visual clustering among the correlation vectors.
+
+@ 
+<<analysis>>=
+setwd( "~/thesis")
+@ %def 
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "thesis"
+%%% End: 

@@ -1,0 +1,131 @@
+\documentclass[draftthesis]{neiuthesis} 
+
+\usepackage{amsmath}
+\usepackage{hyperref}
+\hypersetup{
+    pdftitle={MA G\&ES NEIU Thesis},%
+    pdfauthor={Neil Best <nbest@alum.mit.edu>},%
+    pdfsubject={land use / land cover},%
+    pdfkeywords={agriculture}{United States},%
+    pdffitwindow=true,%
+    pdfstartview={FitH}
+}
+\usepackage{natbib}
+\usepackage[prependcaption]{todonotes} %[obeyDraft]
+%\usepackage{ifpdf}
+\usepackage{Sweave}
+%\usepackage[pdftex]{graphicx}
+
+% \ifpdf  
+%     \pdfinfo { /Title  (Best MA G\&ES NEIU Thesis)
+%                /Creator (TeX)
+%                /Producer (pdfTeX)
+%                /Author (Neil Best nbest@alum.mit.edu)
+%                /CreationDate (D:YYYYMMDDhhmmss)  %format D:YYYYMMDDhhmmss
+%                /ModDate (D:YYYYMMDDhhmm)
+%                /Subject (Land Use / Land Cover)
+%                /Keywords (agriculture, United States) }
+%     \pdfcatalog { /PageMode (/UseOutlines)
+%                   /OpenAction (fitbh)  }
+% \fi
+
+
+\begin{document} \bibliographystyle{chicago}
+
+\title{Synthesis of a complete land use / land cover data set for the
+conterminous United States emphasizing accuracy in area and
+distribution of agricultural activity} \author{Neil A. Best}
+\degreeyear{December~2010}
+
+\othermasters{Master of Arts}{M.A.}  \department{Geography \&
+Environmental Studies}
+
+\maketitle
+
+\frontmatter
+
+\begin{abstract} This paper presents an effort to produce a new land
+cover data set for the conterminous United States that augments
+available agricultural land use data with other uses and covers to
+create a complete landscape characterization.  We start with the data
+set described in Ramankutty, et al., 2008, which improves on the
+spatial distributions of agricultural land indicated by the MODIS Land
+Cover Type and Global Land Cover 2000 data products on which it is
+based by incorporating agricultural census data as a ground truth
+constraint.  However, it provides no information regarding areas which
+were judged to have been misclassified.  We present a method for
+reconciling the Ramankutty data with the MODIS Land Cover Type map for
+2001 and aspects of the higher-resolution 2001 National Landcover
+Database.  This result is subsequently merged with the data from
+Monfreda, et al., 2008 in order to further disaggregate cropland into
+commodity sub-classes.  We describe a prototype economic land use
+change model driven by land conversion costs, crop yield expectations,
+and climate change scenarios that requires this data for
+initialization.  We examine trends in other data sets to assess the
+accuracy of change in agricultural land area expressed in the MODIS
+time series after 2001.  This effort points a way forward to the
+eventual production of a global, annual time series of land cover/
+land use maps featuring explicit disaggregation of croplands by
+commodity to be used in economic modeling of global agricultural
+production, trade, and consumption.
+\end{abstract}
+
+\chapter*{Acknowledgements}
+
+This work was made possible through the support of my employer, the
+Computation Institute, University of Chicago, and its director,
+Dr. Ian Foster.  
+
+
+\tableofcontents \listoftables \listoffigures
+
+%% Create a List of Abbreviations. The left column %% is 1 inch wide and left-justified
+\chapter{List of Abbreviations}
+
+\begin{symbollist*}
+\item[MODIS] Moderate-resolution Imaging Spectroradiometer
+\item[MLCT] MODIS Land Cover Type \citep{MLCT}
+\item[175Crops2000] Harvested Area and Yields of 175 crops (M3-Crops
+Data), \citep{Monfreda2008}
+\item[Aglands2000] \citep{Ramankutty2008}
+\item[NLCD] National Land-Cover Database, 2001 \citep{Homer2004}
+\item[arcmin] minute of arc, 1/60th of a degree
+\item[arcsec] secondof arc, 1/60th of a minute, 1/3600th of a degree
+\item[GRASS] Geographic Resources Analysis Support System, \url{http://grass.osgeo.org}
+
+\end{symbollist*}
+
+%% Create a List of Symbols. The left column 
+%% is 0.7 inch wide and centered
+\chapter{List of Symbols}
+
+\begin{symbollist}[0.7in]
+\item[$A_{min}$] Minimum sub-pixel fraction possible for primary cover
+  given in MLCT base data
+\item[$A_s$] Sub-pixel fraction of secondary cover type, function of
+  classification confidence level and $A_{min}$
+\item[$A_p$] Sub-pixel fraction of primary cover type, function of
+ classification confidence level and $A_{min}$
+\end{symbollist}
+
+\mainmatter
+
+\todototoc
+\listoftodos
+
+\include{introduction}
+\include{data}
+\include{analysis}
+
+\chapter{Conclusions}
+
+
+\appendix*
+
+%\include{appendix}
+
+\backmatter
+
+\bibliography{thesis}
+
+\end{document}

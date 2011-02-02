@@ -33,9 +33,10 @@ mlctReclassMatrix <-
             12, 12,  5,
             13, 13,  6,
             14, 14,  7,
-            15, 16,  8),
+            15, 16,  8,
+            253, 253, NA),
          ncol=3, byrow=TRUE)
-peelClasses <- mlctReclassMatrix[, 3]
+peelClasses <- mlctReclassMatrix[ 1:9, 3]
 names( peelClasses) <- c("water", "forest", "shrub", "open", "wetland", "crop", "urban", "mosaic", "barren")
 
 #peelLegend <- igbpLegend[ mlctReclassMatrix[, 2] +1]
@@ -43,7 +44,8 @@ names( peelClasses) <- c("water", "forest", "shrub", "open", "wetland", "crop", 
 
 ## just in case, save these for later
 ## paste( deparse( peelLegend), collapse="")
-## peelLegend <- c("#2041B3", "#069228", "#85AA5B", "#A4D07E", "#73ABAE", "#CCD253", "#D90000", "#9DE36E", "#949494")
+
+peelLegend <- c("#2041B3", "#069228", "#85AA5B", "#A4D07E", "#73ABAE", "#CCD253", "#D90000", "#9DE36E", "#949494")
 
 nlcdReclassMatrix <- 
   matrix( c( 11,  11,  0,               # water
@@ -77,7 +79,7 @@ mlctReclass <- function( mlct, reclassMatrix, overwrite=FALSE, ...) {
     if( "sec" %in% names( mlct)) {
       mlct$sec <- reclass( mlct$sec, reclassMatrix, 
                           filename= reclassFilename( mlct$sec),
-                          datatype= "INT1U",
+                          #datatype= "INT1U",
                           overwrite= TRUE, ...)
     }
   } else {
@@ -165,11 +167,13 @@ coverFractions <- function( mlct, mosaic= TRUE, overwrite= FALSE, ...)  {
                          filename= paste( mlctName, cover, "Amin", 
                            paste( Amin, ".tif", sep=""),
                            sep="_"),
-                         overwite= TRUE, ...)
+                         overwrite= TRUE, ...)
                })
+      mlct$fracs <- do.call( brick, c( unlist( fracs, use.names=FALSE),
+                                      filename= fracsBrickFile,
+                                      overwrite= TRUE, ...))
     } else {
       fracDoparFun <- function( priFilename, ...) {
-        ##      fracFilenames <-
         foreach( cover= names( classes), .packages= "raster") %dopar% {
           class <- classes[[ cover]]
           frac <-
@@ -186,47 +190,12 @@ coverFractions <- function( mlct, mosaic= TRUE, overwrite= FALSE, ...)  {
           return( filename( frac))
         }
       }
-      ## mlct$fracs <-
-      ##   sapply( names( classes),
-      ##          function( cover) {
-      ##            class <- classes[[ cover]]
-      ##            calc( mlct$pri,
-      ##                 function( pri) {
-      ##                   ifelse( is.na( pri), NA,
-      ##                          ifelse( pri ==class, 1, 0))
-      ##                 },
-      ##                 filename= paste(
-      ##                   mlctName,
-      ##                   paste( cover, ".tif", sep=""),
-      ##                   sep="_"),
-      ##                 overwrite= TRUE, ...)
-      ##          })
-      ## mlct$fracs <-
-      ##   calc( stack( mlct$pri),
-      ##        fun= primaryOnlyFracsFun( mosaic),
-      ##        filename= fracsBrickFile,  # paste("calc", fracsBrickFile, sep= "_"),
-      ##        overwrite= TRUE, ...)
-      ##                                   # call to stack() is work-around needed until raster 1.7-27
-      ##                                   # still using it in 1.7-29 to avoid "Error in .local(x, fun, ...) : function 'fun' returns more than one value"
-      ##                                   # but still get
-      ##                                   #      "Error in v[, i] : incorrect number of dimensions
-      ##                                   #       In addition: Warning message: In compare(rasters) :
-      ##                                   #       There should be at least 2 Raster* objects to compare"
-      ##                                   #
-      ##                                   # going back to sapply() approach
+      mlct$fracs <- 
+        brick( stack( fracDoparFun( filename( mlct$pri), ...)),
+              filename= fracsBrickFile,
+              overwrite= TRUE,
+              ...)
     }
-    ## mlct$fracs <- 
-    ##   do.call( brick, 
-    ##           #c( unlist( mlct$fracs, use.names=FALSE),
-    ##           c( fracFilenames,
-    ##             filename= fracsBrickFile,
-    ##             overwrite= TRUE,
-    ##             ...))
-    mlct$fracs <- 
-      brick( stack( fracDoparFun( filename( mlct$pri), ...)),
-            filename= fracsBrickFile,
-            overwrite= TRUE,
-            ...)
   } else {
     mlct$fracs <- brick( fracsBrickFile)
   }

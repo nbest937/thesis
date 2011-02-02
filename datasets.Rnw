@@ -5,7 +5,7 @@
 \SweaveOpts{ echo=FALSE}
 \SweaveOpts{ engine=R}
 \SweaveOpts{ keep.source=TRUE}
-\SweaveOpts{ eval=FALSE }
+\SweaveOpts{ eval=FALSE}
 
 \graphicspath{ {datasets/} }
 
@@ -15,13 +15,13 @@
                                         # load helper functions
                                         # code will appear in appendix
 source("~/thesis/R/peel.R")
+setwd( "~/thesis/datasets")
 
-#setwd( "~/thesis/data")
-setwd( "/gpfs/pads/projects/see/nbest/thesis/data")
-#quartz.options( type="png")
+##setwd( "/gpfs/pads/projects/see/nbest/thesis/data")
+##quartz.options( type="png")
 
-overwriteRasters <- FALSE
-overwriteFigures <- FALSE
+overwriteRasters <- TRUE
+overwriteFigures <- TRUE
 
 @ 
 
@@ -94,6 +94,9 @@ cover/use classification specified by the PEEL model.
 
 ## these are subsets exported from GRASS
 
+texWd <- setwd("../data")
+dataWd <- getwd()
+
 thumb <- mlctList( "thumb_2001_lct1.tif", 
                    "thumb_2001_lct1_sec.tif", 
                    "thumb_2001_lct1_pct.tif")
@@ -158,8 +161,9 @@ the primay classification.
 \begin{center}
   
 <<fig_thumb_pri_reclass>>= 
+setwd( texWd)
 if( overwriteFigures) {
-  quartz( file="fig_thumb_pri_reclass.png")
+  png( file="fig_thumb_pri_reclass.png")
   print( thumbPlots$pri)
   dev.off()
 }
@@ -178,8 +182,9 @@ if( overwriteFigures) {
   
 <<fig_thumb_sec_reclass>>= 
 
+setwd( texWd)
 if( overwriteFigures) {
-  quartz( file="fig_thumb_sec_reclass.png")
+  png( file="fig_thumb_sec_reclass.png")
   print( thumbPlots$sec)
   dev.off()
 }
@@ -198,8 +203,9 @@ if( overwriteFigures) {
   
 <<fig_thumb_pct>>= 
 
+setwd( texWd)
 if( overwriteFigures) {
-  quartz( file="fig_thumb_pct.png")
+  png( file="fig_thumb_pct.png")
   print( thumbPlots$pct)
   dev.off()
 }
@@ -225,8 +231,9 @@ southeast corner.
   
 <<fig_thumb_pri_facet>>= 
 
+setwd( texWd)
 if( overwriteFigures) {
-  quartz( file="fig_thumb_pri_facet.png")
+  png( file="fig_thumb_pri_facet.png")
   print( thumbPlots$pri + 
         facet_wrap(~ values) + 
         opts( legend.position= "none"))
@@ -247,8 +254,9 @@ if( overwriteFigures) {
   
 <<fig_thumb_sec_facet>>= 
 
+setwd( texWd)
 if( overwriteFigures) {
-  quartz( file="fig_thumb_sec_facet.png")
+  png( file="fig_thumb_sec_facet.png")
   print( thumbPlots$sec + 
         facet_wrap(~ values) +
         opts( legend.position= "none"))
@@ -270,8 +278,9 @@ We repeat this operation for the entire data set.
 
 @
 <<mlct>>=
-## repeat for cUSA
 
+## repeat for cUSA
+setwd( dataWd)
 mlct <- mlctList( "2001_lct1.tif", 
                   "2001_lct1_sec.tif", 
                   "2001_lct1_pct.tif")
@@ -292,8 +301,9 @@ mlctPlots$pct <- ggplotRaster( mlct$pct, 0.01) +
 @
 <<fig_mlct_pri_reclass>>= 
 
+setwd( texWd)
 if( overwriteFigures) {
-  quartz( file="fig_mlct_pri_reclass.png")
+  png( file="fig_mlct_pri_reclass.png")
   print( mlctPlots$pri + coord_equal())
   dev.off()
 }
@@ -312,8 +322,9 @@ if( overwriteFigures) {
   
 <<fig_mlct_sec_reclass>>= 
 
+setwd( texWd)
 if( overwriteFigures) {
-  quartz( file="fig_mlct_sec_reclass.png")
+  png( file="fig_mlct_sec_reclass.png")
   print( mlctPlots$sec + coord_equal())
   dev.off()
 }
@@ -332,8 +343,9 @@ if( overwriteFigures) {
   
 <<fig_mlct_pct>>= 
 
+setwd( texWd)
 if( overwriteFigures) {
-  quartz( file="fig_mlct_pct.png")
+  png( file="fig_mlct_pct.png")
   print( mlctPlots$pct + coord_equal())
   dev.off()
 }
@@ -354,8 +366,9 @@ if( overwriteFigures) {
   
 <<fig_mlct_pri_facet>>= 
 
+setwd( texWd)
 if( overwriteFigures) {
-  quartz( file="fig_mlct_pri_facet.png")
+  png( file="fig_mlct_pri_facet.png")
   print( mlctPlots$pri + 
         facet_wrap(~ values) + 
         coord_equal() +
@@ -377,8 +390,9 @@ if( overwriteFigures) {
   
 <<fig_mlct_sec_facet>>= 
 
+setwd( texWd)
 if( overwriteFigures) {
-  quartz( file="fig_mlct_sec_facet.png")
+  png( file="fig_mlct_sec_facet.png")
                                         # had to remove some NAs from the data
   mlctPlots$sec$data <- mlctPlots$sec$data[ !is.na(mlctPlots$sec$data$values),]
   print( mlctPlots$sec + 
@@ -474,6 +488,8 @@ convenient for properly computing this mean.
 @
 <<thumbPlots>>=
 
+setwd( dataWd)
+
 ## calculate cover fractions and aggregate for detail area
 
 thumb  <- primaryFraction( thumb, Amin=0.5, overwrite= overwriteRasters, progress= "text")
@@ -495,8 +511,9 @@ thumbPlots1 <- list( fracs= coverMaps( thumb1$fracs, 0.4),
   
 <<fig_thumb_fracs>>= 
 
+setwd( texWd)
 if( overwriteFigures) {
-  quartz( file="fig_thumb_fracs.png")
+  png( file="fig_thumb_fracs.png")
   print( thumbPlots$fracs)
   dev.off()
 }
@@ -514,8 +531,9 @@ if( overwriteFigures) {
   
 <<fig_thumb1_fracs>>= 
 
+setwd( texWd)
 if( overwriteFigures) {
-  quartz( file="fig_thumb1_fracs.png")
+  png( file="fig_thumb1_fracs.png")
   print( thumbPlots1$fracs)
   dev.off()
 }
@@ -534,8 +552,9 @@ if( overwriteFigures) {
   
 <<fig_thumb_agg>>= 
 
+setwd( texWd)
 if( overwriteFigures) {
-  quartz( file="fig_thumb_agg.png")
+  png( file="fig_thumb_agg.png")
   print( thumbPlots$agg)
   dev.off()
 }
@@ -553,8 +572,9 @@ if( overwriteFigures) {
   
 <<fig_thumb1_agg>>= 
 
+setwd( texWd)
 if( overwriteFigures) {
-  quartz( file="fig_thumb1_agg.png")
+  png( file="fig_thumb1_agg.png")
   print( thumbPlots1$agg)
   dev.off()
 }
@@ -572,6 +592,8 @@ Before proceeding further it is interesting to inspect the differences
 between the aggregated maps for the chosen values of $A_{min}$.
 
 <<thumbAggDiff>>=
+
+setwd( dataWd)
 
 thumbAggDiff <- 
   if( overwriteRasters) {
@@ -594,8 +616,9 @@ thumbAggDiffPlot <- coverMaps( thumbAggDiff) +
   
 <<fig_thumb_agg_diff>>= 
 
+setwd( texWd)
 if( overwriteFigures) {
-  quartz( file="fig_thumb_agg_diff.png")
+  png( file="fig_thumb_agg_diff.png")
   print( thumbAggDiffPlot)
   dev.off()
 }
@@ -651,6 +674,7 @@ area delineated as mosaic lands:
 
 <<thumbNomos>>=
 
+setwd( dataWd)
 thumb  <- decomposeMosaic( thumb, overwrite= overwriteRasters, progress= "text")
 thumb1 <- decomposeMosaic( thumb1, overwrite= overwriteRasters, progress= "text")
 
@@ -683,8 +707,9 @@ thumbNomosDiffPlot <- coverMaps( thumbNomosDiff) +
   
 <<fig_thumb_nomos>>= 
 
+setwd( texWd)
 if( overwriteFigures) {
-  quartz( file="fig_thumb_nomos.png")
+  png( file="fig_thumb_nomos.png")
   print( thumbPlots$nomos)
   dev.off()
 }
@@ -703,8 +728,9 @@ if( overwriteFigures) {
   
 <<fig_thumb1_nomos>>= 
 
+setwd( texWd)
 if( overwriteFigures) {
-  quartz( file="fig_thumb1_nomos.png")
+  png( file="fig_thumb1_nomos.png")
   print( thumbPlots1$nomos)
   dev.off()
 }
@@ -723,8 +749,9 @@ if( overwriteFigures) {
   
 <<fig_thumb_nomos_diff>>= 
 
+setwd( texWd)
 if( overwriteFigures ) {
-  quartz( file="fig_thumb_nomos_diff.png")
+  png( file="fig_thumb_nomos_diff.png")
   print( thumbNomosDiffPlot)
   dev.off()
 }
@@ -743,7 +770,9 @@ if( overwriteFigures ) {
 
 
 
-<<mlct1, eval=TRUE>>=
+<<mlct1, eval=FALSE>>=
+
+setwd( dataWd)
 
 mlct  <- primaryFraction( mlct, Amin= 0.5, overwrite= overwriteRasters, progress="text")
 mlct  <- coverFractions( mlct, overwrite= overwriteRasters, progress="text")
@@ -816,7 +845,11 @@ activity in Hawaii and Alaska.
 As with the MLCT the process of reclassification and aggregation is
 performed for both the detail region and the complete region.
 
-<<nlcd, eval=FALSE>>=
+<<nlcd>>=
+
+setwd( dataWd)
+setwd( "nlcd")
+nlcdWd <- getwd()
 
 thumbNlcd <- list( pri=raster( "thumb_nlcd2001.tif"))
 thumbNlcd <- sapply( thumbNlcd, setMinMax)
@@ -829,7 +862,7 @@ thumbNlcd <- sapply( thumbNlcd, setMinMax)
 ##                             progress="text")
 ## thumbNlcd$pri <- thumbNlcdResamp
 
-setwd("~/thesis/data/nlcd")
+
 nlcd <- list( pri=raster( "nlcd_geo.tif"))
 
 #nlcd <- sapply( nlcd, setMinMax)
@@ -841,9 +874,9 @@ nlcd <- list( pri=raster( "nlcd_geo.tif"))
 \missingfigure{NLCD reclassification table}
 
 @ 
-<<nlcd-reclass, eval=FALSE>>=
+<<nlcd-reclass, eval=TRUE>>=
 
-
+setwd( nlcdWd)
 
 
 
@@ -856,8 +889,8 @@ thumbNlcd$Amin <- 1
 thumbNlcd <- coverFractions( thumbNlcd, mosaic=FALSE, overwrite=TRUE, progress= "text")
 thumbNlcd <- aggregateFractions( thumbNlcd, overwrite=TRUE, progress="text")
 
-thumNlcdMask <- sapply( c( "water", "wetland", "urban"),
-                       function( cover) {
+##thumNlcdMask <- sapply( c( "water", "wetland", "urban"),
+##                       function( cover) {
 
 thumbNlcdMask <-
   if( overwriteRasters) {
@@ -866,7 +899,7 @@ thumbNlcdMask <-
            ifelse( x %in% peelClasses[ c( "water", "wetland", "urban")],
                   x, NA)
          },
-         datatype= "INT1U",
+         ##datatype= "INT1U",
          overwrite= TRUE,
          filename= "thumbNlcdMask.tif",
          progress= "text")
@@ -876,29 +909,53 @@ thumbNlcdMask <-
 ## thumbNlcdMask <- setMinMax( thumbNlcdMask)
 
 
-## gdalwarp -of VRT -ts $(( 260*12)) 0  thumb_2001_lct1_reclass.tif thumb_2001_lct1_reclass_resamp.vrt
+## system( "gdalwarp -of VRT -ts $(( 260*12)) 0  thumb_2001_lct1_reclass.tif thumb_2001_lct1_reclass_resamp.vrt")
+## thumbResamp <- raster( "thumb_2001_lct1_reclass_resamp.vrt")
 
-thumbResamp <- raster( "thumb_2001_lct1_reclass_resamp.vrt")
-
-## thumbResamp <-
-##   resample( thumb$pri, thumbNlcd$pri,
-##            method="ngb",
-##            datatype= "INT1U",
-##            overwrite= TRUE,
-##            filename= "thumbResamp.tif",
-##            progress= "text")
+thumbResamp <-
+  if( overwriteRasters) {
+    resample( thumb$pri, thumbNlcd$pri,
+             method="ngb",
+             datatype= "INT2U",
+             overwrite= TRUE,
+             filename= "thumbResamp.tif",
+             progress= "text")
+  } else raster( "thumbResamp.tif")
 
 thumbNlcdMlct <-
   if( overwriteRasters) {
     mask( thumbResamp,
          thumbNlcdMask,
-         datatype= "INT1U",
+         datatype= "INT2U",
          overwrite= TRUE,
          filename= "thumbNlcdMlct.tif",
          progress= "text")
   } else {
     raster( "thumbNlcdMlct.tif")
   }
+
+offsetCalcFun <- function( class) {
+  fun <- function( st) {
+    mlct <- st[ 1]
+    nlcd <- st[ 2]
+    result <- matrix( 0, nrow= 1, ncol= 9)
+    if( !is.na( mlct) &&nlcd ==class &&mlct !=nlcd) {
+      result[ 1, mlct +1] <- -1
+    }
+    result
+  }
+  fun
+}
+
+offsetCalcFunWater <- offsetCalcFun(0)
+
+thumbOffsets$water <-
+  calc( stack(thumbNlcdMlct, thumbNlcdMask),
+       fun= offsetCalcFunWater, #offsetCalcFun( 0),
+       datatype= "INT1S",
+       overwrite= TRUE,
+       filename= "thumbOffsets_water.tif",
+       progress= "text")
 
 @ %def 
 
@@ -913,14 +970,17 @@ expensive due to the NLCD's high resolution.
 
 @ 
 <<nlcd-aggr, eval=FALSE>>=
+
+setwd( nlcdWd)
+
 nlcd <- mlctReclass( nlcd, nlcdReclassMatrix, format="EHdr", overwrite=TRUE)
 nlcd$Amin <- 1
 nlcd <- coverFractions( nlcd, format="EHdr", overwrite=TRUE)
 nlcd <- aggregateFractions( nlcd, format="EHdr", overwrite=TRUE)
 
-nlcd <- mlctReclass( nlcd, nlcdReclassMatrix, overwrite= overwriteRasters, progress="text")
+nlcd <- mlctReclass( nlcd, nlcdReclassMatrix, overwrite= overwriteRasters && FALSE, progress="text")
 nlcd$Amin <- 1
-nlcd <- coverFractions( nlcd, mosaic= FALSE, overwrite= overwriteRasters || TRUE)
+nlcd <- coverFractions( nlcd, mosaic= FALSE, overwrite= overwriteRasters || TRUE, progress="text")
 nlcd <- aggregateFractions( nlcd, overwrite=TRUE, progress="text")
 
 @ %def 
@@ -943,7 +1003,7 @@ blah blah blah
 %  gdalbuildvrt -tr 0.0002777778 0.0002777778 -te -124.8333 24.5 -66.91667 49.33333 cdl_2001.vrt $(find . -name "*2001*")
 
 @ 
-<<cdl>>=
+<<cdl, eval=FALSE>>=
 
 
 cdl <- list( pri= raster( "/gpfs/pads/projects/see/data/raw/cdl/vrt/cdl_2001.vrt"))

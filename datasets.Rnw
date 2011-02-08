@@ -20,8 +20,8 @@ setwd( "~/thesis/datasets")
 ##setwd( "/gpfs/pads/projects/see/nbest/thesis/data")
 ##quartz.options( type="png")
 
-overwriteRasters <- TRUE
-overwriteFigures <- TRUE
+overwriteRasters <- FALSE
+overwriteFigures <- FALSE
 
 @ 
 
@@ -848,6 +848,7 @@ performed for both the detail region and the complete region.
 <<nlcd>>=
 
 setwd( dataWd)
+
 setwd( "nlcd")
 nlcdWd <- getwd()
 
@@ -967,10 +968,10 @@ thumbNlcdMlctSec <-
   }
 
 thumbNlcdMlctAp <-
-  if( overwriteRasters) {
+  if( overwriteRasters || TRUE) {
     mask( thumbResampAp,
          thumbNlcdMask,
-         datatype= "INT2U",
+         datatype= "FLT4S",
          overwrite= TRUE,
          filename= "thumbNlcdMlctAp.tif",
          progress= "text")
@@ -980,47 +981,104 @@ thumbNlcdMlctAp <-
 
 crosstab( thumbNlcdMlct, thumbNlcdMask)
 
-thumbOffsetsInput <-
-  if( overwriteRasters) {
-    brick( stack( "thumbNlcdMlct.tif", "thumbNlcdMask.tif"),
-          filename= "thumbOffsets_input.tif",
-          overwrite= TRUE)
-  } else brick( "thumbOffsets_input.tif")
+## thumbOffsetsInput <-
+##   if( overwriteRasters) {
+##     brick( stack( "thumbNlcdMlct.tif", "thumbNlcdMask.tif"),
+##           filename= "thumbOffsets_input.tif",
+##           overwrite= TRUE)
+##   } else brick( "thumbOffsets_input.tif")
+
+## thumbOffsetsInputAp <-
+##   if( overwriteRasters) {
+##     brick( stack( "thumbNlcdMlct.tif",
+##                  "thumbNlcdMlctSec.tif",
+##                  "thumbNlcdMlctAp.tif",
+##                  "thumbNlcdMask.tif"),
+##           filename= "thumbOffsetsInputAp.tif",
+##           overwrite= TRUE)
+##   } else brick( "thumbOffsetsInputAp.tif")
 
 thumbOffsetsInputAp <-
-  if( overwriteRasters) {
-    brick( stack( "thumbNlcdMlct.tif",
-                 "thumbNlcdMlctSec.tif",
-                 "thumbNlcdMlctAp.tif",
-                 "thumbNlcdMask.tif"),
-          filename= "thumbOffsetsInputAp.tif",
-          overwrite= TRUE)
-  } else brick( "thumbOffsetsInputAp.tif")
-
-thumbOffsetsInputAp <-
-  if( overwriteRasters) {
+  if( overwriteRasters || TRUE) {
     brick( stack( thumbNlcdMlct,
                  thumbNlcdMlctSec,
                  thumbNlcdMlctAp,
                  thumbNlcdMask),
           filename= "thumbOffsetsInputAp.tif",
-          overwrite= TRUE)
+          overwrite= TRUE,
+          progress= "text")
   } else brick( "thumbOffsetsInputAp.tif")
 
 
-offsetCalcFun <- function( class) {
-  fun <- function( st) {
-    mlct <- st[ 1]
-    nlcd <- st[ 2]
-    result <- matrix( 0, nrow= 1, ncol= 9)
-    if( !is.na( mlct) &&nlcd ==class &&mlct !=nlcd) {
-      result[ 1, mlct +1] <- -1
-      result[ 1, nlcd +1] <- 1
-    }
-    result
-  }
-  fun
-}
+## offsetCalcFun <- function( class) {
+##   fun <- function( st) {
+##     mlct <- st[ 1]
+##     nlcd <- st[ 2]
+##     result <- matrix( 0, nrow= 1, ncol= 9)
+##     if( !is.na( mlct) &&nlcd ==class &&mlct !=nlcd) {
+##       result[ 1, mlct +1] <- -1
+##       result[ 1, nlcd +1] <- 1
+##     }
+##     result
+##   }
+##   fun
+## }
+
+
+##offsetCalcFunWater <- offsetCalcFun(0)
+
+## offsetCalcFunApWater <- offsetCalcFunAp(0)
+## debug( offsetCalcFunApWater)
+
+## thumbOffsets$water <-
+##   calc( thumbOffsets$input,
+##        fun= offsetCalcFunWater, #offsetCalcFun( 0),
+##        datatype= "INT2S",
+##        overwrite= TRUE,
+##        filename= "thumbOffsets_water.tif",
+##        progress= "text")
+
+## thumbOffsetsAp$water <-
+##   calc( thumbOffsetsInputAp,
+##        fun= offsetCalcFunApWater, #offsetCalcFun( 0),
+##        datatype= "INT2S",
+##        overwrite= TRUE,
+##        filename= "thumbOffsetsAp_water.tif",
+##        progress= "text")
+
+## thumbOffsets <-
+##   sapply( grep( "water|wetland|urban",
+##                names(peelClasses), value=TRUE),
+##          function( cover) {
+##            fn <- paste( "thumbOffsets",
+##                   paste( cover, "tif", sep= "."),
+##                   sep= "_")
+##            print( paste(cover, fn))
+##            if( overwriteRasters || !( file.access( fn) ==0))
+##              calc( thumbOffsetsInput,
+##                   fun= offsetCalcFun( peelClasses[[ cover]]),
+##                   datatype= "INT2S",
+##                   overwrite= TRUE,
+##                   filename= fn,
+##                   progress= "text")
+##            else brick( fn)
+##          })
+
+## thumbOffsets <-
+##   sapply( names( thumbOffsets),
+##          function( cover) {
+##            fn <- paste( "thumbOffsets",
+##                        cover, "agg.tif", sep= "_")
+##            print( paste( cover, fn))
+##            if( overwriteRasters || !( file.access( fn) ==0))
+##              aggregate( thumbOffsets[[ cover]],
+##                        fact= 5/60 /res( thumbOffsets[[ cover]]),
+##                        expand= FALSE,
+##                        filename= fn,
+##                        datatype= "FLT4S",
+##                        overwrite= TRUE)
+##            else brick( fn)
+##          })
 
 offsetCalcFunAp <- function( class) {
   fun <- function( st) {
@@ -1032,67 +1090,12 @@ offsetCalcFunAp <- function( class) {
     if( !is.na( pri) &&nlcd ==class) {
       result[ 1, pri +1] <- -Ap
       result[ 1, sec +1] <- Ap -1
-      result[ 1, nlcd +1] <- 1
+      result[ 1, nlcd +1] <- result[ 1, nlcd +1] +1
     }
     result
   }
   fun
 }
-
-##offsetCalcFunWater <- offsetCalcFun(0)
-
-offsetCalcFunApWater <- offsetCalcFunAp(0)
-debug( offsetCalcFunApWater)
-
-## thumbOffsets$water <-
-##   calc( thumbOffsets$input,
-##        fun= offsetCalcFunWater, #offsetCalcFun( 0),
-##        datatype= "INT2S",
-##        overwrite= TRUE,
-##        filename= "thumbOffsets_water.tif",
-##        progress= "text")
-
-thumbOffsetsAp$water <-
-  calc( thumbOffsetsInputAp,
-       fun= offsetCalcFunApWater, #offsetCalcFun( 0),
-       datatype= "INT2S",
-       overwrite= TRUE,
-       filename= "thumbOffsetsAp_water.tif",
-       progress= "text")
-
-thumbOffsets <-
-  sapply( grep( "water|wetland|urban",
-               names(peelClasses), value=TRUE),
-         function( cover) {
-           fn <- paste( "thumbOffsets",
-                  paste( cover, "tif", sep= "."),
-                  sep= "_")
-           print( paste(cover, fn))
-           if( overwriteRasters || !( file.access( fn) ==0))
-             calc( thumbOffsetsInput,
-                  fun= offsetCalcFun( peelClasses[[ cover]]),
-                  datatype= "INT2S",
-                  overwrite= TRUE,
-                  filename= fn,
-                  progress= "text")
-           else brick( fn)
-         })
-
-thumbOffsets <-
-  sapply( names( thumbOffsets),
-         function( cover) {
-           fn <- paste( "thumbOffsets",
-                       cover, "agg.tif", sep= "_")
-           print( paste( cover, fn))
-           if( overwriteRasters || !( file.access( fn) ==0))
-             aggregate( thumbOffsets[[ cover]],
-                       fact= 5/60 /res( thumbOffsets[[ cover]]),
-                       expand= FALSE,
-                       filename= fn,
-                       datatype= "FLT4S",
-                       overwrite= TRUE)
-           else brick( fn)
-         })
 
 thumbOffsetsAp <-
   sapply( grep( "water|wetland|urban",
@@ -1102,15 +1105,16 @@ thumbOffsetsAp <-
                   paste( cover, "tif", sep= "."),
                   sep= "_")
            print( paste(cover, fn))
-           if( overwriteRasters || !( file.access( fn) ==0))
+           if( overwriteRasters || !( file.access( fn) ==0)) {
              calc( thumbOffsetsInputAp,
                   fun= offsetCalcFunAp( peelClasses[[ cover]]),
                   datatype= "FLT4S",
                   overwrite= TRUE,
                   filename= fn,
                   progress= "text")
-           else brick( fn)
+           } else brick( fn)
          })
+
 
 thumbOffsetsAp <-
   sapply( names( thumbOffsetsAp),
@@ -1129,33 +1133,13 @@ thumbOffsetsAp <-
            else brick( fn)
          })
 
-thumbOffsetsApTotal <-
-  do.call( calc,
-          c( unlist( thumbOffsetsAp, use.names= FALSE),
-            fun= sum,
-            filename= "thumbOffsetsAp_total.tif",
-            progress= "text",
-            na.rm= FALSE))
+thumbOffsetsAp <-
+  sapply( thumbOffsetsAp,
+         function( r) {
+           layerNames( r) <- names( peelClasses)
+           r
+         })
 
-
-thumbOffsetsApTotal <-
-  calc( thumbOffsetsAp$water,
-       thumbOffsetsAp$wetland,
-       thumbOffsetsAp$urban,
-       fun= sum,
-       filename= "thumbOffsetsAp_total.tif",
-       progress= "text",
-       na.rm= FALSE )
-
-thumbOffsetsApTotal <-
-  sum( thumbOffsetsAp$water,
-      thumbOffsetsAp$wetland,
-      thumbOffsetsAp$urban)
-
-thumbOffsetsApTotal <-
-  thumbOffsetsAp$water +
-  thumbOffsetsAp$wetland +
-  thumbOffsetsAp$urban
 
 thumbOffsetsApTotal <-
   writeRaster( thumbOffsetsAp$water +
@@ -1163,6 +1147,19 @@ thumbOffsetsApTotal <-
               thumbOffsetsAp$urban,
               filename= "thumbOffsetsAp_total.tif",
               overwrite=TRUE)
+
+### This should work, but throws an indecipherable error
+
+## thumbOffsetsApTotal <-
+##   do.call( overlay,
+##           c( unlist( thumbOffsetsAp, use.names= FALSE),
+##                fun= sum,
+##                filename= "thumbOffsetsAp_total.tif",
+##                overwrite= TRUE,
+##                progress= "text"))
+
+## Error in structure(.External("dotTclObjv", objv, PACKAGE = "tcltk"), class = "tclObj") : 
+##   [tcl] invalid command name "toplevel".
 
 setwd( dataWd)
 thumb  <- decomposeMosaic( thumb, overwrite= overwriteRasters, progress= "text")

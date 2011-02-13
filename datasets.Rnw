@@ -2,10 +2,10 @@
 
 \SweaveOpts{ results=hide}
 \SweaveOpts{ include=FALSE}
-\SweaveOpts{ echo=FALSE}
+\SweaveOpts{ echo=TRUE}
 \SweaveOpts{ engine=R}
 \SweaveOpts{ keep.source=TRUE}
-\SweaveOpts{ eval=FALSE}
+\SweaveOpts{ eval=TRUE}
 
 \graphicspath{ {datasets/} }
 
@@ -20,8 +20,8 @@ setwd( "~/thesis/datasets")
 ##setwd( "/gpfs/pads/projects/see/nbest/thesis/data")
 ##quartz.options( type="png")
 
-overwriteRasters <- FALSE
-overwriteFigures <- FALSE
+overwriteRasters <- TRUE
+overwriteFigures <- TRUE
 
 @ 
 
@@ -128,25 +128,12 @@ thumb <- mlctReclass( thumb, mlctReclassMatrix, overwrite= overwriteRasters)
 thumbPlots <- list( pri= peelMap( thumb$pri, 0.4),
                     sec= peelMap( thumb$sec, 0.4))
 
-## thumbPlots$pct <- ggplotRaster( thumb$pct, 0.4) + 
-## scale_fill_gradientn( "% confidence", colours=rev( seqTheme( 5)), 
-##                      limits= c( 100, 0),
-##                      breaks= seq( 100, 0, by= -20))
-  
-## this brewer scale doesn't work for some reason
-## wrote to ggplot2 Google Group
-
-##  scale_fill_brewer( "", palette="YlGn", limits= c( 0,100), breaks= seq(0,100,by=20))
-
-## TEST ME ##
 thumbPlots$pct <- ggplotRaster( thumb$pct, 0.4) + 
   scale_fill_gradientn( "% confidence", 
                        colours= rev( brewer.pal( 7, "YlGn")), 
                        limits= c( 100, 0),
                        breaks= seq( 100, 0, by= -20))
 
-## this scale is okay but the palette wasn't quite right
-##  scale_fill_continuous( "", limits= c( 0, 100), low= "yellow", high= "green")
 @ 
 
 \subsubsection{Detail Area}
@@ -638,7 +625,7 @@ mosaic classes because cropland is reduced in the north of the detail
 area where it was dominant in the primary land cover type, and
 simlarly for mosaic in the south.  The relative suitability of these
 choices for $A_{min}$ is discussed in a later section. \todo{ cross ref
-  analysis section where aggregated MLCT crop is campared to Aglands}
+  analysis section where aggregated MLCT crop is campared to Agland}
 
 \subsubsection{Analysis Area}
 \label{sec:agg-analysis-area}
@@ -792,26 +779,43 @@ mlct1  <- decomposeMosaic( mlct1, overwrite= overwriteRasters, progress="text")
 @ 
 
 Both 5-arcmin data sets derived from the MLCT in this fashion
-overestimate cropland area relative to that indicated by Aglands2000,
+overestimate cropland area relative to that indicated by Agland2000,
 but the $A_{min} = 0.5$ variant better portrays the spatial variation
 judging from a simple root-mean-squared-error (RMSE)
 test. \todo{illustrate/demonstrate the RMSE test on the 5-arcmin MLCT
   data sets}
 
-\section{Agricultural Lands in the Year 2000 (Aglands2000)}
-\label{sec:aglands2000}
+\section{Agricultural Lands in the Year 2000 (Agland2000)}
+\label{sec:agland2000}
 
 \citet{Ramankutty2008}
 
   
-\todo[inline, caption={Describe Aglands2000 data set}]{Flesh out a
-  discussion of the merits of accepting Aglands2000 as ``truth'' for
+\todo[inline, caption={Describe Agland2000 data set}]{Flesh out a
+  discussion of the merits of accepting Agland2000 as ``truth'' for
   cropland and pasture distribution due to its basis in agricultural
   census statistics.  Discuss issues of
   classification: pasture (managed for grazing), range land
   (less-managed or unmanaged for grazing), and natural open land (no grazing).}
 
   
+@ 
+<<agland2000, eval=FALSE>>=
+
+setwd( "~/thesis/data/agland2000")
+agland <- stack( list.files( patt= "2000_5min.nc$"))
+layerNames(agland) <- c("crop", "pasture")
+agland <- setMinMax( agland)
+  
+thumbAgland <- crop( agland,
+                    extent(-83.5, -(82+25/60), 42+55/60, 44+5/60),
+                    filename= "thumbAgland.tif",
+                    progress="text")
+
+
+@ 
+%def 
+
 \section{Major Land Uses (MLU)}
 \label{sec:mlu}
 
@@ -821,6 +825,26 @@ state level.  We hope to compare our results to this data on a
 state-by-state basis in order as a check and possibly incorporate some
 of its information as a refinement.
 
+@ 
+<<mlu, eval=FALSE>>=
+
+cusaDf <- readOGR("PG:host=db dbname=cim","gadm.cusa")
+
+cusa <- raster(mlct$pri)
+res(cusa) <- 5/60
+
+cusa <- rasterize( cusaDf, cusa, field= "id_1", filename= "gadm1_cusa.tif", 
+
+foo <- raster("nlcd_agg.tif")                  
+gadm <- raster( foo)                 
+res(gadm) <- 15/3600                  
+gadm[] <- 0                  
+writeRaster(gadm, filename= "foo.tif", overwrite=TRUE, NAflag=0)
+system( "gdal_translate -ot UInt16 -a_nodata 0 foo.tif gadm1_cusa.tif")                  
+                  
+system( "gdal_rasterize -at -a id_1 -ot UInt16 -l gadm.cusa 'PG:host=db dbname=cim' gadm1_cusa.tif")
+
+@ %def 
 
 \section{National Land-cover Database 2001 (NLCD)}
 \label{sec:nlcd}
@@ -1251,10 +1275,10 @@ cdl_il <- aggregateFractions( cdl_il, overwrite=TRUE, progress="text")
 
 \missingfigure{Summary table of crop aggregations for our model}
 
-\todo{Adress issue of smaller land mask for 175crops2000 and Aglands2000}
+\todo{Adress issue of smaller land mask for 175crops2000 and Agland2000}
 
 This data set will provide the information needed to disaggregate the
-cropland area taken from Aglands2000.  It is not possible to use this
+cropland area taken from Agland2000.  It is not possible to use this
 data directly because it reflects only harvested area and so ignores
 various types of ancillary agricultural land, rather it will provide
 proportions for the disaggregation at the grid cell level.  Rather

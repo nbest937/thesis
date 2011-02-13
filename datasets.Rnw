@@ -864,8 +864,7 @@ thumbNlcd <- sapply( thumbNlcd, setMinMax)
 ## thumbNlcd$pri <- thumbNlcdResamp
 
 
-nlcd <- list( pri=raster( "nlcd_geo.tif"))
-
+#nlcd <- list( pri=raster( "nlcd_geo.tif"))
 #nlcd <- sapply( nlcd, setMinMax)
 
 @ 
@@ -875,7 +874,7 @@ nlcd <- list( pri=raster( "nlcd_geo.tif"))
 \missingfigure{NLCD reclassification table}
 
 @ 
-<<nlcd-reclass, eval=TRUE>>=
+<<nlcd-reclass>>=
 
 setwd( nlcdWd)
 
@@ -968,7 +967,7 @@ thumbNlcdMlctSec <-
   }
 
 thumbNlcdMlctAp <-
-  if( overwriteRasters || TRUE) {
+  if( overwriteRasters) {
     mask( thumbResampAp,
          thumbNlcdMask,
          datatype= "FLT4S",
@@ -1010,19 +1009,6 @@ thumbOffsetsInputAp <-
   } else brick( "thumbOffsetsInputAp.tif")
 
 
-## offsetCalcFun <- function( class) {
-##   fun <- function( st) {
-##     mlct <- st[ 1]
-##     nlcd <- st[ 2]
-##     result <- matrix( 0, nrow= 1, ncol= 9)
-##     if( !is.na( mlct) &&nlcd ==class &&mlct !=nlcd) {
-##       result[ 1, mlct +1] <- -1
-##       result[ 1, nlcd +1] <- 1
-##     }
-##     result
-##   }
-##   fun
-## }
 
 
 ##offsetCalcFunWater <- offsetCalcFun(0)
@@ -1148,22 +1134,26 @@ thumbOffsetsApTotal <-
               filename= "thumbOffsetsAp_total.tif",
               overwrite=TRUE)
 
-### This should work, but throws an indecipherable error
 
-## thumbOffsetsApTotal <-
-##   do.call( overlay,
-##           c( unlist( thumbOffsetsAp, use.names= FALSE),
-##                fun= sum,
-##                filename= "thumbOffsetsAp_total.tif",
-##                overwrite= TRUE,
-##                progress= "text"))
+thumbOffsetsApTotal <-
+  do.call( overlay,
+          c( unlist( thumbOffsetsAp, use.names= FALSE),
+               fun= sum,
+               filename= "thumbOffsetsAp_total.tif",
+               overwrite= TRUE,
+               progress= "text"))
 
-## Error in structure(.External("dotTclObjv", objv, PACKAGE = "tcltk"), class = "tclObj") : 
-##   [tcl] invalid command name "toplevel".
+thumbAdj <- thumb
+thumbAdj$agg <- 
+  overlay( thumbAdj$agg, thumbOffsetsApTotal,
+          fun= sum,
+          filename= "thumbAdj.tif")
 
+                  
 setwd( dataWd)
-thumb  <- decomposeMosaic( thumb, overwrite= overwriteRasters, progress= "text")
-thumb1 <- decomposeMosaic( thumb1, overwrite= overwriteRasters, progress= "text")
+
+thumbAdj  <- decomposeMosaic( thumbAdj, overwrite= overwriteRasters || TRUE, progress= "text")
+
 
            
 @ %def 
@@ -1182,15 +1172,10 @@ expensive due to the NLCD's high resolution.
 
 setwd( nlcdWd)
 
-nlcd <- mlctReclass( nlcd, nlcdReclassMatrix, format="EHdr", overwrite=TRUE)
+nlcd <- mlctReclass( nlcd, nlcdReclassMatrix, overwrite= overwriteRasters, progress="text")
 nlcd$Amin <- 1
-nlcd <- coverFractions( nlcd, format="EHdr", overwrite=TRUE)
-nlcd <- aggregateFractions( nlcd, format="EHdr", overwrite=TRUE)
-
-nlcd <- mlctReclass( nlcd, nlcdReclassMatrix, overwrite= overwriteRasters && FALSE, progress="text")
-nlcd$Amin <- 1
-nlcd <- coverFractions( nlcd, mosaic= FALSE, overwrite= overwriteRasters || TRUE, progress="text")
-nlcd <- aggregateFractions( nlcd, overwrite=TRUE, progress="text")
+nlcd <- coverFractions( nlcd, mosaic= FALSE, overwrite= overwriteRasters, progress="text")
+nlcd <- aggregateFractions( nlcd, overwrite= overwriteRasters, progress="text")
 
 @ %def 
 

@@ -1,0 +1,92 @@
+g.mapset -c thesis
+
+g.region -p lower48_5min@peel res=0:00:01.25
+
+r.reclass nlcd2001@NLCD rules=- <<EOF
+11 = 0 water
+90 thru 93 95 thru 97 = 4 wetland
+21 thru 24 = 6 urban
+EOF
+
+class=( water forest shrub open wetland crop urban mosaic barren )
+
+for nlcd in 0 4 6; do
+    cmd="r.mask -o input=nlcd_offsets_mask maskcats=$nlcd"
+    echo $cmd
+    for mlct in $(seq 0 8); do
+	cmd="r.mapcalc nlcd_offset_${class[$nlcd]}_${class[$mlct]}=\"if( isnull(MASK), 0, if( ${nlcd} ==${mlct}, 100, 0) -2001_${class[$mlct]}@peel)\" &"
+	echo $cmd
+    done
+done
+
+r.mask -o input=nlcd_offsets_mask maskcats=0
+r.mapcalc nlcd_offset_water_water="if( isnull(MASK), 0, if( 0 ==0, 100, 0) -2001_water@peel)" &
+r.mapcalc nlcd_offset_water_forest="if( isnull(MASK), 0, if( 0 ==1, 100, 0) -2001_forest@peel)" &
+r.mapcalc nlcd_offset_water_shrub="if( isnull(MASK), 0, if( 0 ==2, 100, 0) -2001_shrub@peel)" &
+r.mapcalc nlcd_offset_water_open="if( isnull(MASK), 0, if( 0 ==3, 100, 0) -2001_open@peel)" &
+r.mapcalc nlcd_offset_water_wetland="if( isnull(MASK), 0, if( 0 ==4, 100, 0) -2001_wetland@peel)" &
+r.mapcalc nlcd_offset_water_crop="if( isnull(MASK), 0, if( 0 ==5, 100, 0) -2001_crop@peel)" &
+r.mapcalc nlcd_offset_water_urban="if( isnull(MASK), 0, if( 0 ==6, 100, 0) -2001_urban@peel)" &
+r.mapcalc nlcd_offset_water_mosaic="if( isnull(MASK), 0, if( 0 ==7, 100, 0) -2001_mosaic@peel)" &
+r.mapcalc nlcd_offset_water_barren="if( isnull(MASK), 0, if( 0 ==8, 100, 0) -2001_barren@peel)" &
+
+r.mask -o input=nlcd_offsets_mask maskcats=4
+r.mapcalc nlcd_offset_wetland_water="if( isnull(MASK), 0, if( 4 ==0, 100, 0) -2001_water@peel)" &
+r.mapcalc nlcd_offset_wetland_forest="if( isnull(MASK), 0, if( 4 ==1, 100, 0) -2001_forest@peel)" &
+r.mapcalc nlcd_offset_wetland_shrub="if( isnull(MASK), 0, if( 4 ==2, 100, 0) -2001_shrub@peel)" &
+r.mapcalc nlcd_offset_wetland_open="if( isnull(MASK), 0, if( 4 ==3, 100, 0) -2001_open@peel)" &
+r.mapcalc nlcd_offset_wetland_wetland="if( isnull(MASK), 0, if( 4 ==4, 100, 0) -2001_wetland@peel)" &
+r.mapcalc nlcd_offset_wetland_crop="if( isnull(MASK), 0, if( 4 ==5, 100, 0) -2001_crop@peel)" &
+r.mapcalc nlcd_offset_wetland_urban="if( isnull(MASK), 0, if( 4 ==6, 100, 0) -2001_urban@peel)" &
+r.mapcalc nlcd_offset_wetland_mosaic="if( isnull(MASK), 0, if( 4 ==7, 100, 0) -2001_mosaic@peel)" &
+r.mapcalc nlcd_offset_wetland_barren="if( isnull(MASK), 0, if( 4 ==8, 100, 0) -2001_barren@peel)" &
+
+r.mask -o input=nlcd_offsets_mask maskcats=6
+r.mapcalc nlcd_offset_urban_water="if( isnull(MASK), 0, if( 6 ==0, 100, 0) -2001_water@peel)" &
+r.mapcalc nlcd_offset_urban_forest="if( isnull(MASK), 0, if( 6 ==1, 100, 0) -2001_forest@peel)" &
+r.mapcalc nlcd_offset_urban_shrub="if( isnull(MASK), 0, if( 6 ==2, 100, 0) -2001_shrub@peel)" &
+r.mapcalc nlcd_offset_urban_open="if( isnull(MASK), 0, if( 6 ==3, 100, 0) -2001_open@peel)" &
+r.mapcalc nlcd_offset_urban_wetland="if( isnull(MASK), 0, if( 6 ==4, 100, 0) -2001_wetland@peel)" &
+r.mapcalc nlcd_offset_urban_crop="if( isnull(MASK), 0, if( 6 ==5, 100, 0) -2001_crop@peel)" &
+r.mapcalc nlcd_offset_urban_urban="if( isnull(MASK), 0, if( 6 ==6, 100, 0) -2001_urban@peel)" &
+r.mapcalc nlcd_offset_urban_mosaic="if( isnull(MASK), 0, if( 6 ==7, 100, 0) -2001_mosaic@peel)" &
+r.mapcalc nlcd_offset_urban_barren="if( isnull(MASK), 0, if( 6 ==8, 100, 0) -2001_barren@peel)" &
+
+
+
+r.mask -r
+
+for mlct in $(seq 0 8); do
+    cmd="r.mapcalc nlcd_offset_total_${class[$mlct]}=\"(nlcd_offset_water_${class[$mlct]}+nlcd_offset_wetland_${class[$mlct]}+nlcd_offset_urban_${class[$mlct]})/100.0\" &"
+    echo $cmd
+done
+
+
+r.mapcalc nlcd_offset_total_water="(nlcd_offset_water_water+nlcd_offset_wetland_water+nlcd_offset_urban_water)/100.0" &
+r.mapcalc nlcd_offset_total_forest="(nlcd_offset_water_forest+nlcd_offset_wetland_forest+nlcd_offset_urban_forest)/100.0" &
+r.mapcalc nlcd_offset_total_shrub="(nlcd_offset_water_shrub+nlcd_offset_wetland_shrub+nlcd_offset_urban_shrub)/100.0" &
+r.mapcalc nlcd_offset_total_open="(nlcd_offset_water_open+nlcd_offset_wetland_open+nlcd_offset_urban_open)/100.0" &
+r.mapcalc nlcd_offset_total_wetland="(nlcd_offset_water_wetland+nlcd_offset_wetland_wetland+nlcd_offset_urban_wetland)/100.0" &
+r.mapcalc nlcd_offset_total_crop="(nlcd_offset_water_crop+nlcd_offset_wetland_crop+nlcd_offset_urban_crop)/100.0" &
+r.mapcalc nlcd_offset_total_urban="(nlcd_offset_water_urban+nlcd_offset_wetland_urban+nlcd_offset_urban_urban)/100.0" &
+r.mapcalc nlcd_offset_total_mosaic="(nlcd_offset_water_mosaic+nlcd_offset_wetland_mosaic+nlcd_offset_urban_mosaic)/100.0" &
+r.mapcalc nlcd_offset_total_barren="(nlcd_offset_water_barren+nlcd_offset_wetland_barren+nlcd_offset_urban_barren)/100.0" &
+
+g.region -p res=0:05
+
+r.mask mask_lower48_5min@GADM
+
+for mlct in ${class[*]}; do
+    cmd="r.resamp.stats input=nlcd_offset_total_${mlct} output=nlcd_offset_${mlct} method=mean &"
+    echo $cmd
+done
+
+r.resamp.stats --overwrite input=nlcd_offset_total_water output=nlcd_offset_water method=average &
+r.resamp.stats --overwrite input=nlcd_offset_total_forest output=nlcd_offset_forest method=average &
+r.resamp.stats --overwrite input=nlcd_offset_total_shrub output=nlcd_offset_shrub method=average &
+r.resamp.stats --overwrite input=nlcd_offset_total_open output=nlcd_offset_open method=average &
+r.resamp.stats --overwrite input=nlcd_offset_total_wetland output=nlcd_offset_wetland method=average &
+r.resamp.stats --overwrite input=nlcd_offset_total_crop output=nlcd_offset_crop method=average &
+r.resamp.stats --overwrite input=nlcd_offset_total_urban output=nlcd_offset_urban method=average &
+r.resamp.stats --overwrite input=nlcd_offset_total_mosaic output=nlcd_offset_mosaic method=average &
+r.resamp.stats --overwrite input=nlcd_offset_total_barren output=nlcd_offset_barren method=average &

@@ -8,83 +8,18 @@
 \chapter{Analysis}
 \label{cha:analysis}
 
-<<analysis>>=
+<<init, eval=TRUE>>=
+
 setwd( "~/thesis/analysis")
-rm(list=ls())
-quartz.options( type="png")
 
-library( raster)
-library( rgdal)
-library( lattice)
-library( xtable)
+texWd <- setwd("../data")
+dataWd <- getwd()
+setwd( dataWd)
 
-library( RColorBrewer)
-divTheme <- sp.theme( 
-    regions= list(
-        col= colorRampPalette( brewer.pal( 5, "BrBG"), 
-          space= "Lab")(100)))
-seqTheme <- sp.theme(
-    regions= list(
-        col= colorRampPalette( brewer.pal( 5, "YlGn"),
-          space="Lab")(100)))
-
-db <- "../data/cusa.sqlite"
-
-                                        # list the subdatasets and split on equal sign
-                                        # e.g. SUBDATASET_2_NAME=RASTERLITE:cusa.sqlite,table=agc_crop 
-maps <- function() {
-  unlist( lapply( strsplit( grep( "NAME",
-                                attr( GDALinfo( db, silent=TRUE),
-                                     "subdsmdata"),
-                                value=T),
-                           "="),
-                 function(x) return(x[3])))
-}
-
-
-covers <- unlist( lapply( strsplit( maps()[ grep( "^agc", maps())], "_"),
-                         function(x) return( x[2])))
-
-                                        # arg: map name string
-                                        # res: fully-qualified DSN in db
-dataset  <- function( s) {
-  return( paste( "RASTERLITE:", db, ",table=", s,
-                sep=""))
-}
-
-                                        # arg: map name string
-                                        # res: rgdal handle
-handle <- function(map) {
-  return( new( "GDALReadOnlyDataset", dataset( map)))
-}
-
-                                        # arg: rgdal handle
-                                        # res: spatial grid data frame
-as.spgdf <- function( handle) {
-  result <- as( handle, "SpatialGridDataFrame")
-  #names( result) <- names( handle)
-  return( result)
-}
-
-#nlcdCrop <- raster( as.spgdf( handle( "nlcd_crop")))
-#agcCrop <-  raster( as.spgdf( handle( "agc_crop")))
-
-
-grepHandles <- function( regex) 
-  return( sapply( maps()[ grep( regex, maps())],
-                 handle))
-
-stackHandles <- function( handles) {
-  result <- stack( sapply( handles, function(x) raster( as.spgdf( x))))
-  attr( result, "layernames") <- names( handles)
-  return( result)
-}
-
-areaAcres <- function( rast) {
-  result <- rast *area( rast) *247.105381
-  attr( result, "layernames") <- attr( rast, "layernames")
-  return( result)
-}
+#rm(list=ls())
+db <- "cusa.sqlite"
+source( "~/thesis/R/analysis.R")
+source( "~/thesis/R/peel.R")
 
 ## calculate areas in millions of acres (Ma)
 areas <- sapply( list( ag="^ag_", As00="As00$", As05="As05$", agc="^agc", nlcd="^nlcd"),
@@ -117,7 +52,7 @@ printAreas <- function( Ma) {
 
 @ 
 
-<<analysis, results=tex>>=
+<<tabTotal, results=tex>>=
 print( xtable( areasDf, 
               caption= "Total Acreages by Map and Cover", 
               label= "tab:total",
@@ -155,41 +90,11 @@ this assumes that all of that development intersects with MLCT
 cropland area.
 @ 
 
-<<analysis>>=
+<<bias>>=
 
 # calculate RMSE/bias summaries
 # comparing everything to NLCD
 
-rmseRast <- function(obsRast, predRast) {
-  sqErr <- overlay( obsRast, predRast,
-                   fun=function( obs, pred) return(( obs -pred) ^2))
-  return( sqrt( cellStats( sqErr, 'mean')))
-}
-
-biasRast <- function(obsRast, predRast) {
-  err <- overlay( obsRast, predRast,
-                   fun=function( obs, pred) return( obs -pred))
-  return( cellStats( err, 'mean'))
-}
-
-
-  
-rmseSummary <- function( obsNameFun, predNameFun) {
-  sapply( covers,
-         function( c) {
-           obsRast  <- raster( as.spgdf( handle( obsNameFun(c))))
-           predRast <- raster( as.spgdf( handle( predNameFun(c))))
-           if( extent( obsRast) != extent( predRast)) {
-             intExt <- intersectExtent( obsRast, predRast)
-             obsRast <- crop( obsRast, intExt)
-             predRast <- crop( predRast, intExt)
-           }
-           return( c( rmse_frac= rmseRast( obsRast, predRast),
-                      bias_frac= biasRast( obsRast, predRast),
-                     rmse_acres= rmseRast( areaAcres(obsRast), areaAcres( predRast)),
-                     bias_acres= biasRast( areaAcres(obsRast), areaAcres( predRast))))
-         })
-}
 
 rmseAgc <- rmseSummary( function(c) paste(  "agc", c, sep="_"),
                         function(c) paste( "nlcd", c, sep="_"))
@@ -201,7 +106,7 @@ rmseAs05 <- rmseSummary( function(c) paste( "mlct_2001", c, "As05", sep="_"),
                          function(c) paste( "nlcd", c, sep="_"))
 @ 
 
-<<analysis, results=tex>>=
+<<biasTab, results=tex>>=
 ## t( rmseAgc)
 ## t( rmseAs00)
 ## t( rmseAs05)
@@ -222,7 +127,7 @@ print( xtable( t( rmseAs05),
               digits= c( 0, 2, -2, 0, 0)))
 @
 
-<<analysis>>=
+<<stack>>=
 ## agcAvgAcres <-
 ##   sapply( paste( "agc_", covers, sep=""),
 ##          function( map) {
@@ -247,15 +152,18 @@ attr( stackDiff, "layernames") <-  covers
 
 \begin{figure} 
 \begin{center} 
-<<analysis>>= 
-## fig_agc
-spgdfAgc <- as.spgdf( stackAgc)
-names( spgdfAgc) <- layerNames( stackAgc)
-quartz( file="fig_agc.png")
-trellis.par.set( seqTheme)
-print( spplot( spgdfAgc))
+
+@
+<<fig_agc>>= 
+
+#spgdfAgc <- as.spgdf( stackAgc)
+#names( spgdfAgc) <- layerNames( stackAgc)
+setwd( texWd)
+png( file="fig_agc.png")
+print( coverMaps( stackAgc, 0.4))
 dev.off()
 @ 
+
 \includegraphics{fig_agc}
 \end{center} 
 \caption{Aglands Complete cover maps} 
@@ -264,15 +172,18 @@ dev.off()
 
 \begin{figure} 
 \begin{center} 
-<<analysis>>= 
-## fig_nlcd
-spgdfNlcd <- as.spgdf( stackNlcd)
-names( spgdfNlcd) <- layerNames( stackNlcd)
-quartz( file="fig_nlcd.png")
-trellis.par.set( seqTheme)
-print( spplot( spgdfNlcd))
+
+@
+<<fig_nlcd>>= 
+
+##spgdfNlcd <- as.spgdf( stackNlcd)
+##names( spgdfNlcd) <- layerNames( stackNlcd)
+setwd( texWd)
+png( file="fig_nlcd.png")
+print( coverMaps( stackNlcd, 0.4))
 dev.off()
 @ 
+
 \includegraphics{fig_nlcd}
 \end{center} 
 \caption{NLCD cover maps} 
@@ -281,15 +192,21 @@ dev.off()
 
 \begin{figure} 
 \begin{center} 
-<<analysis>>=
-## fig_diff
-spgdfDiff <- as.spgdf( stackDiff)
-names( spgdfDiff) <- layerNames( stackDiff)
-quartz( file="fig_diff.png")
-trellis.par.set( divTheme)
-print( spplot( spgdfDiff))
+
+@ 
+<<fig_diff>>=
+
+##spgdfDiff <- as.spgdf( stackDiff)
+##names( spgdfDiff) <- layerNames( stackDiff)
+setwd( texWd)
+png( file="fig_diff.png")
+print( coverMaps( stackDiff, 0.4) + 
+  scale_fill_gradientn( "diff", colours= rev( brewer.pal( 11, "BrBG")), 
+                         limits= c( 0.1, -0.1),
+                         breaks= seq( 0.1, -0.1, by= -0.02)))
 dev.off()
 @ 
+
 \includegraphics{fig_diff}
 \end{center} 
 \caption{Difference maps, Aglands Complete minus NLCD} 
@@ -298,7 +215,9 @@ dev.off()
 
 \begin{figure} 
 \begin{center} 
-<<analysis>>=
+
+@ 
+<<fig_cordiff>>=
 
 ## look for correlations across the difference maps
 
@@ -311,12 +230,27 @@ rownames( corDiff) <- unlist( lapply(
     function( x) return( x[ 2])))
 ord <- order.dendrogram( as.dendrogram( hclust( dist( corDiff))))
 
-## fig_cordiff
-quartz( file="fig_cordiff.png")
-trellis.par.set( divTheme)
-print( levelplot( corDiff[ ord, ord], 
-                 at= do.breaks( c( -1.01, 1.01), 20), 
-                 xlab= "", ylab= ""))
+corDiffPlot <- 
+  ggplot( melt( corDiff),
+         aes( x=X1, y=X2, fill= value)) +
+  geom_tile() +
+  theme_bw() +
+  opts( panel.grid.minor= theme_blank(),
+       panel.grid.major= theme_blank(),
+       panel.background= theme_blank(),
+       axis.title.x= theme_blank(),
+       axis.text.x= theme_text( angle= 90, hjust=1),
+       axis.title.y= theme_blank()) +
+  scale_x_discrete( limits= colnames(corDiff)[ord]) +
+  scale_y_discrete( limits= colnames(corDiff)[ord]) +
+  scale_fill_gradientn( "cor", colours= rev( brewer.pal( 11, "BrBG")), 
+                         limits= c( 1.0, -1.0),
+                         breaks= seq( 1.0, -1.0, by= -0.2))
+
+
+setwd( texWd)
+png( file="fig_cordiff.png")
+print( corDiffPlot)
 dev.off()
 @ 
 \includegraphics{fig_cordiff}

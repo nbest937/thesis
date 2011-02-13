@@ -90,6 +90,24 @@ mlctReclass <- function( mlct, reclassMatrix, overwrite=FALSE, ...) {
   mlct
 }
 
+## overlayFunction <- function( pri, sec, pct) {
+##   ifelse( is.na(pri), NA,
+##          ifelse( is.na( sec), 1,
+##                 ifelse( is.na( pct), Amin,
+##                        Amin +( 1 -Amin) *pct /100)))
+## }
+
+## priFracOvFunc <- function( x) {
+##   pri <- x[ 1]
+##   sec <- x[ 2]
+##   pct <- x[ 3]
+##   ifelse( is.na(pri), NA,
+##          ifelse( is.na( sec), 1,
+##                 ifelse( is.na( pct), Amin,
+##                        Amin +( 1 -Amin) *pct /100)))
+## }
+
+
 primaryFraction <- function( mlct, Amin=1.0, overwrite=FALSE, ...) {
                                         # appends an A_p raster to the MLCT list 
                                         # and returns the appended list
@@ -97,16 +115,34 @@ primaryFraction <- function( mlct, Amin=1.0, overwrite=FALSE, ...) {
     paste( deparse( substitute( mlct)), "Amin", 
           paste( Amin, "tif", sep= "."),
           sep= "_")
-  overlayFunction <- function( pri, sec, pct) {
+  mlct$Amin <- Amin
+  ## priFracOvFunc <- function( r) {
+  ##   pri <- r[ 1]
+  ##   sec <- r[ 2]
+  ##   pct <- r[ 3]
+  ##   ifelse( is.na(pri), NA,
+  ##          ifelse( is.na( sec), 1,
+  ##                 ifelse( is.na( pct), Amin,
+  ##                        Amin +( 1 -Amin) *pct /100)))
+  ## }
+  priFracCalcFunc <- function( st) {
+    pri <- st[ 1]
+    sec <- st[ 2]
+    pct <- st[ 3]
     ifelse( is.na(pri), NA,
            ifelse( is.na( sec), 1,
                   ifelse( is.na( pct), Amin,
                          Amin +( 1 -Amin) *pct /100)))
   }
-  mlct$Amin <- Amin
+
   if( Amin <1 && overwrite)
-    mlct$Ap <- overlay( mlct$pri, mlct$sec, mlct$pct, 
-                       fun= overlayFunction,
+    ## mlct$Ap <- overlay( mlct$pri, mlct$sec, mlct$pct, 
+    ##                    fun= priFracOvFunc, #overlayFunction,
+    ##                    filename= primaryFractionFile,
+    ##                    overwrite= TRUE,
+    ##                    ...)
+    mlct$Ap <- calc( stack(mlct$pri, mlct$sec, mlct$pct), 
+                       fun= priFracCalcFunc,
                        filename= primaryFractionFile,
                        overwrite= TRUE,
                        ...)
@@ -157,13 +193,27 @@ coverFractions <- function( mlct, mosaic= TRUE, overwrite= FALSE, ...)  {
         sapply( names( classes),
                function( cover) {
                  class <- classes[[ cover]]
-                 overlayFunction <- function( pri, sec, Ap) {
+                 ## overlayFunction <- function( pri, sec, Ap) {
+                 ##   ifelse( is.na( pri), NA,
+                 ##          ifelse( pri ==class, Ap, 0)
+                 ##          +ifelse( !is.na(sec) & sec ==class, 1 -Ap, 0))
+                 ## }
+                 ## overlay( mlct$pri, mlct$sec, mlct$Ap, 
+                 ##         fun= overlayFunction,
+                 ##         filename= paste( mlctName, cover, "Amin", 
+                 ##           paste( Amin, ".tif", sep=""),
+                 ##           sep="_"),
+                 ##         overwrite= TRUE, ...)
+                 calcFunction <- function( st) {
+                   pri <- st[ 1]
+                   sec <- st[ 2]
+                   Ap <- st[ 3]
                    ifelse( is.na( pri), NA,
                           ifelse( pri ==class, Ap, 0)
                           +ifelse( !is.na(sec) & sec ==class, 1 -Ap, 0))
                  }
-                 overlay( mlct$pri, mlct$sec, mlct$Ap, 
-                         fun= overlayFunction,
+                 calc( stack(mlct$pri, mlct$sec, mlct$Ap),
+                         fun= calcFunction,
                          filename= paste( mlctName, cover, "Amin", 
                            paste( Amin, ".tif", sep=""),
                            sep="_"),

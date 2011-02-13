@@ -284,7 +284,7 @@ setwd( dataWd)
 mlct <- mlctList( "2001_lct1.tif", 
                   "2001_lct1_sec.tif", 
                   "2001_lct1_pct.tif")
-mlct  <- mlctReclass( mlct, mlctReclassMatrix, overwrite= overwriteRasters, progress="text")
+mlct  <- mlctReclass( mlct, mlctReclassMatrix, overwrite= overwriteRasters, datatype="INT1U", progress="text")
 
 mlctPlots <- list( pri= peelMap( mlct$pri, 0.01),
                     sec= peelMap( mlct$sec, 0.01))
@@ -770,12 +770,12 @@ if( overwriteFigures ) {
 
 
 
-<<mlct1, eval=FALSE>>=
+<<mlct1>>=
 
 setwd( dataWd)
 
-mlct  <- primaryFraction( mlct, Amin= 0.5, overwrite= overwriteRasters, progress="text")
-mlct  <- coverFractions( mlct, overwrite= overwriteRasters, progress="text")
+mlct  <- primaryFraction( mlct, Amin= 0.5, overwrite= overwriteRasters || TRUE, progress="text")
+mlct  <- coverFractions( mlct, overwrite= overwriteRasters || TRUE, progress="text")
 mlct  <- aggregateFractions( mlct, overwrite= overwriteRasters, progress="text")
 mlct  <- decomposeMosaic( mlct, overwrite= overwriteRasters, progress="text")
 

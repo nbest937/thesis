@@ -10,7 +10,7 @@ library( RColorBrewer)
 
 library( foreach)
 library(doMC)
-registerDoMC()
+registerDoMC( cores= 9)
 
 mlctList <- function( priFile, secFile, pctFile) {
                                         # creates a list of raster objects
@@ -20,7 +20,7 @@ mlctList <- function( priFile, secFile, pctFile) {
     list( pri= priRaster,
           sec= if( missing( secFile)) raster( priRaster) else raster( secFile),
           pct= if( missing( pctFile)) raster( priRaster) else raster( pctFile))
-  sapply( mlct, setMinMax)
+  ##sapply( mlct, setMinMax)
 }
 
 
@@ -189,39 +189,28 @@ coverFractions <- function( mlct, mosaic= TRUE, overwrite= FALSE, ...)  {
             "fracs.tif", sep="_")
   if( overwrite) {
     if( Amin < 1.0) {
-      fracs <-
-        sapply( names( classes),
-               function( cover) {
-                 class <- classes[[ cover]]
-                 ## overlayFunction <- function( pri, sec, Ap) {
-                 ##   ifelse( is.na( pri), NA,
-                 ##          ifelse( pri ==class, Ap, 0)
-                 ##          +ifelse( !is.na(sec) & sec ==class, 1 -Ap, 0))
-                 ## }
-                 ## overlay( mlct$pri, mlct$sec, mlct$Ap, 
-                 ##         fun= overlayFunction,
-                 ##         filename= paste( mlctName, cover, "Amin", 
-                 ##           paste( Amin, ".tif", sep=""),
-                 ##           sep="_"),
-                 ##         overwrite= TRUE, ...)
-                 calcFunction <- function( st) {
+      fracDoparFun <- function( priFilename, secFilename, pctFilename, ...) {
+        foreach( cover= names( classes), .packages= "raster") %dopar% {
+          class <- classes[[ cover]]
+          frac <-
+            calc( stack( raster( priFilename),
+                        raster( secFilename),
+                        raster( pctFilename)),
+                 fun= function( st) {
                    pri <- st[ 1]
                    sec <- st[ 2]
                    Ap <- st[ 3]
                    ifelse( is.na( pri), NA,
                           ifelse( pri ==class, Ap, 0)
                           +ifelse( !is.na(sec) & sec ==class, 1 -Ap, 0))
-                 }
-                 calc( stack(mlct$pri, mlct$sec, mlct$Ap),
-                         fun= calcFunction,
-                         filename= paste( mlctName, cover, "Amin", 
-                           paste( Amin, ".tif", sep=""),
-                           sep="_"),
-                         overwrite= TRUE, ...)
-               })
-      mlct$fracs <- do.call( brick, c( unlist( fracs, use.names=FALSE),
-                                      filename= fracsBrickFile,
-                                      overwrite= TRUE, ...))
+                 },
+                 filename= paste( mlctName, cover, "Amin", 
+                   paste( Amin, ".tif", sep=""),
+                   sep="_"),
+                 overwrite= TRUE, ...)
+          return( filename( frac))
+        }
+      }
     } else {
       fracDoparFun <- function( priFilename, ...) {
         foreach( cover= names( classes), .packages= "raster") %dopar% {
@@ -240,12 +229,15 @@ coverFractions <- function( mlct, mosaic= TRUE, overwrite= FALSE, ...)  {
           return( filename( frac))
         }
       }
-      mlct$fracs <- 
-        brick( stack( fracDoparFun( filename( mlct$pri), ...)),
-              filename= fracsBrickFile,
-              overwrite= TRUE,
-              ...)
     }
+    mlct$fracs <- 
+      brick( stack( fracDoparFun( filename( mlct$pri),
+                                 secFilename= filename( mlct$sec),
+                                 pctFilename= filename( mlct$pct),
+                                 ...)),
+            filename= fracsBrickFile,
+            overwrite= TRUE,
+            ...)
   } else {
     mlct$fracs <- brick( fracsBrickFile)
   }

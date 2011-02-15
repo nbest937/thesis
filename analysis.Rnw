@@ -18,8 +18,8 @@ setwd( dataWd)
 
 #rm(list=ls())
 db <- "cusa.sqlite"
-source( "~/thesis/R/analysis.R")
-source( "~/thesis/R/peel.R")
+source( "~/thesis/code/analysis.R")
+source( "~/thesis/code/peel.R")
 
 ## calculate areas in millions of acres (Ma)
 areas <- sapply( list( ag="^ag_", As00="As00$", As05="As05$", agc="^agc", nlcd="^nlcd"),

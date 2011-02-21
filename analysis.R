@@ -1,18 +1,7 @@
-% -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
-
-\SweaveOpts{ results=hide}
-\SweaveOpts{ include=FALSE}
-\SweaveOpts{ echo=TRUE}
-\SweaveOpts{ engine=R}
-\SweaveOpts{ keep.source=TRUE}
-\SweaveOpts{ eval=TRUE}
-
-\graphicspath{ {analysis/} }
-
-\chapter{Analysis}
-\label{cha:analysis}
-
-<<init, eval=TRUE>>=
+###################################################
+### chunk number 1: init
+###################################################
+#line 16 "/home/nbest/thesis/analysis.Rnw"
 
 setwd( "~/thesis/analysis")
 
@@ -54,47 +43,22 @@ printAreas <- function( Ma) {
   return( paste( round( Ma, digits=1), "Ma (", round( Ma *0.404685642, digits=1), "Mha)", sep=""))
 }
 
-@ 
 
-<<tabTotal, results=tex>>=
+
+###################################################
+### chunk number 2: tabTotal
+###################################################
+#line 60 "/home/nbest/thesis/analysis.Rnw"
 print( xtable( areasDf, 
               caption= "Total Acreages by Map and Cover", 
               label= "tab:total",
               digits= 1))
-@ 
 
-The MLCT indicates \Sexpr{ printAreas( areasDf[ "As05", "crop"]) } of
-cropland in the cUSA in 2001. Assuming that 50\% of the
-cropland/natural vegetation mosaic is additional cropland area gives
-an additional \Sexpr{ printAreas( areasDf[ "As05", "mosaic"] *0.5) }
-of agricultural land. This gives a total area of 
-\Sexpr{ printAreas(areasDf[ "As05", "crop"] +areasDf[ "As05", "mosaic"] *0.5) }
-of total area directly associated with
-agricultural activity according to the IGBP classification used in the
-MLCT.
 
-Aglands2000 indicates roughly \Sexpr{ printAreas( areasDf[ "ag","crop"]) } 
-of cropland.
-
-Pasture indicated by Aglands2000 appears to be a broader
-classification than that of the NLCD's pasture class because much of
-the grazing land east of the Mississippi river counted in the
-Aglands2000 pasture map is absent in the NLCD pasture class.
-
-Due to its greater resolution (30m) the NLCD is better suited at
-discerning developed areas in rural landscapes ranging from rural
-roads to farmsteads to small communities that do not show up in the
-MLCT data. There is a total area of roughly 74 Ma (30 Mha) of
-development remaining after subtracting the MLCT urban class from all
-developed classes in the NLCD where the NLCD shows greater development
-after they have both been aggregated to the 5-arcmin grid. Applying
-this area as an offset to the cropland area in Aglands2000 brings us
-closer to the expected acreage under cultivation in 2001, although
-this assumes that all of that development intersects with MLCT
-cropland area.
-@ 
-
-<<bias>>=
+###################################################
+### chunk number 3: bias
+###################################################
+#line 98 "/home/nbest/thesis/analysis.Rnw"
 
 # calculate RMSE/bias summaries
 # comparing everything to NLCD
@@ -108,9 +72,12 @@ rmseAs00 <- rmseSummary( function(c) paste( "mlct_2001", c, "As00", sep="_"),
 
 rmseAs05 <- rmseSummary( function(c) paste( "mlct_2001", c, "As05", sep="_"),
                          function(c) paste( "nlcd", c, sep="_"))
-@ 
 
-<<biasTab, results=tex>>=
+
+###################################################
+### chunk number 4: biasTab
+###################################################
+#line 114 "/home/nbest/thesis/analysis.Rnw"
 ## t( rmseAgc)
 ## t( rmseAs00)
 ## t( rmseAs05)
@@ -129,9 +96,12 @@ print( xtable( t( rmseAs05),
               caption= "Errors and Biases of MLCT, $A_s = 0.5$ relative to NLCD",
               label= "tab:ebmlct05",
               digits= c( 0, 2, -2, 0, 0)))
-@
 
-<<stack>>=
+
+###################################################
+### chunk number 5: stack
+###################################################
+#line 135 "/home/nbest/thesis/analysis.Rnw"
 ## agcAvgAcres <-
 ##   sapply( paste( "agc_", covers, sep=""),
 ##          function( map) {
@@ -152,13 +122,12 @@ attr( stackNlcd, "layernames") <-  covers
 stackDiff <- stackAgc -stackNlcd
 attr( stackDiff, "layernames") <-  covers
 
-@ 
 
-\begin{figure} 
-\begin{center} 
 
-@
-<<fig_agc>>= 
+###################################################
+### chunk number 6: fig_agc
+###################################################
+#line 162 "/home/nbest/thesis/analysis.Rnw"
 
 #spgdfAgc <- as.spgdf( stackAgc)
 #names( spgdfAgc) <- layerNames( stackAgc)
@@ -166,19 +135,12 @@ setwd( texWd)
 png( file="fig_agc.png")
 print( coverMaps( stackAgc, 0.4))
 dev.off()
-@ 
 
-\includegraphics{fig_agc}
-\end{center} 
-\caption{Aglands Complete cover maps} 
-\label{fig:agc} 
-\end{figure} 
 
-\begin{figure} 
-\begin{center} 
-
-@
-<<fig_nlcd>>= 
+###################################################
+### chunk number 7: fig_nlcd
+###################################################
+#line 182 "/home/nbest/thesis/analysis.Rnw"
 
 ##spgdfNlcd <- as.spgdf( stackNlcd)
 ##names( spgdfNlcd) <- layerNames( stackNlcd)
@@ -186,19 +148,12 @@ setwd( texWd)
 png( file="fig_nlcd.png")
 print( coverMaps( stackNlcd, 0.4))
 dev.off()
-@ 
 
-\includegraphics{fig_nlcd}
-\end{center} 
-\caption{NLCD cover maps} 
-\label{fig:nlcd} 
-\end{figure} 
 
-\begin{figure} 
-\begin{center} 
-
-@ 
-<<fig_diff>>=
+###################################################
+### chunk number 8: fig_diff
+###################################################
+#line 202 "/home/nbest/thesis/analysis.Rnw"
 
 ##spgdfDiff <- as.spgdf( stackDiff)
 ##names( spgdfDiff) <- layerNames( stackDiff)
@@ -209,19 +164,12 @@ print( coverMaps( stackDiff, 0.4) +
                          limits= c( 0.1, -0.1),
                          breaks= seq( 0.1, -0.1, by= -0.02)))
 dev.off()
-@ 
 
-\includegraphics{fig_diff}
-\end{center} 
-\caption{Difference maps, Aglands Complete minus NLCD} 
-\label{fig:diff} 
-\end{figure} 
 
-\begin{figure} 
-\begin{center} 
-
-@ 
-<<fig_cordiff>>=
+###################################################
+### chunk number 9: fig_cordiff
+###################################################
+#line 225 "/home/nbest/thesis/analysis.Rnw"
 
 ## look for correlations across the difference maps
 
@@ -256,23 +204,12 @@ setwd( texWd)
 png( file="fig_cordiff.png")
 print( corDiffPlot)
 dev.off()
-@ 
-\includegraphics{fig_cordiff}
-\end{center} 
-\caption{Correlations across cover type in difference maps} 
-\label{fig:cordiff} 
-\end{figure} 
 
-The elements of the matrix have been reordered according to the
-clustering forumla given in \citet[sec. 6.2.3]{Sarkar2008} in order to
-achieve a degree of visual clustering among the correlation vectors.
 
-@ 
-<<analysis>>=
+###################################################
+### chunk number 10: analysis
+###################################################
+#line 272 "/home/nbest/thesis/analysis.Rnw"
 setwd( "~/thesis")
-@ %def 
 
-%%% Local Variables: 
-%%% mode: latex
-%%% TeX-master: "thesis"
-%%% End: 
+

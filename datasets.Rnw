@@ -2,7 +2,7 @@
 
 \SweaveOpts{ results=hide}
 \SweaveOpts{ include=FALSE}
-\SweaveOpts{ echo=FALSE}
+\SweaveOpts{ echo=TRUE}
 \SweaveOpts{ engine=R}
 \SweaveOpts{ keep.source=TRUE}
 \SweaveOpts{ eval=TRUE}
@@ -264,6 +264,7 @@ if( overwriteFigures) {
 We repeat this operation for the entire data set.
 
 @
+
 <<mlct>>=
 
 ## repeat for cUSA
@@ -344,6 +345,8 @@ if( overwriteFigures) {
 \caption{MLCT primary cover classification confidence} 
 \label{fig:mlct_pct} 
 \end{figure} 
+
+\todo{Fix artifacts in confidence figure}
 
 \todo{Describe characteristics of MLCT reclass maps and confidence at
   cUSA extents}

@@ -16,6 +16,12 @@
 \usepackage{Sweave}
 \usepackage{graphicx}
 
+\usepackage{listings} 
+\usepackage{courier} 
+\lstset{breaklines=true,basicstyle=\ttfamily,language=R}
+
+\usepackage{pdfpages}
+
 % \ifpdf  
 % \pdfinfo { /Title  (Best MA G\&ES NEIU Thesis)
 %   /Creator (TeX)
@@ -35,12 +41,15 @@
 \title{Synthesis of a complete land use / land cover data set for the
   conterminous United States emphasizing accuracy in area and
   distribution of agricultural activity} \author{Neil A. Best}
-\degreeyear{December~2010}
+\degreeyear{May~2011}
 
 \othermasters{Master of Arts}{M.A.}  \department{Geography \&
   Environmental Studies}
 
 \maketitle
+
+%\includepdf[pages={2,1}]{neiuForms.pdf}
+%!pdfTeX error: pdflatex (file ./neiuForms.pdf): PDF inclusion: invalid font in reference type <dictionary>
 
 \frontmatter
 
@@ -72,12 +81,30 @@
 
 \chapter*{Acknowledgements}
 
-This work was made possible through the support of my employer, the
-Computation Institute, University of Chicago, and its director,
-Dr. Ian Foster.  
+This thesis is dedicated to my son, Leo.  Son, I began working on this
+degree before you were born and my commitment to completing it was
+sustained by my desire to demonstrate to you that in life we finish
+what we have started.
+
+I could not have completed this paper over the past year and, by
+extension, my degree over more years than I care to mention without the
+support of my loving wife, Laura.
+
+This work was made possible through the support of my
+employer, the Computation Institute at the University of Chicago, and its
+director, Dr. Ian Foster.  
+
+My thesis committee was comprised of Dr. Monika Mihir (chair),
+Dr. Erick Howenstine (department head), both of the Department of
+Geography \& Environmental Studies at Northeastern Illinois
+University, and Dr. Joshua Elliott from the Computation Institute.  I
+deeply appreciate their guidance and support through all stages of
+this phase of my education.
 
 
-\tableofcontents \listoftables \listoffigures
+\tableofcontents 
+\listoftables
+\listoffigures
 
 %% Create a List of Abbreviations. The left column %% is 1 inch wide and left-justified
 \chapter{List of Abbreviations}
@@ -120,12 +147,25 @@ Dr. Ian Foster.
 \chapter{Conclusions}
 
 
-\appendix*
 
-%\include{appendix}
 
 \backmatter
 
 \bibliography{thesis}
+
+\appendix
+
+\chapter{Source Code: Data Sets}
+\section{R helper functions}
+\lstinputlisting{code/peel.R}
+\section{R code embedded in the chapter}
+\lstinputlisting{datasets.R}
+\chapter{Source Code: Analysis}
+\section{R helper functions}
+\lstinputlisting{code/analysis.R}
+\section{R code embedded in the chapter}
+\lstinputlisting{analysis.R}
+\section{GRASS code use to compute NLCD offsets}
+\lstinputlisting[language=bash]{code/nlcd.grass}
 
 \end{document}

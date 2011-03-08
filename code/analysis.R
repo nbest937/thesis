@@ -14,62 +14,71 @@ library( xtable)
 ##         col= colorRampPalette( brewer.pal( 5, "YlGn"),
 ##           space="Lab")(100)))
 
-                                        # list the subdatasets and split on equal sign
-                                        # e.g. SUBDATASET_2_NAME=RASTERLITE:cusa.sqlite,table=agc_crop 
-maps <- function() {
-  unlist( lapply( strsplit( grep( "NAME",
-                                attr( GDALinfo( db, silent=TRUE),
-                                     "subdsmdata"),
-                                value=T),
-                           "="),
-                 function(x) return(x[3])))
-}
+##                                         # list the subdatasets and split on equal sign
+##                                         # e.g. SUBDATASET_2_NAME=RASTERLITE:cusa.sqlite,table=agc_crop 
+## maps <- function() {
+##   unlist( lapply( strsplit( grep( "NAME",
+##                                 attr( GDALinfo( db, silent=TRUE),
+##                                      "subdsmdata"),
+##                                 value=T),
+##                            "="),
+##                  function(x) return(x[3])))
+## }
 
 
-covers <- unlist( lapply( strsplit( maps()[ grep( "^agc", maps())], "_"),
-                         function(x) return( x[2])))
+## covers <- unlist( lapply( strsplit( maps()[ grep( "^agc", maps())], "_"),
+##                          function(x) return( x[2])))
 
-                                        # arg: map name string
-                                        # res: fully-qualified DSN in db
-dataset  <- function( s) {
-  return( paste( "RASTERLITE:", db, ",table=", s,
+##                                         # arg: map name string
+##                                         # res: fully-qualified DSN in db
+## dataset  <- function( s) {
+##   return( paste( "RASTERLITE:", db, ",table=", s,
+##                 sep=""))
+## }
+
+##                                         # arg: map name string
+##                                         # res: rgdal handle
+## handle <- function(map) {
+##   return( new( "GDALReadOnlyDataset", dataset( map)))
+## }
+
+##                                         # arg: rgdal handle
+##                                         # res: spatial grid data frame
+## as.spgdf <- function( handle) {
+##   result <- as( handle, "SpatialGridDataFrame")
+##   #names( result) <- names( handle)
+##   return( result)
+## }
+
+## #nlcdCrop <- raster( as.spgdf( handle( "nlcd_crop")))
+## #agcCrop <-  raster( as.spgdf( handle( "agc_crop")))
+
+
+## grepHandles <- function( regex) 
+##   return( sapply( maps()[ grep( regex, maps())],
+##                  handle))
+
+## stackHandles <- function( handles) {
+##   result <- stack( sapply( handles, function(x) raster( as.spgdf( x))))
+##   attr( result, "layernames") <- names( handles)
+##   return( result)
+## }
+
+## areaAcres <- function( rast) {
+##   result <- rast *area( rast) *247.105381
+##   attr( result, "layernames") <- attr( rast, "layernames")
+##   return( result)
+##}
+
+printAreas <- function( acres) {
+  return( paste( round( acres /10^6, digits=1), "Ma (",
+                round( acres /10^6 *0.404685642, digits=1), "Mha)",
                 sep=""))
 }
 
-                                        # arg: map name string
-                                        # res: rgdal handle
-handle <- function(map) {
-  return( new( "GDALReadOnlyDataset", dataset( map)))
+getPeelBand <- function( peelBrick, cover) {
+  unstack( peelBrick)[[ peelBands[[ cover]]]]
 }
-
-                                        # arg: rgdal handle
-                                        # res: spatial grid data frame
-as.spgdf <- function( handle) {
-  result <- as( handle, "SpatialGridDataFrame")
-  #names( result) <- names( handle)
-  return( result)
-}
-
-#nlcdCrop <- raster( as.spgdf( handle( "nlcd_crop")))
-#agcCrop <-  raster( as.spgdf( handle( "agc_crop")))
-
-
-grepHandles <- function( regex) 
-  return( sapply( maps()[ grep( regex, maps())],
-                 handle))
-
-stackHandles <- function( handles) {
-  result <- stack( sapply( handles, function(x) raster( as.spgdf( x))))
-  attr( result, "layernames") <- names( handles)
-  return( result)
-}
-
-areaAcres <- function( rast) {
-  result <- rast *area( rast) *247.105381
-  attr( result, "layernames") <- attr( rast, "layernames")
-  return( result)
-}
-
 
 rmseRast <- function(obsRast, predRast) {
   sqErr <- overlay( obsRast, predRast,

@@ -12,39 +12,33 @@
 }
 \usepackage{natbib}
 \usepackage[prependcaption]{todonotes} %[obeyDraft]
-% \usepackage{ifpdf}
 \usepackage{Sweave}
+% chages to Sweave.sty defaults
+% from http://faculty.agecon.vt.edu/moeltner/AAEC5126/Sweave/docs/Arnholt_tutorial.pdf
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{fontsize=\small,fontshape=n}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{fontsize=\small,fontshape=n}
+\DefineVerbatimEnvironment{Scode}{Verbatim}{fontsize=\small,fontshape=n}
 \usepackage{graphicx}
-
 \usepackage{listings} 
 \usepackage{courier} 
 \lstset{breaklines=true,basicstyle=\ttfamily,language=R}
-
 \usepackage{pdfpages}
 
-% \ifpdf  
-% \pdfinfo { /Title  (Best MA G\&ES NEIU Thesis)
-%   /Creator (TeX)
-%   /Producer (pdfTeX)
-%   /Author (Neil Best nbest@alum.mit.edu)
-%   /CreationDate (D:YYYYMMDDhhmmss)  %format D:YYYYMMDDhhmmss
-%   /ModDate (D:YYYYMMDDhhmm)
-%   /Subject (Land Use / Land Cover)
-%   /Keywords (agriculture, United States) }
-% \pdfcatalog { /PageMode (/UseOutlines)
-%   /OpenAction (fitbh)  }
-% \fi
 
-
-\begin{document} \bibliographystyle{chicago}
+\begin{document} 
+\bibliographystyle{chicago}
 
 \title{Synthesis of a complete land use / land cover data set for the
   conterminous United States emphasizing accuracy in area and
-  distribution of agricultural activity} \author{Neil A. Best}
+  distribution of agricultural activity} 
+
+\othermasters{Master of Arts}{M.A.}  
+\department{Geography \& Environmental Studies}
+
+\author{Neil A. Best}
 \degreeyear{May~2011}
 
-\othermasters{Master of Arts}{M.A.}  \department{Geography \&
-  Environmental Studies}
+
 
 \maketitle
 
@@ -81,6 +75,8 @@
 
 \chapter*{Acknowledgements}
 
+\todo{Fix indent and paragraph breaks in acknowledgements}
+
 This thesis is dedicated to my son, Leo.  Son, I began working on this
 degree before you were born and my commitment to completing it was
 sustained by my desire to demonstrate to you that in life we finish
@@ -113,12 +109,14 @@ this phase of my education.
 \item[MODIS] Moderate-resolution Imaging Spectroradiometer
 \item[MLCT] MODIS Land Cover Type \citep{MLCT}
 \item[175Crops2000] Harvested Area and Yields of 175 crops (M3-Crops
-  Data), \citep{Monfreda2008}
-\item[Aglands2000] \citep{Ramankutty2008}
+  Data) \citep{Monfreda2008}
+\item[Agland2000] Agricultural Lands in the Year 2000 (M3-Cropland and
+  M3-Pasture Data) \citep{Ramankutty2008}
 \item[NLCD] National Land-Cover Database, 2001 \citep{Homer2004}
 \item[arcmin] minute of arc, 1/60th of a degree
 \item[arcsec] secondof arc, 1/60th of a minute, 1/3600th of a degree
 \item[GRASS] Geographic Resources Analysis Support System, \url{http://grass.osgeo.org}
+\item[RMSE] root of the mean squared error
 
 \end{symbollist*}
 
@@ -156,16 +154,23 @@ this phase of my education.
 \appendix
 
 \chapter{Source Code: Data Sets}
-\section{R helper functions}
+
+\section*{R helper functions}
 \lstinputlisting{code/peel.R}
-\section{R code embedded in the chapter}
+
+\section*{R code embedded in the chapter}
 \lstinputlisting{datasets.R}
+
+
 \chapter{Source Code: Analysis}
-\section{R helper functions}
+
+\section*{R helper functions}
 \lstinputlisting{code/analysis.R}
-\section{R code embedded in the chapter}
+
+\section*{R code embedded in the chapter}
 \lstinputlisting{analysis.R}
-\section{GRASS code use to compute NLCD offsets}
-\lstinputlisting[language=bash]{code/nlcd.grass}
+
+\section*{GRASS code use to compute NLCD offsets}
+\lstinputlisting[language=bash]{code/nlcd_offsets.grass}
 
 \end{document}

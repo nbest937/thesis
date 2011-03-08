@@ -1,0 +1,155 @@
+g.mapset -c thesis
+
+# by setting the resolution for the computation region
+# the inputs are automatically resampled from 15 arcsecs
+# to 1.25 arcsecs, which is the NLCD's nominal resolution
+
+g.region -p lower48_5min@peel res=0:00:01.25
+
+
+# the inputs are the per-class fractions computed based on
+# $A_min=0.5$
+
+r.in.gdal input=mlct_Amin_0.5_fracs.tif output=mlct_fracs
+
+
+# we are only interested in certain classes from the NLCD
+
+r.reclass input=nlcd2001@NLCD output=nlcd_offsets_mask <<EOF
+11 = 0 water
+90 thru 93 95 thru 97 = 4 wetland
+21 thru 24 = 6 urban
+EOF
+
+
+class=( water forest shrub open wetland crop urban mosaic barren )
+
+# generate the GRASS commands to calculate the 1.25-arcsec per-pixel fractional adjustments.
+# the outer if() clause converts NULL to 0 for pixels not in the NLCD classes in question.
+# the inner if() clause accounts for the possibility that NLCD and MLCT agree to some degree.
+
+for nlcd in 0 4 6; do
+    cmd="r.mask -o input=nlcd_offsets_mask maskcats=$nlcd"
+    echo $cmd
+    for mlct in $(seq 1 9); do
+	cmd="r.mapcalc nlcd_offset_${class[$nlcd]}_${mlct}=\"if( isnull(MASK@thesis), 0, if( ${nlcd} ==$((mlct-1)), 1, 0) -mlct_fracs.${mlct})\" &"
+	echo $cmd
+    done
+    echo
+done
+
+
+# the following groups of commands are intended to be run manually
+# running this script automatically will produce unintended results due to changes
+# in region and mask settings before completion of prior steps
+
+r.mask -o input=nlcd_offsets_mask maskcats=0
+r.mapcalc nlcd_offset_water_1="if( isnull(MASK@thesis), 0, if( 0 ==0, 1, 0) -mlct_fracs.1)" &
+r.mapcalc nlcd_offset_water_2="if( isnull(MASK@thesis), 0, if( 0 ==1, 1, 0) -mlct_fracs.2)" &
+r.mapcalc nlcd_offset_water_3="if( isnull(MASK@thesis), 0, if( 0 ==2, 1, 0) -mlct_fracs.3)" &
+r.mapcalc nlcd_offset_water_4="if( isnull(MASK@thesis), 0, if( 0 ==3, 1, 0) -mlct_fracs.4)" &
+r.mapcalc nlcd_offset_water_5="if( isnull(MASK@thesis), 0, if( 0 ==4, 1, 0) -mlct_fracs.5)" &
+r.mapcalc nlcd_offset_water_6="if( isnull(MASK@thesis), 0, if( 0 ==5, 1, 0) -mlct_fracs.6)" &
+r.mapcalc nlcd_offset_water_7="if( isnull(MASK@thesis), 0, if( 0 ==6, 1, 0) -mlct_fracs.7)" &
+r.mapcalc nlcd_offset_water_8="if( isnull(MASK@thesis), 0, if( 0 ==7, 1, 0) -mlct_fracs.8)" &
+r.mapcalc nlcd_offset_water_9="if( isnull(MASK@thesis), 0, if( 0 ==8, 1, 0) -mlct_fracs.9)" &
+
+r.mask -o input=nlcd_offsets_mask maskcats=4
+r.mapcalc nlcd_offset_wetland_1="if( isnull(MASK@thesis), 0, if( 4 ==0, 1, 0) -mlct_fracs.1)" &
+r.mapcalc nlcd_offset_wetland_2="if( isnull(MASK@thesis), 0, if( 4 ==1, 1, 0) -mlct_fracs.2)" &
+r.mapcalc nlcd_offset_wetland_3="if( isnull(MASK@thesis), 0, if( 4 ==2, 1, 0) -mlct_fracs.3)" &
+r.mapcalc nlcd_offset_wetland_4="if( isnull(MASK@thesis), 0, if( 4 ==3, 1, 0) -mlct_fracs.4)" &
+r.mapcalc nlcd_offset_wetland_5="if( isnull(MASK@thesis), 0, if( 4 ==4, 1, 0) -mlct_fracs.5)" &
+r.mapcalc nlcd_offset_wetland_6="if( isnull(MASK@thesis), 0, if( 4 ==5, 1, 0) -mlct_fracs.6)" &
+r.mapcalc nlcd_offset_wetland_7="if( isnull(MASK@thesis), 0, if( 4 ==6, 1, 0) -mlct_fracs.7)" &
+r.mapcalc nlcd_offset_wetland_8="if( isnull(MASK@thesis), 0, if( 4 ==7, 1, 0) -mlct_fracs.8)" &
+r.mapcalc nlcd_offset_wetland_9="if( isnull(MASK@thesis), 0, if( 4 ==8, 1, 0) -mlct_fracs.9)" &
+
+r.mask -o input=nlcd_offsets_mask maskcats=6
+r.mapcalc nlcd_offset_urban_1="if( isnull(MASK@thesis), 0, if( 6 ==0, 1, 0) -mlct_fracs.1)" &
+r.mapcalc nlcd_offset_urban_2="if( isnull(MASK@thesis), 0, if( 6 ==1, 1, 0) -mlct_fracs.2)" &
+r.mapcalc nlcd_offset_urban_3="if( isnull(MASK@thesis), 0, if( 6 ==2, 1, 0) -mlct_fracs.3)" &
+r.mapcalc nlcd_offset_urban_4="if( isnull(MASK@thesis), 0, if( 6 ==3, 1, 0) -mlct_fracs.4)" &
+r.mapcalc nlcd_offset_urban_5="if( isnull(MASK@thesis), 0, if( 6 ==4, 1, 0) -mlct_fracs.5)" &
+r.mapcalc nlcd_offset_urban_6="if( isnull(MASK@thesis), 0, if( 6 ==5, 1, 0) -mlct_fracs.6)" &
+r.mapcalc nlcd_offset_urban_7="if( isnull(MASK@thesis), 0, if( 6 ==6, 1, 0) -mlct_fracs.7)" &
+r.mapcalc nlcd_offset_urban_8="if( isnull(MASK@thesis), 0, if( 6 ==7, 1, 0) -mlct_fracs.8)" &
+r.mapcalc nlcd_offset_urban_9="if( isnull(MASK@thesis), 0, if( 6 ==8, 1, 0) -mlct_fracs.9)" &
+
+
+
+r.mask -r
+
+# generate the commands to merge the per-NLCD class offsets into a total offset for each MLCT class
+
+for mlct in $(seq 1 9); do
+    cmd="r.mapcalc nlcd_offset_total_${mlct}=\"(nlcd_offset_water_${mlct}+nlcd_offset_wetland_${mlct}+nlcd_offset_urban_${mlct})\" &"
+    echo $cmd
+done
+
+
+# only NULLs are outside the lower48 mask since they were replaced with zeroes everywhere else
+# so we don't have to worry about trapping NULLs in this step
+
+r.mapcalc nlcd_offset_total_1="(nlcd_offset_water_1+nlcd_offset_wetland_1+nlcd_offset_urban_1)" &
+r.mapcalc nlcd_offset_total_2="(nlcd_offset_water_2+nlcd_offset_wetland_2+nlcd_offset_urban_2)" &
+r.mapcalc nlcd_offset_total_3="(nlcd_offset_water_3+nlcd_offset_wetland_3+nlcd_offset_urban_3)" &
+r.mapcalc nlcd_offset_total_4="(nlcd_offset_water_4+nlcd_offset_wetland_4+nlcd_offset_urban_4)" &
+r.mapcalc nlcd_offset_total_5="(nlcd_offset_water_5+nlcd_offset_wetland_5+nlcd_offset_urban_5)" &
+r.mapcalc nlcd_offset_total_6="(nlcd_offset_water_6+nlcd_offset_wetland_6+nlcd_offset_urban_6)" &
+r.mapcalc nlcd_offset_total_7="(nlcd_offset_water_7+nlcd_offset_wetland_7+nlcd_offset_urban_7)" &
+r.mapcalc nlcd_offset_total_8="(nlcd_offset_water_8+nlcd_offset_wetland_8+nlcd_offset_urban_8)" &
+r.mapcalc nlcd_offset_total_9="(nlcd_offset_water_9+nlcd_offset_wetland_9+nlcd_offset_urban_9)" &
+
+
+# aggregate to 5-arcmin resolution
+
+g.region -p res=0:05
+r.mask -o mask_lower48_5min@GADM
+
+for mlct in $(seq 1 9); do
+    cmd="r.resamp.stats --o input=nlcd_offset_total_${mlct} output=nlcd_offset_${mlct} method=average &"
+    echo $cmd
+done
+
+r.resamp.stats --o input=nlcd_offset_total_1 output=nlcd_offset_1 method=average &
+r.resamp.stats --o input=nlcd_offset_total_2 output=nlcd_offset_2 method=average &
+r.resamp.stats --o input=nlcd_offset_total_3 output=nlcd_offset_3 method=average &
+r.resamp.stats --o input=nlcd_offset_total_4 output=nlcd_offset_4 method=average &
+r.resamp.stats --o input=nlcd_offset_total_5 output=nlcd_offset_5 method=average &
+r.resamp.stats --o input=nlcd_offset_total_6 output=nlcd_offset_6 method=average &
+r.resamp.stats --o input=nlcd_offset_total_7 output=nlcd_offset_7 method=average &
+r.resamp.stats --o input=nlcd_offset_total_8 output=nlcd_offset_8 method=average &
+r.resamp.stats --o input=nlcd_offset_total_9 output=nlcd_offset_9 method=average &
+
+
+# check the results; should sum to zero everywhere
+
+
+offsets=$(g.mlist -r type=rast mapset=thesis patt="nlcd_offset_.$" sep=,)
+r.series input=$offsets output=nlcd_offset_total method=sum
+r.univar nlcd_offset_total
+
+# total null and non-null cells: 207110
+# total null cells: 85179
+#
+# Of the non-null cells:
+# ----------------------
+# n: 121931
+# minimum: -1.19766e-08
+# maximum: 1.31818e-08
+# range: 2.51585e-08
+# mean: -1.72333e-11
+# mean of absolute values: 1.89202e-10
+# standard deviation: 0
+# variance: 0
+# variation coefficient: -0 %
+# sum: -0.0000021013
+
+
+# stack and export back to file system for consumption by R
+
+cd ~/thesis/data/analysis
+
+i.group group=nlcd_offset input=${offsets}
+r.out.gdal input=nlcd_offset output=nlcd_offset.tif

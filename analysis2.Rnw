@@ -5,20 +5,22 @@
 \SweaveOpts{ echo=TRUE}
 \SweaveOpts{ engine=R}
 \SweaveOpts{ keep.source=TRUE}
-\SweaveOpts{ eval=TRUE}
+\SweaveOpts{ eval=FALSE}
 
 \graphicspath{ {analysis/} }
 
 \chapter{Analysis}
 \label{cha:analysis}
 
-<<init, eval=TRUE>>=
+% , eval=TRUE>>=
 
-  
+<<init>>=
+
+
 source( "~/thesis/code/analysis.R")
 source( "~/thesis/code/peel.R")
 
-   texWd <- "~/thesis/analysis"
+texWd <- "~/thesis/analysis"
 rasterWd <- "~/thesis/data/analysis"
 dataPath <- "~/thesis/data"
 setwd( rasterWd)
@@ -30,9 +32,18 @@ studyArea <- "mlct"
 peelBands <- peelClasses +1
                                         # mask and agland exported from GRASS
                                         # no need to mask or crop
-mask <- raster( "mask_cusa.tif")
-cusaExtent <- extent( mask)
-thumbExtent <- extent(-83.5, -(82+25/60), 42+55/60, 44+5/60)
+cusaMask <- raster( "mask_cusa.tif")
+cusaExtent <- extent( cusaMask)
+thumbExtent <- extent( -( 83 +30 /60), -( 82 +25 /60),
+                          42 +55 /60,     44  +5 /60 )
+
+world <- raster()
+res(world) <- 5/60
+                                        # geographic, full extent by default
+
+grid <- raster( cusaMask)
+grid[] <- cellsFromExtent( world, grid)
+grid <- mask( grid, cusaMask)
 
 if( studyArea == "thumb") {
   mask <- crop( mask, thumbExtent)
@@ -129,11 +140,10 @@ areasCt <- areasCt[ c( names( peelClasses), "(all)"), rasterNames]
 
       
       
-@ 
-%def 
+@ %def 
 
 
-
+@
 <<tabTotal, results=tex>>=
 
 
@@ -148,24 +158,24 @@ local({
 })
 
 
-@ 
+@ %def 
+
 
 After decomposing the mosaic class The MLCT indicates
 \Sexpr{printAreas( areasCt[ "crop", "nomos05"])} of cropland for
 $A_{min}=0.5$ and \Sexpr{printAreas( areasCt[ "crop", "nomos1"])} for
 $A_{min}=1.0$ in the cUSA in 2001. 
 
-
 Pasture indicated by Aglands2000 appears to be a broader
 classification than that of the NLCD's pasture class because much of
 the grazing land east of the Mississippi river counted in the
 Aglands2000 pasture map is absent in the NLCD pasture class.
 
-Aglands2000 indicates roughly \Sexpr{ printAreas( areasDf[
-  "crop","agland"]) } of cropland.  The inability of the MLCT data set
-to resolve rural transportation networks, minor settlements, and small
-water or wetland features is a major contribution to the surplus of
-cropland acreage indicated by the MLCT.  Due to its greater
+Aglands2000 indicates roughly \Sexpr{ printAreas(
+  areasDf["crop","agland"])} of cropland.  The inability of the MLCT
+data set to resolve rural transportation networks, minor settlements,
+and small water or wetland features is a major contribution to the
+surplus of cropland acreage indicated by the MLCT.  Due to its greater
 resolution, ~30m vs. ~500m, the NLCD is better suited at discerning
 developed areas in rural landscapes ranging from rural roads to
 farmsteads to small communities that do not show up in the MLCT
@@ -191,7 +201,7 @@ accordingly.  Although MLCT overstates cropland acreage for both
 $A_{min}=0.5$ and $A_min=1.0$ the discrimination among the two is made
 by the distribution of errors rather than the aggregate error.
 
-\todo{ Create error maps for ``nomos'' vs. Agland2000 crop}
+\todo{Create error maps for ``nomos'' vs. Agland2000 crop}
 
 These maps show the cell-by-cell differences between the MLCT-derived
 data set that we have calculated after mosaic decomposition and the
@@ -199,29 +209,17 @@ Agland2000 cropland map.  TO summarize and compare these errors we
 calculate the root of the mean squared error (RMSE) given by:
 
 $$
-\operatorname{RMSE}=\sqrt{\frac{\sum_{i=1}^{n}(\hat\theta_i-\theta_i )^2}{n} }
+\operatorname{RMSE}=\sqrt{\frac{\sum_{i=1}^{n}(\hat\theta_i-\theta_i )^2}{n}}
 $$
 
 where $\hat\theta_i$ are the predictions derived from the respective
 MLCT derivations and $\theta_i$ are the observations taken from the
 Agland2000 data set.
 
-@ 
-<<rmse>>=
-
-
-rmseDf <- ldply( list("nomos05", "nomos1"),
-                function( brickName)
-                  rmseRast( getPeelBand( get( brickName), "crop"),
-                            unstack( agland)[[1]]))
-rmseDf <- cbind( c( 0.5, 1.0), rmseDf)
-colnames( rmseDf) <- c( "$A_{min}$", "RMSE")
-
+blah blah blah $2+2=4$
 
 @ 
-
-@ 
-<<rmse_table,result=tex>>=
+<<rmse_table, results=tex>>=
 
 print( xtable( rmseDf,
               caption= "RMSE, MLCT vs. Agland2000 crop",
@@ -236,14 +234,14 @@ The results on Table \ref{tab:rmse} indicate that $A_{min}=0.5$ is
 more representative of the distribution of cropland because although
 the total area indicated is higher there is less error on a
 cell-by-cell basis indicating that it does a better job of
-representing the spatial distribution than $A_{min]=1.0$. Later when
-  we recalculate the cell proportions by accepting the values for
-  cropland area from Agland2000 as truth we can expect minimal
-  distortion in reconciling its landscape with that given by MLCT.
-  From this point forward we will consider only the statistics derived
-  from setting $A_{min}=0.5$ for the aggregation of the MLCT data due
-  to this improved fit with Agland2000 cropland and its full
-  consideration of all information imparted by the MLCT data.
+representing the spatial distribution than $A_{min}=1.0$.  Later when
+we recalculate the cell proportions by accepting the values for
+cropland area from Agland2000 as truth we can expect minimal
+distortion in reconciling its landscape with that given by MLCT.  From
+this point forward we will consider only the statistics derived from
+setting $A_{min}=0.5$ for the aggregation of the MLCT data due to this
+improved fit with Agland2000 cropland and its full consideration of
+all information imparted by the MLCT data.
 
 
 \section{NLCD Offsets}
@@ -264,31 +262,32 @@ included in the urban class as another form of developed land.
 The process of merging this information from the NLCD is as follows:
 
 \begin{enumerate}
-\item Create a mask comprised of pixels classified as water, wetland,
-  or urban in the reclassified NLCD
-\item Resample the MLCT layers to NLCD resolution (\~1.25 arcsecs) using this
-  mask
-\item Compute class-by-class offsets by accepting each NLCD pixel in
-  the mask as a positive increment and each in the MLCT as a negative
-  in proportion to the shares given by the formulas for $A_{pri}$ and
-  $A_{sec}$.  Pixels outside the mask or where the data sets agree are
-  assigned a zero value in this step.
-\item Aggregate these offsets to 5-arcmin resolution by taking the
-  mean of offset values across a given output grid cell
-\item Add these offsets to the aggregated MLCT maps prior to the
-  mosaic decomposition step
-\item Recalculate the mosaic decomposition
+  \item Create a mask comprised of pixels classified as water, wetland,
+    or urban in the reclassified NLCD
+  \item Resample the MLCT layers to NLCD resolution (\~1.25 arcsecs)
+    using this mask
+  \item Compute class-by-class offsets by accepting each NLCD pixel in
+    the mask as a positive increment and each in the MLCT as a negative
+    in proportion to the shares given by the formulas for $A_{pri}$ and
+    $A_{sec}$.  Pixels outside the mask or where the data sets agree are
+    assigned a zero value in this step.
+  \item Aggregate these offsets to 5-arcmin resolution by taking the
+    mean of offset values across a given output grid cell
+  \item Add these offsets to the aggregated MLCT maps prior to the
+    mosaic decomposition step
+  \item Recalculate the mosaic decomposition
+\end{enumerate}
 
 <<offsets_init>>=
 
-                                        # rebuild the thumb object from the previous chapter
+## rebuild the thumb object from the previous chapter
 
-thumb <- mlctList( "thumb_2001_lct1.tif", 
-                   "thumb_2001_lct1_sec.tif", 
-                   "thumb_2001_lct1_pct.tif")
+## thumb <- mlctList( "thumb_2001_lct1.tif", 
+##                    "thumb_2001_lct1_sec.tif", 
+##                    "thumb_2001_lct1_pct.tif")
 
 thumbRasters <- list.files( dataPath, "thumb_2001.*_(reclass|pct)",
-                                  recursive=TRUE, full.names=TRUE)[ c(2,3,1)]
+                           recursive=TRUE, full.names=TRUE)[ c(2,3,1)]
 names( thumbRasters) <- names(formals( mlctList))
 
 thumb <- do.call( mlctList, as.list( thumbRasters))
@@ -301,8 +300,11 @@ thumbNlcd <- list( pri=raster( list.files( dataPath, "thumbNlcd_reclass.tif",
                                            recursive=TRUE, full.names=TRUE)))
 @ 
 
+
+
 @ 
 <<offsets_mask>>=
+
 thumbNlcdMask <-
   if( overwriteRasters) {
     calc( thumbNlcd$pri,
@@ -364,60 +366,9 @@ thumbNlcdMlct <- setMinMax( thumbNlcdMlct)
 <<offsets_calc>>=
 
 
-## thumbNlcdMlct <-
-##   if( overwriteRasters) {
-##     mask( thumbResamp,
-##          thumbNlcdMask,
-##          datatype= "INT2U",
-##          overwrite= TRUE,
-##          filename= "thumbNlcdMlct.tif",
-##          progress= "text")
-##   } else {
-##     raster( "thumbNlcdMlct.tif")
-##   }
-
-## thumbNlcdMlctSec <-
-##   if( overwriteRasters) {
-##     mask( thumbResampSec,
-##          thumbNlcdMask,
-##          datatype= "INT2U",
-##          overwrite= TRUE,
-##          filename= "thumbNlcdMlctSec.tif",
-##          progress= "text")
-##   } else {
-##     raster( "thumbNlcdMlctSec.tif")
-##   }
-
-## thumbNlcdMlctAp <-
-##   if( overwriteRasters) {
-##     mask( thumbResampAp,
-##          thumbNlcdMask,
-##          datatype= "FLT4S",
-##          overwrite= TRUE,
-##          filename= "thumbNlcdMlctAp.tif",
-##          progress= "text")
-##   } else {
-##     raster( "thumbNlcdMlctAp.tif")
-##   }
 
 ##crosstab( thumbNlcdMlct, thumbNlcdMask)
 
-## thumbOffsetsInput <-
-##   if( overwriteRasters) {
-##     brick( stack( "thumbNlcdMlct.tif", "thumbNlcdMask.tif"),
-##           filename= "thumbOffsets_input.tif",
-##           overwrite= TRUE)
-##   } else brick( "thumbOffsets_input.tif")
-
-## thumbOffsetsInputAp <-
-##   if( overwriteRasters) {
-##     brick( stack( "thumbNlcdMlct.tif",
-##                  "thumbNlcdMlctSec.tif",
-##                  "thumbNlcdMlctAp.tif",
-##                  "thumbNlcdMask.tif"),
-##           filename= "thumbOffsetsInputAp.tif",
-##           overwrite= TRUE)
-##   } else brick( "thumbOffsetsInputAp.tif")
 
 thumbOffsetsInputAp <-
   if( overwriteRasters) {
@@ -433,62 +384,13 @@ thumbOffsetsInputAp <-
 
 ##offsetCalcFunWater <- offsetCalcFun(0)
 
-## offsetCalcFunApWater <- offsetCalcFunAp(0)
-## debug( offsetCalcFunApWater)
 
-## thumbOffsets$water <-
-##   calc( thumbOffsets$input,
-##        fun= offsetCalcFunWater, #offsetCalcFun( 0),
-##        datatype= "INT2S",
-##        overwrite= TRUE,
-##        filename= "thumbOffsets_water.tif",
-##        progress= "text")
-
-## thumbOffsetsAp$water <-
-##   calc( thumbOffsetsInputAp,
-##        fun= offsetCalcFunApWater, #offsetCalcFun( 0),
-##        datatype= "INT2S",
-##        overwrite= TRUE,
-##        filename= "thumbOffsetsAp_water.tif",
-##        progress= "text")
-
-## thumbOffsets <-
-##   sapply( grep( "water|wetland|urban",
-##                names(peelClasses), value=TRUE),
-##          function( cover) {
-##            fn <- paste( "thumbOffsets",
-##                   paste( cover, "tif", sep= "."),
-##                   sep= "_")
-##            print( paste(cover, fn))
-##            if( overwriteRasters || !( file.access( fn) ==0))
-##              calc( thumbOffsetsInput,
-##                   fun= offsetCalcFun( peelClasses[[ cover]]),
-##                   datatype= "INT2S",
-##                   overwrite= TRUE,
-##                   filename= fn,
-##                   progress= "text")
-##            else brick( fn)
-##          })
-
-## thumbOffsets <-
-##   sapply( names( thumbOffsets),
-##          function( cover) {
-##            fn <- paste( "thumbOffsets",
-##                        cover, "agg.tif", sep= "_")
-##            print( paste( cover, fn))
-##            if( overwriteRasters || !( file.access( fn) ==0))
-##              aggregate( thumbOffsets[[ cover]],
-##                        fact= 5/60 /res( thumbOffsets[[ cover]]),
-##                        expand= FALSE,
-##                        filename= fn,
-##                        datatype= "FLT4S",
-##                        overwrite= TRUE)
-##            else brick( fn)
-##          })
-
-# the next few assignments end with "Ap" to signify that
+# The next few assignments end with "Ap" to signify that
 # the variable A_p is considered, thereby incorporating
-# information from both primary and secondary covers
+# information from both primary and secondary covers.
+
+# Prior implementation only considered primary cover in
+# calculating these offsets
 
 offsetCalcFunAp <- function( class) {
   fun <- function( st) {
@@ -579,6 +481,9 @@ thumbAdj  <- decomposeMosaic( thumbAdj, overwrite= overwriteRasters, progress= "
 
 @ 
 
+\missingfigure{Facet map of thumb offsets}
+
+
 Due to performance constraints it was not possible to carry out this
 operation on the full cUSA study area.  The equivalent operation of
 resampling the MLCT to the NLCD resolution of 1.25 arcsecs,
@@ -592,9 +497,10 @@ environment is given in the appendix.
 The resulting offsets are added to the aggregated fractions calculated
 from the MLCT with $A_{min}=0.5$.  
 
+
 <<cusa_offset>>=
 
-offsetFile <- path.expand( paste( rasterWd, "nlcd_offset.tif", sep="/")
+offsetFile <- path.expand( paste( rasterWd, "nlcd_offset.tif", sep="/"))
 
 offset <- brick( offsetFile)
 offset <- setMinMax( offset)
@@ -613,6 +519,8 @@ mySum <- function( ...) {
   res[ res < 0] <- 0
   res
 }
+                                        # use this function to clean up any over/underruns
+                                        # resulting from floating point math
 
 mlctAdj <- list( Amin=0.5)
 mlctAdj$agg <- 
@@ -628,20 +536,24 @@ mlctAdj  <- decomposeMosaic( mlctAdj, overwrite= overwriteRasters, progress= "te
 
 \missingfigure{Facet map of cUSA NLCD offsets}
 
+\SweaveOpts{ eval=TRUE}
+
 <<areas2>>=
 
 # reuse area table code from above; better to implement a function?
 
-rasterNames2 <- c( "agland", "nlcd", "agg05", "nomos05", "offset", "mlctAdj$agg", "mlctAdj$nomos")
+rasterNames2 <- c( "agland", "nlcd", "agg05", "nomos05",
+                  "offset", "mlctAdj$agg", "mlctAdj$nomos")
 
-dataSets2 <- sapply( rasterNames2, function( n) eval( parse( text=n)))
+dataSets2 <- sapply( rasterNames2,
+  function( n) eval( parse( text=n)))
 
 areas2 <- llply( dataSets2,
-function( d) {
-  res <- cellStats( d *acres, sum)
-  names( res) <- layerNames( d)
-  res
-})
+  function( d) {
+    res <- cellStats( d *acres, sum)
+    names( res) <- layerNames( d)
+    res
+  })
 
 areasDf2 <- ldply( areas2, function( a) melt( t( as.data.frame( a))))
 
@@ -651,7 +563,28 @@ rownames( areasCt2) <- areasCt2[, "X2"]
 areasCt2 <- areasCt2[, -1]
 areasCt2 <- areasCt2[ c( names( peelClasses), "(all)"), rasterNames2]
 
-               
+
+## check that everything balances
+## output of decomposeMosaic is not brick()ed properly
+
+delta <- unstack( mlctAdj$delta)
+names(delta) <- names( peelClasses)[ c(1,2,3,7,5)]
+
+zeroes <- mask
+zeroes[] <- 0
+
+restack <- function( peelBrick) {
+  llply( names( peelClasses),
+    function( cover) {
+      if( is.null( peelBrick[[ cover]]))
+        zeroes
+      else
+        peelBrick[[ cover]]
+    })
+}
+
+
+
 @ 
 %def 
 
@@ -672,11 +605,10 @@ local({
 })
 
 
-
-
 @
 
- 
+\SweaveOpts{ eval=FALSE}
+
 <<agc>>=
 
 thumbAgland <- crop( agland,
@@ -686,6 +618,9 @@ thumbAgland <- crop( agland,
 @ 
 
 To assess the impact of this step on the overall accuracy it is useful compare the errors and biases of our newly derived ``Agland Complete''(AgC) data set for all cover classes before and after the adjustment of the cell-by-cell cropland areas to match Agland2000.
+
+
+
 
 @ 
 <<bias>>=
@@ -861,9 +796,6 @@ The elements of the matrix have been reordered according to the
 clustering forumla given in \citet[sec. 6.2.3]{Sarkar2008} in order to
 achieve a degree of visual clustering among the correlation vectors.
 
-@ 
-<<analysis>>=
-setwd( "~/thesis")
 @ %def 
 
 %%% Local Variables: 

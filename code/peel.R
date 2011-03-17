@@ -351,8 +351,8 @@ decomposeMosaic <- function( mlct, overwrite= FALSE, ...) {
             filename= deltaBrickFile,
             overwrite= overwrite, ...)
   } else {
-    mlct$nomos <- brick( nomosBrickFile)
-    mlct$delta <- brick( deltaBrickFile)
+    mlct$nomos <- brick( list.files( getwd(), patt=nomosBrickFile, full.names=TRUE))
+    mlct$delta <- brick( list.files( getwd(), patt=deltaBrickFile, full.names=TRUE))
   }
   layerNames( mlct$nomos) <-
     c( names( peelClasses)[ names( peelClasses) !="mosaic"],
@@ -427,3 +427,24 @@ coverMaps <- function( r, samp=1, ...) {
 ##     scale_fill_gradientn( colours= rev( brewer.pal( 11, "BrBG")), 
 ##                          limits= c( 1, -1),
 ##                          breaks= seq( 1, -1, by= -0.2))
+
+
+acreageTable <- function( rasterNames) {
+
+  dataSets <- sapply( rasterNames,
+                     function( n) eval( parse( text=n)))
+
+  areas <- llply( dataSets,
+                 function( d) {
+                   res <- cellStats( d *acres, sum)
+                   names( res) <- layerNames( d)
+                   res
+                 })
+
+  areasDf <- ldply( areas, function( a) melt( t( as.data.frame( a))))
+
+  areasCt <- cast( areasDf, X2 ~ .id, subset= X2 != "total", sum, margins="grand_row")
+  rownames( areasCt) <- areasCt[, "X2"]
+  areasCt <- areasCt[, -1]
+  areasCt <- areasCt[ c( names( peelClasses), "(all)"), rasterNames]
+}

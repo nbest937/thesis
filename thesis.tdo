@@ -1,21 +1,36 @@
-\contentsline {todo}{{GLC2000 citation}}{2}{section*.9}
-\contentsline {todo}{{MLCT citation}}{2}{section*.10}
-\contentsline {todo}{Figure: {Generate a summary table of data sets (raster/tabular, resolution, citation)}}{5}{chapter.2}
-\contentsline {todo}{Figure: {MLCT reclassification table}}{6}{subsection.2.1.1}
-\contentsline {todo}{{Fix artifacts in confidence figure}}{13}{section*.13}
-\contentsline {todo}{{Describe characteristics of MLCT reclass maps and confidence at cUSA extents}}{13}{section*.14}
-\contentsline {todo}{{cite email from Friedl}}{18}{section*.15}
-\contentsline {todo}{{crossref histograms showing confidence distribution}}{18}{section*.16}
-\contentsline {todo}{{ cross ref analysis section where aggregated MLCT crop is campared to Agland}}{25}{section*.18}
-\contentsline {todo}{{ move cUSA aggregation to sec:agg-analysis-area}}{25}{section*.20}
-\contentsline {todo}{{cite Friedl email}}{25}{section*.21}
-\contentsline {todo}{{Expect something to be wrong with no-mosaic plots when this section gets sweaved (``swoven''?)}}{26}{section*.22}
-\contentsline {todo}{{illustrate/demonstrate the RMSE test on the 5-arcmin MLCT data sets}}{29}{section*.23}
-\contentsline {todo}{{Describe Agland2000 data set}}{29}{section*.24}
-\contentsline {todo}{{check whether/how urban, water, wetland are informed with priors in NLCD}}{30}{section*.25}
-\contentsline {todo}{Figure: {NLCD reclassification table}}{31}{subsection.2.4.1}
-\contentsline {todo}{Figure: {Table or chart showing CDL covereage for various years}}{37}{section.2.5}
-\contentsline {todo}{Figure: {CDL reclassification table}}{38}{subsection.2.5.1}
-\contentsline {todo}{Figure: {Table of crops and types reproduced from \citep {Monfreda2008}}}{38}{section.2.6}
+\contentsline {todo}{{Fix indent and paragraph breaks in acknowledgements}}{iv}{section*.3}
+\contentsline {todo}{{GLC2000 citation}}{3}{section*.10}
+\contentsline {todo}{{MLCT citation}}{3}{section*.11}
+\contentsline {todo}{{ cite R packages (reshape, ggplot2, raster)}}{4}{section*.12}
+\contentsline {todo}{Figure: {Generate a summary table of data sets (raster/tabular, resolution, citation)}}{6}{chapter.2}
+\contentsline {todo}{Figure: {MLCT reclassification table}}{7}{subsection.2.1.1}
+\contentsline {todo}{{Fix artifacts in confidence figure}}{14}{section*.15}
+\contentsline {todo}{{Describe characteristics of MLCT reclass maps and confidence at cUSA extents}}{14}{section*.16}
+\contentsline {todo}{{cite email from Friedl}}{14}{section*.17}
+\contentsline {todo}{{crossref histograms showing confidence distribution}}{18}{section*.18}
+\contentsline {todo}{{ cross ref analysis section where aggregated MLCT crop is campared to Agland}}{23}{section*.20}
+\contentsline {todo}{{ move cUSA aggregation to sec:agg-analysis-area}}{23}{section*.22}
+\contentsline {todo}{{cite Friedl email}}{23}{section*.23}
+\contentsline {todo}{{Expect something to be wrong with no-mosaic plots when this section gets sweaved (``swoven''?)}}{25}{section*.24}
+\contentsline {todo}{{illustrate/demonstrate the RMSE test on the 5-arcmin MLCT data sets}}{29}{section*.25}
+\contentsline {todo}{{Describe Agland2000 data set}}{29}{section*.26}
+\contentsline {todo}{{check whether/how urban, water, wetland are informed with priors in NLCD}}{32}{section*.27}
+\contentsline {todo}{Figure: {NLCD reclassification table}}{33}{subsection.2.4.1}
+\contentsline {todo}{{Include GRASS code for aggregating NLCD}}{33}{section*.28}
+\contentsline {todo}{Figure: {Table or chart showing CDL covereage for various years}}{38}{section.2.5}
+\contentsline {todo}{{Calculate CDL mask for 5-arcmin cells completely filled}}{38}{section*.29}
+\contentsline {todo}{{Calculate CDL aggregated in GRASS}}{38}{section*.30}
+\contentsline {todo}{Figure: {CDL reclassification table}}{39}{section*.30}
+\contentsline {todo}{Figure: {Table of crops and types reproduced from \citep {Monfreda2008}}}{39}{section.2.6}
 \contentsline {todo}{Figure: {Summary table of crop aggregations for our model}}{39}{section.2.6}
-\contentsline {todo}{{Adress issue of smaller land mask for 175crops2000 and Agland2000}}{39}{section*.26}
+\contentsline {todo}{{Adress issue of smaller land mask for 175crops2000 and Agland2000}}{39}{section*.31}
+\contentsline {todo}{Figure: {error map for ``nomos'' vs. Agland2000 crop}}{45}{table.3.1}
+\contentsline {todo}{Figure: { NLCD mask facet map}}{47}{Item.9}
+\contentsline {todo}{Figure: { MLCT resampled and masked facet(?) map(s?)}}{48}{Item.9}
+\contentsline {todo}{Figure: {Facet map of thumb offsets}}{50}{Item.9}
+\contentsline {todo}{Figure: {Difference map, thumb adjusted vs. original after mosaic decomposition}}{51}{Item.9}
+\contentsline {todo}{{Reference / hyperlink NLCD offset GRASS script in appendix}}{51}{section*.32}
+\contentsline {todo}{Figure: {Facet map of cUSA NLCD offsets}}{52}{section*.32}
+\contentsline {todo}{{hyperlink to section where MLCT was aggregated}}{53}{section*.33}
+\contentsline {todo}{{Should the RMSE tables be rearranged?}}{55}{section*.34}
+\contentsline {todo}{{Decide what to do with old code in Analysis chapter}}{60}{section*.35}

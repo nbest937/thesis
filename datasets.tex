@@ -101,10 +101,10 @@ cover/use classification specified by the PEEL model.
 > igbpLegend <- thumb$pri@legend@colortable
 > igbpLegend <- igbpLegend[ igbpLegend != "#000000"]
 > 
-+ ## just in case, save these for later
-+ ##  paste( deparse( igbpLegend), collapse="")
-+ ## igbpLegend <- c("#2041B3", "#006A0F", "#007C25", "#00A25B", "#00A125", "#069228", "#9E9668", "#C1C48F", "#85AA5B", "#B1B741", "#A4D07E", "#73ABAE", "#CCD253", "#D90000", "#9DE36E", "#B6B5C2", "#949494")"
-+ 
+> ## just in case, save these for later
+> ##  paste( deparse( igbpLegend), collapse="")
+> ## igbpLegend <- c("#2041B3", "#006A0F", "#007C25", "#00A25B", "#00A125", "#069228", "#9E9668", "#C1C48F", "#85AA5B", "#B1B741", "#A4D07E", "#73ABAE", "#CCD253", "#D90000", "#9DE36E", "#B6B5C2", "#949494")"
+> 
 \end{Sinput}
 \end{Schunk}
 \subsection{Reclassification}
@@ -120,13 +120,16 @@ PEEL model.
 \begin{Schunk}
 \begin{Sinput}
 > thumb <- mlctReclass( thumb, mlctReclassMatrix, overwrite= overwriteRasters)
-> thumbPlots <- list( pri= peelMap( thumb$pri, 0.4),
-+                     sec= peelMap( thumb$sec, 0.4))
-> thumbPlots$pct <- ggplotRaster( thumb$pct, 0.4) + 
-+   scale_fill_gradientn( "% confidence", 
-+                        colours= rev( brewer.pal( 7, "YlGn")), 
-+                        limits= c( 100, 0),
-+                        breaks= seq( 100, 0, by= -20))
+> if( overwriteFigures) {
++   thumbPlots <- list( pri= peelMap( thumb$pri, 0.4),
++                      sec= peelMap( thumb$sec, 0.4))
++ 
++   thumbPlots$pct <- ggplotRaster( thumb$pct, 0.4) + 
++     scale_fill_gradientn( "% confidence", 
++                          colours= rev( brewer.pal( 7, "YlGn")), 
++                          limits= c( 100, 0),
++                          breaks= seq( 100, 0, by= -20))
++ }
 > 
 \end{Sinput}
 \end{Schunk}
@@ -273,12 +276,16 @@ We repeat this operation for the entire data set.
 +                   "2001_lct1_sec.tif", 
 +                   "2001_lct1_pct.tif")
 > mlct  <- mlctReclass( mlct, mlctReclassMatrix, overwrite= overwriteRasters, datatype="INT1U", progress="text")
-> mlctPlots <- list( pri= peelMap( mlct$pri, 0.01),
+> if( overwriteFigures) {
++   mlctPlots <- list( pri= peelMap( mlct$pri, 0.01),
 +                     sec= peelMap( mlct$sec, 0.01))
-> mlctPlots$pct <- ggplotRaster( mlct$pct, 0.01) + 
-+   scale_fill_gradientn( "% confidence", colours=rev( brewer.pal( 7, "YlGn")), 
-+                        limits= c( 100, 0),
-+                        breaks= seq( 100, 0, by= -20))
++   mlctPlots$pct <- ggplotRaster( mlct$pct, 0.01) + 
++     scale_fill_gradientn( "% confidence", colours=rev( brewer.pal( 7, "YlGn")), 
++                          limits= c( 100, 0),
++                          breaks= seq( 100, 0, by= -20))
++ }
+> 
+> 
 \end{Sinput}
 \end{Schunk}
 
@@ -292,12 +299,13 @@ We repeat this operation for the entire data set.
 +   png( file="fig_mlct_pri_reclass.png")
 +   print( mlctPlots$pri + coord_equal())
 +   dev.off()
++   system( "convert -trim fig_mlct_pri_reclass.png fig_mlct_pri_reclass_trim.png")
 + }
 > 
 \end{Sinput}
 \end{Schunk}
 
-\includegraphics{fig_mlct_pri_reclass}
+\includegraphics{fig_mlct_pri_reclass_trim}
 \end{center} 
 \caption{MLCT primary cover reclassified} 
 \label{fig:mlct_pri_reclass} 
@@ -314,12 +322,14 @@ We repeat this operation for the entire data set.
 +   png( file="fig_mlct_sec_reclass.png")
 +   print( mlctPlots$sec + coord_equal())
 +   dev.off()
++   system( "convert -trim fig_mlct_sec_reclass.png fig_mlct_sec_reclass_trim.png")
++ 
 + }
 > 
 \end{Sinput}
 \end{Schunk}
 
-\includegraphics{fig_mlct_sec_reclass}
+\includegraphics{fig_mlct_sec_reclass_trim}
 \end{center} 
 \caption{MLCT secondary cover reclassified} 
 \label{fig:mlct_sec_reclass} 
@@ -336,12 +346,13 @@ We repeat this operation for the entire data set.
 +   png( file="fig_mlct_pct.png")
 +   print( mlctPlots$pct + coord_equal())
 +   dev.off()
++   system( "convert -trim fig_mlct_pct.png fig_mlct_pct_trim.png")
 + }
 > 
 \end{Sinput}
 \end{Schunk}
 
-\includegraphics{fig_mlct_pct}
+\includegraphics{fig_mlct_pct_trim}
 \end{center} 
 \caption{MLCT primary cover classification confidence} 
 \label{fig:mlct_pct} 
@@ -490,14 +501,17 @@ convenient for properly computing this mean.
 > thumb  <- aggregateFractions( thumb, overwrite= overwriteRasters, progress= "text")
 > thumb1 <- aggregateFractions( thumb1, overwrite= overwriteRasters, progress= "text")
 > ## seems like brick() has a bug such that the filenames have no paths
-> thumb$fracs <- brick( paste( getwd(), filename( thumb$fracs), sep="/"))
-> thumb1$fracs <- brick( paste( getwd(), filename( thumb1$fracs), sep="/"))
-> thumb$agg <- brick( paste( getwd(), filename( thumb$agg), sep="/"))
-> thumb1$agg <- brick( paste( getwd(), filename( thumb1$agg), sep="/"))
-> thumbPlots <- list( fracs= coverMaps( thumb$fracs, 0.4),
-+                    agg= coverMaps( thumb$agg, 1))
-> thumbPlots1 <- list( fracs= coverMaps( thumb1$fracs, 0.4),
-+                    agg= coverMaps( thumb1$agg, 1))
+> ## thumb$fracs <- brick( paste( getwd(), filename( thumb$fracs), sep="/"))
+> ## thumb1$fracs <- brick( paste( getwd(), filename( thumb1$fracs), sep="/"))
+> ## thumb$agg <- brick( paste( getwd(), filename( thumb$agg), sep="/"))
+> ## thumb1$agg <- brick( paste( getwd(), filename( thumb1$agg), sep="/"))
+> 
+> if( overwriteFigures) {
++   thumbPlots <- list( fracs= coverMaps( thumb$fracs, 0.4),
++                      agg= coverMaps( thumb$agg, 1))
++   thumbPlots1 <- list( fracs= coverMaps( thumb1$fracs, 0.4),
++                       agg= coverMaps( thumb1$agg, 1))
++ }
 > 
 \end{Sinput}
 \end{Schunk}
@@ -602,10 +616,12 @@ between the aggregated maps for the chosen values of $A_{min}$.
 +             overwrite= TRUE)
 +   } else brick( "thumb_agg_diff.tif")
 > layerNames( thumbAggDiff) <- layerNames( thumb$agg)
-> thumbAggDiffPlot <- coverMaps( thumbAggDiff) + 
-+   scale_fill_gradientn( "diff", colours= rev( brewer.pal( 11, "BrBG")), 
+> if( overwriteFigures) {
++   thumbAggDiffPlot <- coverMaps( thumbAggDiff) + 
++     scale_fill_gradientn( "diff", colours= rev( brewer.pal( 11, "BrBG")), 
 +                          limits= c( 0.1, -0.1),
 +                          breaks= seq( 0.1, -0.1, by= -0.02))
++ }
 > 
 \end{Sinput}
 \end{Schunk}
@@ -677,12 +693,15 @@ area delineated as mosaic lands:
 > setwd( dataWd)
 > thumb  <- decomposeMosaic( thumb, overwrite= overwriteRasters, progress= "text")
 > thumb1 <- decomposeMosaic( thumb1, overwrite= overwriteRasters, progress= "text")
-> thumb$nomos <- brick( paste( getwd(), filename( thumb$nomos), sep="/"))
-> thumb1$nomos <- brick( paste( getwd(), filename( thumb1$nomos), sep="/"))
-> thumb$delta <- brick( paste( getwd(), filename( thumb$delta), sep="/"))
-> thumb1$delta <- brick( paste( getwd(), filename( thumb1$delta), sep="/"))
-> thumbPlots$nomos <- coverMaps( thumb$agg, 1)  
-> thumbPlots1$nomos <- coverMaps( thumb1$agg, 1)  
+> ## thumb$nomos <- brick( paste( getwd(), filename( thumb$nomos), sep="/"))
+> ## thumb1$nomos <- brick( paste( getwd(), filename( thumb1$nomos), sep="/"))
+> ## thumb$delta <- brick( paste( getwd(), filename( thumb$delta), sep="/"))
+> ## thumb1$delta <- brick( paste( getwd(), filename( thumb1$delta), sep="/"))
+> 
+> if( overwriteFigures) {
++   thumbPlots$nomos <- coverMaps( thumb$agg, 1)
++   thumbPlots1$nomos <- coverMaps( thumb1$agg, 1)  
++ }
 > thumbNomosDiff <- 
 +   if( overwriteRasters) {
 +     overlay( thumb$agg, thumb1$agg, 
@@ -691,8 +710,9 @@ area delineated as mosaic lands:
 +             overwrite= TRUE)
 +   } else brick( "thumb_nomos_diff.tif")
 > layerNames( thumbNomosDiff) <- layerNames( thumb$agg)
-> thumbNomosDiffPlot <- coverMaps( thumbNomosDiff) + 
-+   scale_fill_gradientn( "diff", colours= rev( brewer.pal( 11, "BrBG")), 
+> if( overwriteFigures) {
++   thumbNomosDiffPlot <- coverMaps( thumbNomosDiff) + 
++     scale_fill_gradientn( "diff", colours= rev( brewer.pal( 11, "BrBG")), 
 +                          limits= c( 0.32, -0.32),
 +                          ## breaks= { b <- c( 0.3, 0.15, 0.075, 0.075/2, 0.075/4)
 +                          ##           c( b, 0, rev( -b))
@@ -700,6 +720,7 @@ area delineated as mosaic lands:
 +                          breaks= { b <- c( 0.01, 0.02, 0.04, 0.08, 0.16, 0.32)
 +                                    c( rev( b), 0, -b)
 +                                  })
++ }
 > 
 \end{Sinput}
 \end{Schunk}
@@ -787,11 +808,11 @@ area delineated as mosaic lands:
 > mlct1  <- aggregateFractions( mlct1, overwrite= overwriteRasters, progress="text")
 > mlct1  <- decomposeMosaic( mlct1, overwrite= overwriteRasters, progress="text")
 > 
-+ ## might be useful to cross-tabulate the primary and secondary
-+ ## frequencies for the cUSA
-+ 
-+ ## table(thumbDf@data$pri, thumbDf@data$sec)
-+ 
+> ## might be useful to cross-tabulate the primary and secondary
+> ## frequencies for the cUSA
+> 
+> ## table(thumbDf@data$pri, thumbDf@data$sec)
+> 
 \end{Sinput}
 \end{Schunk}
 
@@ -818,19 +839,89 @@ test. \todo{illustrate/demonstrate the RMSE test on the 5-arcmin MLCT
   
 \begin{Schunk}
 \begin{Sinput}
-> setwd( "~/thesis/data/agland2000")
-> agland <- stack( list.files( patt= "2000_5min.nc$"))
-> layerNames(agland) <- c("crop", "pasture")
+> setwd( dataWd)  
+> setwd( "agland")
+> agland <- stack( list.files( patt="(cropland|pasture).tif$"))
+> layerNames(agland) <- c("crop", "open")
 > agland <- setMinMax( agland)
-> thumbAgland <- crop( agland,
-+                     extent(-83.5, -(82+25/60), 42+55/60, 44+5/60),
-+                     filename= "thumbAgland.tif",
-+                     progress="text")
+> thumbAgland <-
++   if( overwriteRasters) {
++     crop( agland,
++          extent(-83.5, -(82+25/60),
++                 42+55/60, 44+5/60),
++          filename= "thumbAgland.tif",
++          progress="text",
++          overwrite= overwriteRasters)
++   } else brick( list.files( getwd(),
++                            "thumbAgland.tif",
++                            full.names= TRUE,
++                            recursive= TRUE))
+> layerNames( thumbAgland) <- c("crop", "open")
+>                                         # crop() returns a brick
 > 
-+ 
+> overwriteFigures <- TRUE
+> if( overwriteFigures) {
++   thumbAglandPlot <- coverMaps( thumbAgland, 1) + coord_equal()
++   aglandPlot <- coverMaps( agland, 0.4) + coord_equal()
++ }
+> 
+> ##     sapply( layerNames( thumbAgland),
+> ##            function( cover) {
+> ##              ggplotRaster( agland[[ cover]]) + 
+> ##                scale_fill_gradientn( paste("%", cover),
+> ##                                     colours=rev( brewer.pal( 7, "YlGn")), 
+> ##                                     limits= c( 100, 0),
+> ##                                     breaks= seq( 100, 0, by= -20))
+> ##            })
+> ## }
+> 
+> 
 \end{Sinput}
 \end{Schunk}
 %def 
+
+\begin{figure} 
+\begin{center}
+  
+\begin{Schunk}
+\begin{Sinput}
+> setwd( texWd)
+> if( overwriteFigures) {
++   png( file="fig_thumb_agland.png")
++   print( thumbAglandPlot)
++   dev.off()
++ }
+> 
+\end{Sinput}
+\end{Schunk}
+
+\includegraphics{fig_thumb_agland}
+\end{center} 
+\caption{Agland2000 distribution in detail area}
+\label{fig:thumb_agland} 
+\end{figure} 
+
+\begin{figure} 
+\begin{center}
+  
+\begin{Schunk}
+\begin{Sinput}
+> setwd( texWd)
+> if( overwriteFigures) {
++   png( file="fig_agland.png")
++   print( aglandPlot +coord_equal() +facet_wrap( ~ variable, ncol= 1))
++   dev.off()
++ }
+> 
+\end{Sinput}
+\end{Schunk}
+
+\includegraphics{fig_thumb_agland}
+\end{center} 
+\caption{Agland2000 distribution in detail area}
+\label{fig:thumb_agland} 
+\end{figure} 
+
 
 \section{Major Land Uses (MLU)}
 \label{sec:mlu}
@@ -843,6 +934,7 @@ of its information as a refinement.
 
 \begin{Schunk}
 \begin{Sinput}
+> setwd( texWd)
 > cusaDf <- readOGR("PG:host=db dbname=cim","gadm.cusa")
 > cusa <- raster(mlct$pri)
 > res(cusa) <- 5/60
@@ -886,23 +978,12 @@ performed for both the detail region and the complete region.
 > setwd( dataWd)
 > setwd( "nlcd")
 > nlcdWd <- getwd()
-> thumbNlcd <- list( pri=raster( "thumb_nlcd2001.tif"))
-> thumbNlcd <- sapply( thumbNlcd, setMinMax)
+> thumbNlcd <- list( pri=raster( "thumbNlcd.tif"))
+> ## thumbNlcd <- sapply( thumbNlcd, setMinMax)
 > 
-+ ## thumbNlcdResamp <- raster( thumbNlcd$pri)
-+ ## res(thumbNlcdResamp) <- 1.25/3600
-+ ## thumbNlcdResamp <- resample( thumbNlcd$pri, thumbNlcdResamp,
-+ ##                             method="ngb",
-+ ##                             filename="thumb_nlcd2001_resamp.tif",
-+ ##                             progress="text")
-+ ## thumbNlcd$pri <- thumbNlcdResamp
-+ 
-+ 
-+ #nlcd <- list( pri=raster( "nlcd_geo.tif"))
-+ #nlcd <- sapply( nlcd, setMinMax)
-+ 
 \end{Sinput}
 \end{Schunk}
+
 \subsection{Reclassification}
 \label{sec:nlcd-reclass}
 
@@ -911,253 +992,59 @@ performed for both the detail region and the complete region.
 \begin{Schunk}
 \begin{Sinput}
 > setwd( nlcdWd)
-> thumbNlcd <- mlctReclass( thumbNlcd, nlcdReclassMatrix, overwrite= overwriteRasters, progress="text")
-> thumbNlcdPlot <- peelMap(thumbNlcd$pri, 0.05)
-> thumbNlcd$Amin <- 1
-> thumbNlcd <- coverFractions( thumbNlcd, mosaic=FALSE, overwrite= overwriteRasters, progress= "text")
-> thumbNlcd <- aggregateFractions( thumbNlcd, overwrite= overwriteRasters, progress="text")
-> thumbNlcdMask <-
-+   if( overwriteRasters) {
-+     calc( thumbNlcd$pri,
-+          function( x) {
-+            ifelse( x %in% peelClasses[ c( "water", "wetland", "urban")],
-+                   x, NA)
-+          },
-+          datatype= "INT2U",
-+          overwrite= TRUE,
-+          filename= "thumbNlcdMask.tif",
-+          progress= "text")
-+   } else {
-+     raster( "thumbNlcdMask.tif")
-+   }
-> thumbNlcdMask <- setMinMax( thumbNlcdMask)
-> ## system( "gdalwarp -of VRT -ts $(( 260*12)) 0  thumb_2001_lct1_reclass.tif thumb_2001_lct1_reclass_resamp.vrt")
-> ## thumbResamp <- raster( "thumb_2001_lct1_reclass_resamp.vrt")
-> 
-> thumbResamp <-
-+   if( overwriteRasters) {
-+     resample( thumb$pri, thumbNlcd$pri,
-+              method="ngb",
-+              datatype= "INT2U",
-+              overwrite= TRUE,
-+              filename= "thumbResamp.tif",
-+              progress= "text")
-+   } else raster( "thumbResamp.tif")
-> thumbResampSec <-
-+   if( overwriteRasters) {
-+     resample( thumb$sec, thumbNlcd$pri,
-+              method="ngb",
-+              datatype= "INT2U",
-+              overwrite= TRUE,
-+              filename= "thumbResampSec.tif",
-+              progress= "text")
-+   } else raster( "thumbResampSec.tif")
-> thumbResampAp <-
-+   if( overwriteRasters) {
-+     resample( thumb$Ap, thumbNlcd$pri,
-+              method="ngb",
-+              datatype= "FLT4S",
-+              overwrite= TRUE,
-+              filename= "thumbResampAp.tif",
-+              progress= "text")
-+   } else raster( "thumbResampAp.tif")
-> thumbNlcdMlct <-
-+   if( overwriteRasters) {
-+     mask( thumbResamp,
-+          thumbNlcdMask,
-+          datatype= "INT2U",
-+          overwrite= TRUE,
-+          filename= "thumbNlcdMlct.tif",
-+          progress= "text")
-+   } else {
-+     raster( "thumbNlcdMlct.tif")
-+   }
-> thumbNlcdMlctSec <-
-+   if( overwriteRasters) {
-+     mask( thumbResampSec,
-+          thumbNlcdMask,
-+          datatype= "INT2U",
-+          overwrite= TRUE,
-+          filename= "thumbNlcdMlctSec.tif",
-+          progress= "text")
-+   } else {
-+     raster( "thumbNlcdMlctSec.tif")
-+   }
-> thumbNlcdMlctAp <-
-+   if( overwriteRasters) {
-+     mask( thumbResampAp,
-+          thumbNlcdMask,
-+          datatype= "FLT4S",
-+          overwrite= TRUE,
-+          filename= "thumbNlcdMlctAp.tif",
-+          progress= "text")
-+   } else {
-+     raster( "thumbNlcdMlctAp.tif")
-+   }
-> ##crosstab( thumbNlcdMlct, thumbNlcdMask)
-> 
-> ## thumbOffsetsInput <-
-> ##   if( overwriteRasters) {
-> ##     brick( stack( "thumbNlcdMlct.tif", "thumbNlcdMask.tif"),
-> ##           filename= "thumbOffsets_input.tif",
-> ##           overwrite= TRUE)
-> ##   } else brick( "thumbOffsets_input.tif")
-> 
-> ## thumbOffsetsInputAp <-
-> ##   if( overwriteRasters) {
-> ##     brick( stack( "thumbNlcdMlct.tif",
-> ##                  "thumbNlcdMlctSec.tif",
-> ##                  "thumbNlcdMlctAp.tif",
-> ##                  "thumbNlcdMask.tif"),
-> ##           filename= "thumbOffsetsInputAp.tif",
-> ##           overwrite= TRUE)
-> ##   } else brick( "thumbOffsetsInputAp.tif")
-> 
-> thumbOffsetsInputAp <-
-+   if( overwriteRasters) {
-+     brick( stack( thumbNlcdMlct,
-+                  thumbNlcdMlctSec,
-+                  thumbNlcdMlctAp,
-+                  thumbNlcdMask),
-+           filename= "thumbOffsetsInputAp.tif",
-+           overwrite= TRUE,
-+           progress= "text")
-+   } else brick( "thumbOffsetsInputAp.tif")
-> ##offsetCalcFunWater <- offsetCalcFun(0)
-> 
-> ## offsetCalcFunApWater <- offsetCalcFunAp(0)
-> ## debug( offsetCalcFunApWater)
-> 
-> ## thumbOffsets$water <-
-> ##   calc( thumbOffsets$input,
-> ##        fun= offsetCalcFunWater, #offsetCalcFun( 0),
-> ##        datatype= "INT2S",
-> ##        overwrite= TRUE,
-> ##        filename= "thumbOffsets_water.tif",
-> ##        progress= "text")
-> 
-> ## thumbOffsetsAp$water <-
-> ##   calc( thumbOffsetsInputAp,
-> ##        fun= offsetCalcFunApWater, #offsetCalcFun( 0),
-> ##        datatype= "INT2S",
-> ##        overwrite= TRUE,
-> ##        filename= "thumbOffsetsAp_water.tif",
-> ##        progress= "text")
-> 
-> ## thumbOffsets <-
-> ##   sapply( grep( "water|wetland|urban",
-> ##                names(peelClasses), value=TRUE),
-> ##          function( cover) {
-> ##            fn <- paste( "thumbOffsets",
-> ##                   paste( cover, "tif", sep= "."),
-> ##                   sep= "_")
-> ##            print( paste(cover, fn))
-> ##            if( overwriteRasters || !( file.access( fn) ==0))
-> ##              calc( thumbOffsetsInput,
-> ##                   fun= offsetCalcFun( peelClasses[[ cover]]),
-> ##                   datatype= "INT2S",
-> ##                   overwrite= TRUE,
-> ##                   filename= fn,
-> ##                   progress= "text")
-> ##            else brick( fn)
-> ##          })
-> 
-> ## thumbOffsets <-
-> ##   sapply( names( thumbOffsets),
-> ##          function( cover) {
-> ##            fn <- paste( "thumbOffsets",
-> ##                        cover, "agg.tif", sep= "_")
-> ##            print( paste( cover, fn))
-> ##            if( overwriteRasters || !( file.access( fn) ==0))
-> ##              aggregate( thumbOffsets[[ cover]],
-> ##                        fact= 5/60 /res( thumbOffsets[[ cover]]),
-> ##                        expand= FALSE,
-> ##                        filename= fn,
-> ##                        datatype= "FLT4S",
-> ##                        overwrite= TRUE)
-> ##            else brick( fn)
-> ##          })
-> 
-> offsetCalcFunAp <- function( class) {
-+   fun <- function( st) {
-+     pri <- st[ 1]
-+     sec <- st[ 2]
-+     Ap <- st[ 3]
-+     nlcd <- st[ 4]
-+     result <- matrix( 0, nrow= 1, ncol= 9)
-+     if( !is.na( pri) &&nlcd ==class) {
-+       result[ 1, pri +1] <- -Ap
-+       result[ 1, sec +1] <- Ap -1
-+       result[ 1, nlcd +1] <- result[ 1, nlcd +1] +1
-+     }
-+     result
-+   }
-+   fun
+> thumbNlcd <- mlctReclass( thumbNlcd, nlcdReclassMatrix,
++                          overwrite= overwriteRasters,
++                          progress="text")
+> if( overwriteFigures) {
++   thumbNlcdPlot <- peelMap(thumbNlcd$pri, 0.05)
 + }
-> thumbOffsetsAp <-
-+   sapply( grep( "water|wetland|urban",
-+                names(peelClasses), value=TRUE),
-+          function( cover) {
-+            fn <- paste( "thumbOffsetsAp",
-+                   paste( cover, "tif", sep= "."),
-+                   sep= "_")
-+            print( paste(cover, fn))
-+            if( overwriteRasters || !( file.access( fn) ==0)) {
-+              calc( thumbOffsetsInputAp,
-+                   fun= offsetCalcFunAp( peelClasses[[ cover]]),
-+                   datatype= "FLT4S",
-+                   overwrite= TRUE,
-+                   filename= fn,
-+                   progress= "text")
-+            } else brick( fn)
-+          })
-> thumbOffsetsAp <-
-+   sapply( names( thumbOffsetsAp),
-+          function( cover) {
-+            fn <- paste( "thumbOffsetsAp",
-+                        cover, "agg.tif", sep= "_")
-+            print( paste( cover, fn))
-+            if( overwriteRasters || !( file.access( fn) ==0))
-+              aggregate( thumbOffsetsAp[[ cover]],
-+                        fact= 5/60 /res( thumbOffsetsAp[[ cover]]),
-+                        expand= FALSE,
-+                        filename= fn,
-+                        datatype= "FLT4S",
-+                        overwrite= TRUE,
-+                        progress= "text")
-+            else brick( fn)
-+          })
-> thumbOffsetsAp <-
-+   sapply( thumbOffsetsAp,
-+          function( r) {
-+            layerNames( r) <- names( peelClasses)
-+            r
-+          })
-> thumbOffsetsApTotal <-
-+   writeRaster( thumbOffsetsAp$water +
-+               thumbOffsetsAp$wetland +
-+               thumbOffsetsAp$urban,
-+               filename= "thumbOffsetsAp_total.tif",
-+               overwrite=TRUE)
-> thumbOffsetsApTotal <-
-+   do.call( overlay,
-+           c( unlist( thumbOffsetsAp, use.names= FALSE),
-+                fun= sum,
-+                filename= "thumbOffsetsAp_total.tif",
-+                overwrite= TRUE,
-+                progress= "text"))
-> thumbAdj <- thumb
-> thumbAdj$agg <- 
-+   overlay( thumbAdj$agg, thumbOffsetsApTotal,
-+           fun= sum,
-+           filename= "thumbAdj.tif",
-+           overwrite= TRUE)
-> thumbAdj  <- decomposeMosaic( thumbAdj, overwrite= overwriteRasters, progress= "text")
 > 
-+ 
-+            
 \end{Sinput}
 \end{Schunk}
+
+\begin{figure} 
+\begin{center}
+
+\begin{Schunk}
+\begin{Sinput}
+> setwd( texWd)
+> if( overwriteFigures) {
++   png( file="fig_thumb_nlcd_reclass.png")
++   print( thumbNlcdPlot + coord_equal())
++   dev.off()
++ }
+> 
+\end{Sinput}
+\end{Schunk}
+
+\includegraphics{fig_thumb_nlcd_reclass}
+\end{center} 
+\caption{NLCD reclassified} 
+\label{fig:thumb_nlcd_reclass} 
+\end{figure} 
+
+\begin{figure} 
+\begin{center}
+  
+\begin{Schunk}
+\begin{Sinput}
+> setwd( texWd)
+> if( overwriteFigures) {
++   png( file="fig_thumb_nlcd_facet.png")
++   print( thumbNlcdPlot + 
++         facet_wrap(~ values) + 
++         opts( legend.position= "none"))
++   dev.off()
++ }
+> 
+\end{Sinput}
+\end{Schunk}
+
+\includegraphics{fig_thumb_nlcd_facet}
+\end{center} 
+\caption{NLCD covers shown separately, detail} 
+\label{fig:thumb_nlcd_facet} 
+\end{figure} 
 
 \subsection{Aggregation}
 \label{sec:nlcd-aggr}
@@ -1168,18 +1055,94 @@ primary cover type can be applied here.
 Repeating this process for the entire study area is computationally
 expensive due to the NLCD's high resolution.
 
+\todo{Include GRASS code for aggregating NLCD}
+
 \begin{Schunk}
 \begin{Sinput}
-> overwriteRasters <- FALSE
-> overwriteFigures <- FALSE
 > setwd( nlcdWd)
-> nlcd <- mlctReclass( nlcd, nlcdReclassMatrix, overwrite= overwriteRasters, progress="text")
-> nlcd$Amin <- 1
-> nlcd <- coverFractions( nlcd, mosaic= FALSE, overwrite= overwriteRasters, progress="text")
-> nlcd <- aggregateFractions( nlcd, overwrite= overwriteRasters, progress="text")
+> overwriteRasters <- TRUE
+> thumbNlcd$Amin <- 1
+> thumbNlcd <-
++   coverFractions( thumbNlcd, mosaic=FALSE,
++                  overwrite= overwriteRasters,
++                  progress= "text")
+> thumbNlcd <-
++   aggregateFractions( thumbNlcd,
++                      overwrite= overwriteRasters,
++                      progress="text")
+> if( overwriteFigures) {
++   thumbNlcdAggPlot <- coverMaps( thumbNlcd$agg, 1)
++ }
+> overwriteRasters <- FALSE
+\end{Sinput}
+\end{Schunk}
+
+\begin{figure} 
+\begin{center}
+  
+\begin{Schunk}
+\begin{Sinput}
+> overwriteRasters <- TRUE
+> overwriteFigures <- TRUE
+> setwd( texWd)
+> if( overwriteFigures) {
++   png( file="fig_thumb_nlcd_agg.png")
++   print( thumbNlcdAggPlot)
++   dev.off()
++ }
 > 
 \end{Sinput}
 \end{Schunk}
+
+
+\includegraphics{fig_thumb_nlcd_agg}
+\end{center} 
+\caption{NLCD aggregated cover fractions, detail area}
+\label{fig:thumb_nlcd_agg}
+\end{figure} 
+
+
+
+\begin{Schunk}
+\begin{Sinput}
+> setwd( dataWd)
+> ## nlcd <- stack( paste( "nlcd", names( peelClasses[ -8]), "5min.tif", sep="_"))
+> 
+> nlcd <- stack( sapply( names( peelClasses[ -8]),
++                       function( cover) {
++                         list.files( paste( dataWd, "nlcd", sep="/"),
++                                    patt= paste( "nlcd", cover, "5min.tif$", sep="_"),
++                                    full.names= TRUE)
++                       }))
+> nlcd <- setMinMax( nlcd)
+> layerNames(nlcd) <- names( peelClasses[ -8])
+> nlcdPlot <- coverMaps( nlcd, 0.1)
+> 
+> 
+\end{Sinput}
+\end{Schunk}
+
+\begin{figure} 
+\begin{center}
+  
+\begin{Schunk}
+\begin{Sinput}
+> setwd( texWd)
+> if( overwriteFigures) {
++   png( file="fig_nlcd.png")
++   print( nlcdPlot)
++   dev.off()
++ }
+> 
+\end{Sinput}
+\end{Schunk}
+
+
+\includegraphics{fig_nlcd}
+\end{center} 
+\caption{NLCD aggregated cover fractions}
+\label{fig:nlcd}
+\end{figure} 
 
 \section{Cropland Data Layer (CDL)}
 \label{sec:cdl}
@@ -1194,9 +1157,13 @@ data set.
 \subsection{Reclassification}
 \label{sec:cdl-reclass}
 
-blah blah blah
+
 
 %  gdalbuildvrt -tr 0.0002777778 0.0002777778 -te -124.8333 24.5 -66.91667 49.33333 cdl_2001.vrt $(find . -name "*2001*")
+
+
+\todo{Calculate CDL mask for 5-arcmin cells completely filled}
+\todo{Calculate CDL aggregated in GRASS}
 
 \begin{Schunk}
 \begin{Sinput}

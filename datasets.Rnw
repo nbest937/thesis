@@ -234,7 +234,7 @@ if( overwriteFigures) {
 \includegraphics{fig_thumb_pri_facet}
 \end{center} 
 \caption{MLCT primary covers shown separately, detail} 
-\label{fig:thumb_pri_reclass} 
+\label{fig:thumb_pri_facet} 
 \end{figure} 
 
 

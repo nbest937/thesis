@@ -2,7 +2,7 @@
 
 \SweaveOpts{ results=hide}
 \SweaveOpts{ include=FALSE}
-\SweaveOpts{ echo=TRUE}
+\SweaveOpts{ echo=FALSE}
 \SweaveOpts{ engine=R}
 \SweaveOpts{ keep.source= TRUE}
 \SweaveOpts{ eval=TRUE}
@@ -866,7 +866,6 @@ layerNames( aglandComplete) <- names(peelClasses)[-8]
 
 agcMap <- coverMaps( aglandComplete, 0.4) +
   coord_equal() +
-  ## facet_wrap( ~variable, ncol=1)
   facet_grid( variable ~ .)
 
 
@@ -875,7 +874,7 @@ agcMap <- coverMaps( aglandComplete, 0.4) +
 \begin{figure} 
 \begin{center} 
 
-<<fig_agc>>= 
+<<fig_agc, eval=FALSE>>= 
 
 setwd( texWd)
 ggsave( "fig_agc.png", width=4.5, height=8)
@@ -900,7 +899,7 @@ ggsave( "fig_agc.png", width=4.5, height=8)
 blah blah blah
 
 @ 
-<<table_rmse3, results=tex>>=
+<<table_rmse3, results=tex, eval=FALSE>>=
 
 setwd( rasterWd)  
 
@@ -933,15 +932,16 @@ print( rmseXt,
 @ %def 
 
 
-<<tab_areas3, results=tex>>=
+<<tab_areas3, results=tex, eval=FALSE>>=
 
 areasCt3 <- acreageTable( c( rasterNames2[ c( 1, 2, 4, 7)], "aglandComplete"))
 
 local({
-  colnames( areasCt3) <- c( "Agland2000", "NLCD",
-                           "\\pbox[c][][c]{3in}{MLCT\\\\No Mosaic}",
-                           "\\pbox[c][][c]{3in}{\\smallskip{}MLCT\\\\Adjusted\\\\No Mosaic}",
-                           "AgC")
+  colnames( areasCt3) <-
+    c( "Agland2000", "NLCD",
+      "\\pbox[c][][c]{3in}{MLCT\\\\No Mosaic}",
+      "\\pbox[c][][c]{3in}{\\smallskip{}MLCT\\\\Adjusted\\\\No Mosaic}",
+      "AgC")
   print( xtable( areasCt3 / 10^6, 
                 caption= "Agland Complete (AgC) acreages, $A_{min}=0.5$",
                 label= "tab:areas3",
@@ -958,6 +958,55 @@ local({
 
 @
 
+<<crop_cats, eval=FALSE>>=
+
+setwd( dataPath)
+##cropCats <- rep( NA, times=10)
+cropCats <-
+  c("cereals", "field_crop", "forage", "maize",
+    "rice", "shrub_crop", "soybean", "sugarcane",
+    "tree_crop", "wheat")
+names( cropCats) <- cropCats
+
+cropCatsPeel <- cropCats
+cropCatsPeel[ c( "cereals", "field_crop",
+                "maize", "rice", "soybean",
+                "sugarcane", "wheat")] <- "crop"
+cropCatsPeel[ "forage"] <- "open"
+cropCatsPeel[ "shrub_crop"] <- "shrub"
+cropCatsPeel[ "tree_crop"] <- "forest"
+
+cropCatsPeel <-
+  list( crop= c( "cereals", "field_crop",
+                "maize", "rice", "soybean",
+                "sugarcane", "wheat"),
+       open= "forage",
+       shrub= "shrub_crop",
+       forest= "tree_crop")
+                     
+cropCats <- llply(  cropCats, function(c) {
+  raster( paste( c, "tif", sep="."))
+})
+
+cropStack <- stack( cropCats)
+
+grep( paste( cropCatsPeel$crop, sep="|"),
+)
+
+overlay( stack( cropCats[ cropCatsPeel$crop]), fun=sum)
+                                        # problem: max is 1.37
+                                        # double-cropping?
+                                        # what about non-crop covers?
+
+cropOffsets <- llply( cropCatsPeel, function( catsVec) {
+  if( length( catsVec) ==1) {
+    cropCats[ catsVec]
+  } else {
+    overlay( stack( cropCats[ catsVec]), fun=sum)
+  }})
+
+
+@ 
 
 \todo[inline,caption={Decide what to do with old code in Analysis
   chapter}]{The remaining code in this draft of the Analysis chapter

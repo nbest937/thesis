@@ -9,23 +9,9 @@
 
 \graphicspath{ {datasets/} }
 
-\begin{Schunk}
-\begin{Sinput}
->                                         # load helper functions
->                                         # code will appear in appendix
-> source("~/thesis/code/peel.R")
-> setwd( "~/thesis/datasets")
-> ##setwd( "/gpfs/pads/projects/see/nbest/thesis/data")
-> ##quartz.options( type="png")
-> 
-> overwriteRasters <- FALSE
-> overwriteFigures <- FALSE
-> 
-\end{Sinput}
-\end{Schunk}
 
-\chapter{Data}
-\label{cha:data}
+\chapter{Data Sets}
+\label{cha:datasets}
 
 This chapter presents some summary descriptions of the various data
 sets that are relevant to this analysis and further discussion on how
@@ -83,30 +69,6 @@ secondary (alternate) cover type at 15-arcsec resolution, to a stack
 of cover fractions at 5-arcmin resolution using the simplified
 cover/use classification specified by the PEEL model. 
 
-\begin{Schunk}
-\begin{Sinput}
-> ## this works but it's slow
-> ##
-> ## thumb <- crop( raster("2001_lct1.tif"), 
-> ##                extent(-83.5, -(82+25/60), 42+55/60, 44+5/60))
-> ##
-> 
-> ## these are subsets exported from GRASS
-> 
-> texWd <- setwd("../data")
-> dataWd <- getwd()
-> thumb <- mlctList( "thumb_2001_lct1.tif", 
-+                    "thumb_2001_lct1_sec.tif", 
-+                    "thumb_2001_lct1_pct.tif")
-> igbpLegend <- thumb$pri@legend@colortable
-> igbpLegend <- igbpLegend[ igbpLegend != "#000000"]
-> 
-> ## just in case, save these for later
-> ##  paste( deparse( igbpLegend), collapse="")
-> ## igbpLegend <- c("#2041B3", "#006A0F", "#007C25", "#00A25B", "#00A125", "#069228", "#9E9668", "#C1C48F", "#85AA5B", "#B1B741", "#A4D07E", "#73ABAE", "#CCD253", "#D90000", "#9DE36E", "#B6B5C2", "#949494")"
-> 
-\end{Sinput}
-\end{Schunk}
 \subsection{Reclassification}
 \label{sec:mlct-reclass}
 
@@ -117,22 +79,6 @@ PEEL model.
 \missingfigure{MLCT reclassification table}
 
 
-\begin{Schunk}
-\begin{Sinput}
-> thumb <- mlctReclass( thumb, mlctReclassMatrix, overwrite= overwriteRasters)
-> if( overwriteFigures) {
-+   thumbPlots <- list( pri= peelMap( thumb$pri, 0.4),
-+                      sec= peelMap( thumb$sec, 0.4))
-+ 
-+   thumbPlots$pct <- ggplotRaster( thumb$pct, 0.4) + 
-+     scale_fill_gradientn( "% confidence", 
-+                          colours= rev( brewer.pal( 7, "YlGn")), 
-+                          limits= c( 100, 0),
-+                          breaks= seq( 100, 0, by= -20))
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 \subsubsection{Detail Area}
 \label{sec:reclass-detail-area}
@@ -145,17 +91,6 @@ the primay classification.
 \begin{figure} 
 \begin{center}
   
-\begin{Schunk}
-\begin{Sinput}
-> setwd( texWd)
-> if( overwriteFigures) {
-+   png( file="fig_thumb_pri_reclass.png")
-+   print( thumbPlots$pri)
-+   dev.off()
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 \includegraphics{fig_thumb_pri_reclass}
 \end{center} 
@@ -167,17 +102,6 @@ the primay classification.
 \begin{figure} 
 \begin{center}
   
-\begin{Schunk}
-\begin{Sinput}
-> setwd( texWd)
-> if( overwriteFigures) {
-+   png( file="fig_thumb_sec_reclass.png")
-+   print( thumbPlots$sec)
-+   dev.off()
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 \includegraphics{fig_thumb_sec_reclass}
 \end{center} 
@@ -189,17 +113,6 @@ the primay classification.
 \begin{figure} 
 \begin{center}
   
-\begin{Schunk}
-\begin{Sinput}
-> setwd( texWd)
-> if( overwriteFigures) {
-+   png( file="fig_thumb_pct.png")
-+   print( thumbPlots$pct)
-+   dev.off()
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 \includegraphics{fig_thumb_pct}
 \end{center} 
@@ -218,43 +131,17 @@ southeast corner.
 \begin{figure} 
 \begin{center}
   
-\begin{Schunk}
-\begin{Sinput}
-> setwd( texWd)
-> if( overwriteFigures) {
-+   png( file="fig_thumb_pri_facet.png")
-+   print( thumbPlots$pri + 
-+         facet_wrap(~ values) + 
-+         opts( legend.position= "none"))
-+   dev.off()
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 \includegraphics{fig_thumb_pri_facet}
 \end{center} 
 \caption{MLCT primary covers shown separately, detail} 
-\label{fig:thumb_pri_reclass} 
+\label{fig:thumb_pri_facet} 
 \end{figure} 
 
 
 \begin{figure} 
 \begin{center}
   
-\begin{Schunk}
-\begin{Sinput}
-> setwd( texWd)
-> if( overwriteFigures) {
-+   png( file="fig_thumb_sec_facet.png")
-+   print( thumbPlots$sec + 
-+         facet_wrap(~ values) +
-+         opts( legend.position= "none"))
-+   dev.off()
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 \includegraphics{fig_thumb_sec_facet}
 \end{center} 
@@ -268,42 +155,10 @@ southeast corner.
 We repeat this operation for the entire data set.
 
 
-\begin{Schunk}
-\begin{Sinput}
-> ## repeat for cUSA
-> setwd( dataWd)
-> mlct <- mlctList( "2001_lct1.tif", 
-+                   "2001_lct1_sec.tif", 
-+                   "2001_lct1_pct.tif")
-> mlct  <- mlctReclass( mlct, mlctReclassMatrix, overwrite= overwriteRasters, datatype="INT1U", progress="text")
-> if( overwriteFigures) {
-+   mlctPlots <- list( pri= peelMap( mlct$pri, 0.01),
-+                     sec= peelMap( mlct$sec, 0.01))
-+   mlctPlots$pct <- ggplotRaster( mlct$pct, 0.01) + 
-+     scale_fill_gradientn( "% confidence", colours=rev( brewer.pal( 7, "YlGn")), 
-+                          limits= c( 100, 0),
-+                          breaks= seq( 100, 0, by= -20))
-+ }
-> 
-> 
-\end{Sinput}
-\end{Schunk}
 
 \begin{figure} 
 \begin{center}
 
-\begin{Schunk}
-\begin{Sinput}
-> setwd( texWd)
-> if( overwriteFigures) {
-+   png( file="fig_mlct_pri_reclass.png")
-+   print( mlctPlots$pri + coord_equal())
-+   dev.off()
-+   system( "convert -trim fig_mlct_pri_reclass.png fig_mlct_pri_reclass_trim.png")
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 \includegraphics{fig_mlct_pri_reclass_trim}
 \end{center} 
@@ -315,19 +170,6 @@ We repeat this operation for the entire data set.
 \begin{figure} 
 \begin{center}
   
-\begin{Schunk}
-\begin{Sinput}
-> setwd( texWd)
-> if( overwriteFigures) {
-+   png( file="fig_mlct_sec_reclass.png")
-+   print( mlctPlots$sec + coord_equal())
-+   dev.off()
-+   system( "convert -trim fig_mlct_sec_reclass.png fig_mlct_sec_reclass_trim.png")
-+ 
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 \includegraphics{fig_mlct_sec_reclass_trim}
 \end{center} 
@@ -339,18 +181,6 @@ We repeat this operation for the entire data set.
 \begin{figure} 
 \begin{center}
   
-\begin{Schunk}
-\begin{Sinput}
-> setwd( texWd)
-> if( overwriteFigures) {
-+   png( file="fig_mlct_pct.png")
-+   print( mlctPlots$pct + coord_equal())
-+   dev.off()
-+   system( "convert -trim fig_mlct_pct.png fig_mlct_pct_trim.png")
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 \includegraphics{fig_mlct_pct_trim}
 \end{center} 
@@ -366,20 +196,6 @@ We repeat this operation for the entire data set.
 \begin{figure} 
 \begin{center}
   
-\begin{Schunk}
-\begin{Sinput}
-> setwd( texWd)
-> if( overwriteFigures) {
-+   png( file="fig_mlct_pri_facet.png")
-+   print( mlctPlots$pri + 
-+         facet_wrap(~ values) + 
-+         coord_equal() +
-+         opts( legend.position= "none"))
-+   dev.off()
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 \includegraphics{fig_mlct_pri_facet}
 \end{center} 
@@ -391,22 +207,6 @@ We repeat this operation for the entire data set.
 \begin{figure} 
 \begin{center}
   
-\begin{Schunk}
-\begin{Sinput}
-> setwd( texWd)
-> if( overwriteFigures) {
-+   png( file="fig_mlct_sec_facet.png")
-+                                         # had to remove some NAs from the data
-+   mlctPlots$sec$data <- mlctPlots$sec$data[ !is.na(mlctPlots$sec$data$values),]
-+   print( mlctPlots$sec + 
-+         facet_wrap(~ values) + 
-+         coord_equal() +
-+         opts( legend.position= "none"))
-+   dev.off()
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 \includegraphics{fig_mlct_sec_facet}
 \end{center} 
@@ -489,47 +289,10 @@ convenient for properly computing this mean.
 \subsubsection{Detail Area}
 \label{sec:agg-detail-area}
 
-\begin{Schunk}
-\begin{Sinput}
-> setwd( dataWd)
-> ## calculate cover fractions and aggregate for detail area
-> 
-> thumb  <- primaryFraction( thumb, Amin=0.5, overwrite= overwriteRasters, progress= "text")
-> thumb1 <- primaryFraction( thumb, Amin=1.0, overwrite= overwriteRasters, progress= "text")
-> thumb  <- coverFractions( thumb, overwrite= overwriteRasters, progress= "text")
-> thumb1 <- coverFractions( thumb1, overwrite= overwriteRasters, progress= "text")
-> thumb  <- aggregateFractions( thumb, overwrite= overwriteRasters, progress= "text")
-> thumb1 <- aggregateFractions( thumb1, overwrite= overwriteRasters, progress= "text")
-> ## seems like brick() has a bug such that the filenames have no paths
-> ## thumb$fracs <- brick( paste( getwd(), filename( thumb$fracs), sep="/"))
-> ## thumb1$fracs <- brick( paste( getwd(), filename( thumb1$fracs), sep="/"))
-> ## thumb$agg <- brick( paste( getwd(), filename( thumb$agg), sep="/"))
-> ## thumb1$agg <- brick( paste( getwd(), filename( thumb1$agg), sep="/"))
-> 
-> if( overwriteFigures) {
-+   thumbPlots <- list( fracs= coverMaps( thumb$fracs, 0.4),
-+                      agg= coverMaps( thumb$agg, 1))
-+   thumbPlots1 <- list( fracs= coverMaps( thumb1$fracs, 0.4),
-+                       agg= coverMaps( thumb1$agg, 1))
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 \begin{figure} 
 \begin{center}
   
-\begin{Schunk}
-\begin{Sinput}
-> setwd( texWd)
-> if( overwriteFigures) {
-+   png( file="fig_thumb_fracs.png")
-+   print( thumbPlots$fracs)
-+   dev.off()
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 \includegraphics{fig_thumb_fracs}
 \end{center} 
@@ -540,17 +303,6 @@ convenient for properly computing this mean.
 \begin{figure} 
 \begin{center}
   
-\begin{Schunk}
-\begin{Sinput}
-> setwd( texWd)
-> if( overwriteFigures) {
-+   png( file="fig_thumb1_fracs.png")
-+   print( thumbPlots1$fracs)
-+   dev.off()
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 \includegraphics{fig_thumb_fracs}
 \end{center} 
@@ -562,17 +314,6 @@ convenient for properly computing this mean.
 \begin{figure} 
 \begin{center}
   
-\begin{Schunk}
-\begin{Sinput}
-> setwd( texWd)
-> if( overwriteFigures) {
-+   png( file="fig_thumb_agg.png")
-+   print( thumbPlots$agg)
-+   dev.off()
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 \includegraphics{fig_thumb_agg}
 \end{center} 
@@ -583,17 +324,6 @@ convenient for properly computing this mean.
 \begin{figure} 
 \begin{center}
   
-\begin{Schunk}
-\begin{Sinput}
-> setwd( texWd)
-> if( overwriteFigures) {
-+   png( file="fig_thumb1_agg.png")
-+   print( thumbPlots1$agg)
-+   dev.off()
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 \includegraphics{fig_thumb_agg}
 \end{center} 
@@ -605,41 +335,10 @@ convenient for properly computing this mean.
 Before proceeding further it is interesting to inspect the differences
 between the aggregated maps for the chosen values of $A_{min}$.
 
-\begin{Schunk}
-\begin{Sinput}
-> setwd( dataWd)
-> thumbAggDiff <- 
-+   if( overwriteRasters) {
-+     overlay( thumb$agg, thumb1$agg, 
-+             fun= function( t, t1) t -t1, 
-+             filename= "thumb_agg_diff.tif", 
-+             overwrite= TRUE)
-+   } else brick( "thumb_agg_diff.tif")
-> layerNames( thumbAggDiff) <- layerNames( thumb$agg)
-> if( overwriteFigures) {
-+   thumbAggDiffPlot <- coverMaps( thumbAggDiff) + 
-+     scale_fill_gradientn( "diff", colours= rev( brewer.pal( 11, "BrBG")), 
-+                          limits= c( 0.1, -0.1),
-+                          breaks= seq( 0.1, -0.1, by= -0.02))
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 \begin{figure} 
 \begin{center}
   
-\begin{Schunk}
-\begin{Sinput}
-> setwd( texWd)
-> if( overwriteFigures) {
-+   png( file="fig_thumb_agg_diff.png")
-+   print( thumbAggDiffPlot)
-+   dev.off()
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 \includegraphics{fig_thumb_agg_diff}
 \end{center} 
@@ -688,57 +387,10 @@ area delineated as mosaic lands:
 \end{enumerate}
 
 
-\begin{Schunk}
-\begin{Sinput}
-> setwd( dataWd)
-> thumb  <- decomposeMosaic( thumb, overwrite= overwriteRasters, progress= "text")
-> thumb1 <- decomposeMosaic( thumb1, overwrite= overwriteRasters, progress= "text")
-> ## thumb$nomos <- brick( paste( getwd(), filename( thumb$nomos), sep="/"))
-> ## thumb1$nomos <- brick( paste( getwd(), filename( thumb1$nomos), sep="/"))
-> ## thumb$delta <- brick( paste( getwd(), filename( thumb$delta), sep="/"))
-> ## thumb1$delta <- brick( paste( getwd(), filename( thumb1$delta), sep="/"))
-> 
-> if( overwriteFigures) {
-+   thumbPlots$nomos <- coverMaps( thumb$agg, 1)
-+   thumbPlots1$nomos <- coverMaps( thumb1$agg, 1)  
-+ }
-> thumbNomosDiff <- 
-+   if( overwriteRasters) {
-+     overlay( thumb$agg, thumb1$agg, 
-+             fun= function( t, t1) t -t1, 
-+             filename= "thumb_nomos_diff.tif", 
-+             overwrite= TRUE)
-+   } else brick( "thumb_nomos_diff.tif")
-> layerNames( thumbNomosDiff) <- layerNames( thumb$agg)
-> if( overwriteFigures) {
-+   thumbNomosDiffPlot <- coverMaps( thumbNomosDiff) + 
-+     scale_fill_gradientn( "diff", colours= rev( brewer.pal( 11, "BrBG")), 
-+                          limits= c( 0.32, -0.32),
-+                          ## breaks= { b <- c( 0.3, 0.15, 0.075, 0.075/2, 0.075/4)
-+                          ##           c( b, 0, rev( -b))
-+                          ##         })
-+                          breaks= { b <- c( 0.01, 0.02, 0.04, 0.08, 0.16, 0.32)
-+                                    c( rev( b), 0, -b)
-+                                  })
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 \begin{figure} 
 \begin{center}
   
-\begin{Schunk}
-\begin{Sinput}
-> setwd( texWd)
-> if( overwriteFigures) {
-+   png( file="fig_thumb_nomos.png")
-+   print( thumbPlots$nomos)
-+   dev.off()
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 
 \includegraphics{fig_thumb_nomos}
@@ -750,17 +402,6 @@ area delineated as mosaic lands:
 \begin{figure} 
 \begin{center}
   
-\begin{Schunk}
-\begin{Sinput}
-> setwd( texWd)
-> if( overwriteFigures) {
-+   png( file="fig_thumb1_nomos.png")
-+   print( thumbPlots1$nomos)
-+   dev.off()
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 
 \includegraphics{fig_thumb1_nomos}
@@ -772,17 +413,6 @@ area delineated as mosaic lands:
 \begin{figure} 
 \begin{center}
   
-\begin{Schunk}
-\begin{Sinput}
-> setwd( texWd)
-> if( overwriteFigures ) {
-+   png( file="fig_thumb_nomos_diff.png")
-+   print( thumbNomosDiffPlot)
-+   dev.off()
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 \includegraphics{fig_thumb_nomos_diff}
 \end{center} 
@@ -796,25 +426,6 @@ area delineated as mosaic lands:
 
 
 
-\begin{Schunk}
-\begin{Sinput}
-> setwd( dataWd)
-> mlct  <- primaryFraction( mlct, Amin= 0.5, overwrite= overwriteRasters, progress="text")
-> mlct  <- coverFractions( mlct, overwrite= overwriteRasters, progress="text")
-> mlct  <- aggregateFractions( mlct, overwrite= overwriteRasters, progress="text")
-> mlct  <- decomposeMosaic( mlct, overwrite= overwriteRasters, progress="text")
-> mlct1  <- primaryFraction( mlct, Amin=1.0, overwrite= overwriteRasters, progress="text")
-> mlct1  <- coverFractions( mlct1, overwrite= overwriteRasters, progress="text")
-> mlct1  <- aggregateFractions( mlct1, overwrite= overwriteRasters, progress="text")
-> mlct1  <- decomposeMosaic( mlct1, overwrite= overwriteRasters, progress="text")
-> 
-> ## might be useful to cross-tabulate the primary and secondary
-> ## frequencies for the cUSA
-> 
-> ## table(thumbDf@data$pri, thumbDf@data$sec)
-> 
-\end{Sinput}
-\end{Schunk}
 
 Both 5-arcmin data sets derived from the MLCT in this fashion
 overestimate cropland area relative to that indicated by Agland2000,
@@ -837,63 +448,11 @@ test. \todo{illustrate/demonstrate the RMSE test on the 5-arcmin MLCT
   (less-managed or unmanaged for grazing), and natural open land (no grazing).}
 
   
-\begin{Schunk}
-\begin{Sinput}
-> setwd( dataWd)  
-> setwd( "agland")
-> agland <- stack( list.files( patt="(cropland|pasture).tif$"))
-> layerNames(agland) <- c("crop", "open")
-> agland <- setMinMax( agland)
-> thumbAgland <-
-+   if( overwriteRasters) {
-+     crop( agland,
-+          extent(-83.5, -(82+25/60),
-+                 42+55/60, 44+5/60),
-+          filename= "thumbAgland.tif",
-+          progress="text",
-+          overwrite= overwriteRasters)
-+   } else brick( list.files( getwd(),
-+                            "thumbAgland.tif",
-+                            full.names= TRUE,
-+                            recursive= TRUE))
-> layerNames( thumbAgland) <- c("crop", "open")
->                                         # crop() returns a brick
-> 
-> overwriteFigures <- TRUE
-> if( overwriteFigures) {
-+   thumbAglandPlot <- coverMaps( thumbAgland, 1) + coord_equal()
-+   aglandPlot <- coverMaps( agland, 0.4) + coord_equal()
-+ }
-> 
-> ##     sapply( layerNames( thumbAgland),
-> ##            function( cover) {
-> ##              ggplotRaster( agland[[ cover]]) + 
-> ##                scale_fill_gradientn( paste("%", cover),
-> ##                                     colours=rev( brewer.pal( 7, "YlGn")), 
-> ##                                     limits= c( 100, 0),
-> ##                                     breaks= seq( 100, 0, by= -20))
-> ##            })
-> ## }
-> 
-> 
-\end{Sinput}
-\end{Schunk}
 %def 
 
 \begin{figure} 
 \begin{center}
   
-\begin{Schunk}
-\begin{Sinput}
-> setwd( texWd)
-> if( overwriteFigures) {
-+   png( file="fig_thumb_agland.png")
-+   print( thumbAglandPlot)
-+   dev.off()
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 \includegraphics{fig_thumb_agland}
 \end{center} 
@@ -904,17 +463,6 @@ test. \todo{illustrate/demonstrate the RMSE test on the 5-arcmin MLCT
 \begin{figure} 
 \begin{center}
   
-\begin{Schunk}
-\begin{Sinput}
-> setwd( texWd)
-> if( overwriteFigures) {
-+   png( file="fig_agland.png")
-+   print( aglandPlot +coord_equal() +facet_wrap( ~ variable, ncol= 1))
-+   dev.off()
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 \includegraphics{fig_thumb_agland}
 \end{center} 
@@ -923,6 +471,7 @@ test. \todo{illustrate/demonstrate the RMSE test on the 5-arcmin MLCT
 \end{figure} 
 
 
+\begin{comment}
 \section{Major Land Uses (MLU)}
 \label{sec:mlu}
 
@@ -932,23 +481,7 @@ state level.  We hope to compare our results to this data on a
 state-by-state basis in order as a check and possibly incorporate some
 of its information as a refinement.
 
-\begin{Schunk}
-\begin{Sinput}
-> setwd( texWd)
-> cusaDf <- readOGR("PG:host=db dbname=cim","gadm.cusa")
-> cusa <- raster(mlct$pri)
-> res(cusa) <- 5/60
-> cusa <- rasterize( cusaDf, cusa, field= "id_1", filename= "gadm1_cusa.tif")
-> foo <- raster("nlcd_agg.tif")                  
-> gadm <- raster( foo)                 
-> res(gadm) <- 15/3600                  
-> gadm[] <- 0                  
-> writeRaster(gadm, filename= "foo.tif", overwrite=TRUE, NAflag=0)
-> system( "gdal_translate -ot UInt16 -a_nodata 0 foo.tif gadm1_cusa.tif")                  
-> system( "gdal_rasterize -at -a id_1 -ot UInt16 -l gadm.cusa 'PG:host=db dbname=cim' gadm1_cusa.tif")
-> 
-\end{Sinput}
-\end{Schunk}
+\end{comment}
 
 \section{National Land-cover Database 2001 (NLCD)}
 \label{sec:nlcd}
@@ -956,66 +489,32 @@ of its information as a refinement.
 \citet{Homer2004}
 
 
-The NLCD gives a higer-resolution (30m) snapshot of land use / land
-cover circa 2001.  \todo{check whether/how urban, water, wetland are
-  informed with priors in NLCD}  Reclassifying and aggregating this
-data to 5-arcmin resolution in a fashion similar to that used for the
-MLCT is expected to give better estimations of aggregate area for
-detailed features like rural transportation networks and small stream
-and wetland features.  This will compensate for MLCT's bias against
-these finely detailed structures due to it's resolution.  It is the
-availability of this information that makes it difficult to apply this
-analysis beyond the United States without access to a comparable data
-set with global extents.  The analysis is restricted to the
-conterminous US because of the relative paucity of agricultural
-activity in Hawaii and Alaska.
+The NLCD gives a higer-resolution (30m) snapshot of LULC circa 2001.
+\todo{check whether/how urban, water, wetland are informed with priors
+  in NLCD} Reclassifying and aggregating this data to 5-arcmin
+resolution in a fashion similar to that used for the MLCT is expected
+to give better estimations of aggregate area for detailed features
+like rural transportation networks and small stream and wetland
+features.  This will compensate for MLCT's bias against these finely
+detailed structures due to it's resolution.  It is the availability of
+this information that makes it difficult to apply this analysis beyond
+the United States without access to a comparable data set with global
+extents.  The analysis is restricted to the conterminous US because of
+the relative paucity of agricultural activity in Hawaii and Alaska.
 
 As with the MLCT the process of reclassification and aggregation is
 performed for both the detail region and the complete region.
 
-\begin{Schunk}
-\begin{Sinput}
-> setwd( dataWd)
-> setwd( "nlcd")
-> nlcdWd <- getwd()
-> thumbNlcd <- list( pri=raster( "thumbNlcd.tif"))
-> ## thumbNlcd <- sapply( thumbNlcd, setMinMax)
-> 
-\end{Sinput}
-\end{Schunk}
 
 \subsection{Reclassification}
 \label{sec:nlcd-reclass}
 
 \missingfigure{NLCD reclassification table}
 
-\begin{Schunk}
-\begin{Sinput}
-> setwd( nlcdWd)
-> thumbNlcd <- mlctReclass( thumbNlcd, nlcdReclassMatrix,
-+                          overwrite= overwriteRasters,
-+                          progress="text")
-> if( overwriteFigures) {
-+   thumbNlcdPlot <- peelMap(thumbNlcd$pri, 0.05)
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 \begin{figure} 
 \begin{center}
 
-\begin{Schunk}
-\begin{Sinput}
-> setwd( texWd)
-> if( overwriteFigures) {
-+   png( file="fig_thumb_nlcd_reclass.png")
-+   print( thumbNlcdPlot + coord_equal())
-+   dev.off()
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 \includegraphics{fig_thumb_nlcd_reclass}
 \end{center} 
@@ -1026,19 +525,6 @@ performed for both the detail region and the complete region.
 \begin{figure} 
 \begin{center}
   
-\begin{Schunk}
-\begin{Sinput}
-> setwd( texWd)
-> if( overwriteFigures) {
-+   png( file="fig_thumb_nlcd_facet.png")
-+   print( thumbNlcdPlot + 
-+         facet_wrap(~ values) + 
-+         opts( legend.position= "none"))
-+   dev.off()
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 \includegraphics{fig_thumb_nlcd_facet}
 \end{center} 
@@ -1057,42 +543,11 @@ expensive due to the NLCD's high resolution.
 
 \todo{Include GRASS code for aggregating NLCD}
 
-\begin{Schunk}
-\begin{Sinput}
-> setwd( nlcdWd)
-> overwriteRasters <- TRUE
-> thumbNlcd$Amin <- 1
-> thumbNlcd <-
-+   coverFractions( thumbNlcd, mosaic=FALSE,
-+                  overwrite= overwriteRasters,
-+                  progress= "text")
-> thumbNlcd <-
-+   aggregateFractions( thumbNlcd,
-+                      overwrite= overwriteRasters,
-+                      progress="text")
-> if( overwriteFigures) {
-+   thumbNlcdAggPlot <- coverMaps( thumbNlcd$agg, 1)
-+ }
-> overwriteRasters <- FALSE
-\end{Sinput}
-\end{Schunk}
+ 
 
 \begin{figure} 
 \begin{center}
   
-\begin{Schunk}
-\begin{Sinput}
-> overwriteRasters <- TRUE
-> overwriteFigures <- TRUE
-> setwd( texWd)
-> if( overwriteFigures) {
-+   png( file="fig_thumb_nlcd_agg.png")
-+   print( thumbNlcdAggPlot)
-+   dev.off()
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 
 \includegraphics{fig_thumb_nlcd_agg}
@@ -1103,39 +558,10 @@ expensive due to the NLCD's high resolution.
 
 
 
-\begin{Schunk}
-\begin{Sinput}
-> setwd( dataWd)
-> ## nlcd <- stack( paste( "nlcd", names( peelClasses[ -8]), "5min.tif", sep="_"))
-> 
-> nlcd <- stack( sapply( names( peelClasses[ -8]),
-+                       function( cover) {
-+                         list.files( paste( dataWd, "nlcd", sep="/"),
-+                                    patt= paste( "nlcd", cover, "5min.tif$", sep="_"),
-+                                    full.names= TRUE)
-+                       }))
-> nlcd <- setMinMax( nlcd)
-> layerNames(nlcd) <- names( peelClasses[ -8])
-> nlcdPlot <- coverMaps( nlcd, 0.1)
-> 
-> 
-\end{Sinput}
-\end{Schunk}
 
 \begin{figure} 
 \begin{center}
   
-\begin{Schunk}
-\begin{Sinput}
-> setwd( texWd)
-> if( overwriteFigures) {
-+   png( file="fig_nlcd.png")
-+   print( nlcdPlot)
-+   dev.off()
-+ }
-> 
-\end{Sinput}
-\end{Schunk}
 
 
 \includegraphics{fig_nlcd}
@@ -1144,6 +570,7 @@ expensive due to the NLCD's high resolution.
 \label{fig:nlcd}
 \end{figure} 
 
+\begin{comment}
 \section{Cropland Data Layer (CDL)}
 \label{sec:cdl}
 
@@ -1163,39 +590,8 @@ data set.
 
 
 \todo{Calculate CDL mask for 5-arcmin cells completely filled}
-\todo{Calculate CDL aggregated in GRASS}
+\todo(Calculate CDL aggregated in GRASS}
 
-\begin{Schunk}
-\begin{Sinput}
-> cdl <- list( pri= raster( "/gpfs/pads/projects/see/data/raw/cdl/vrt/cdl_2001.vrt"))
-> cdlReclassMatrix <- 
-+   matrix( c( 83,  83,  0,               # water
-+              85,  85,  0,
-+              63,  63,  1,               # forest
-+                                         # no shrub
-+              62,  62,  3,               # open
-+              88,  88,  3,
-+              87,  87,  4,               # wetland
-+               1,  61,  5,               # crop
-+              90,  90,  5,
-+              82,  82,  6,               # urban
-+              84,  84,  6,
-+              86,  86,  6),
-+                                         # no mosaic
-+                                         # no barren
-+          ncol= 3, byrow= TRUE)
-> cdl  <- mlctReclass( cdl, cdlReclassMatrix, overwrite= overwriteRasters, progress= "text")
-> cdl$Amin <- 1
-> cdl <- coverFractions( cdl, mosaic= FALSE, overwrite= TRUE, progress="text")
-> cdl <- aggregateFractions( cdl, overwrite=TRUE, progress="text")
-> cdl_il <- list( pri= raster( "cdl_il_2001.tif"))
-> cdl_il <- mlctReclass( cdl_il, cdlReclassMatrix, overwrite= overwriteRasters, progress= "text")
-> cdl_il$Amin <- 1
-> cdl_il <- coverFractions( cdl_il, mosaic= FALSE, overwrite= TRUE, progress="text")
-> cdl_il <- aggregateFractions( cdl_il, overwrite=TRUE, progress="text")
-> 
-\end{Sinput}
-\end{Schunk}
 
 
 
@@ -1203,7 +599,7 @@ data set.
 
 \subsection{Aggregation}
 \label{sec:cdl-aggr}
-
+\end{comment}
 
 \section{Harvested Area and Yields of 175 Crops (175crops2000)}
 \label{sec:175crops2000}
@@ -1227,6 +623,17 @@ cereals into their own class, and combine all remaining crops as a
 catch-all ``other'' category.  Field crops will be distinguished from
 orchard / plantation crops that would likely fall under areas
 classified by MLCT as forest or shrub in this step.
+
+
+\begin{figure} 
+\begin{center} 
+
+
+\includegraphics{fig_crops}
+\end{center} 
+\caption{175Crops2000 category maps} 
+\label{fig:crops} 
+\end{figure} 
 
 
 %%% Local Variables: 

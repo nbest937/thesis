@@ -24,13 +24,16 @@
 \lstset{breaklines=true,basicstyle=\ttfamily,language=R}
 \usepackage{pdfpages}
 \usepackage{pbox}
+\usepackage{verbatim}
+\usepackage{rotating}
 
 \begin{document} 
 \bibliographystyle{chicago}
 
-\title{Synthesis of a complete land use / land cover data set for the
+\title{Synthesis of a complete land use\slash land cover data set for the
   conterminous United States emphasizing accuracy in area and
-  distribution of agricultural activity} 
+  distribution of agricultural activity}
+ 
 
 \othermasters{Master of Arts}{M.A.}  
 \department{Geography \& Environmental Studies}
@@ -48,54 +51,78 @@
 \frontmatter
 
 \begin{abstract} This paper presents an effort to produce a new land
-  cover data set for the conterminous United States that augments
-  available agricultural land use data with other uses and covers to
-  create a complete landscape characterization.  We start with the data
-  set described in Ramankutty, et al., 2008, which improves on the
-  spatial distributions of agricultural land indicated by the MODIS Land
-  Cover Type and Global Land Cover 2000 data products on which it is
-  based by incorporating agricultural census data as a ground truth
-  constraint.  However, it provides no information regarding areas which
-  were judged to have been misclassified.  We present a method for
-  reconciling the Ramankutty data with the MODIS Land Cover Type map for
-  2001 and aspects of the higher-resolution 2001 National Landcover
-  Database.  This result is subsequently merged with the data from
-  Monfreda, et al., 2008 in order to further disaggregate cropland into
-  commodity sub-classes.  We describe a prototype economic land use
-  change model driven by land conversion costs, crop yield expectations,
-  and climate change scenarios that requires this data for
-  initialization.  We examine trends in other data sets to assess the
-  accuracy of change in agricultural land area expressed in the MODIS
-  time series after 2001.  This effort points a way forward to the
-  eventual production of a global, annual time series of land cover/
-  land use maps featuring explicit disaggregation of croplands by
-  commodity to be used in economic modeling of global agricultural
-  production, trade, and consumption.
+  cover data set for the conterminous United States of America (cUSA)
+  that augments available agricultural land use data with other uses
+  and natual covers to create a complete landscape characterization.
+  Using the Agland2000 data set as a benchmark we formulate a
+  hybridization of the MODIS Land Cover Type (MLCT) for 2001 and the
+  2001 National Land Cover Database (NLCD) that is particularly
+  tailored to serve as an initialization data set for long-term
+  economic land use change models.  In order strike a balance between
+  spatial precision and local diversity of use and cover the new data
+  set has lower resolution than the MLCT (5 arcminutes vs. 500m) but
+  represents consituent cover classes as sub-pixel fractions rather
+  than forcing individual pixels into mutually exclusive thematic
+  categories.  After aggregating to the 5-arcmin grid we present a
+  method for decomposing the natural vegetaion/cropland mosaic class
+  found in MLCT into constituent classes as a function of the local
+  landscape and quantify its contribution to aggregate acreages by
+  class, particularly cropland.  We compensate for the absence of
+  certain fine-grained details from MLCT, such as rural transportation
+  networks, small settlements, linear water features, and wetlands,
+  mainly by virtue of sensor resolution, by incorporating
+  corresponding components of the NLCD, after similar reclassification
+  and aggregation, as a set of offsets to the MLCT-derived fractions.
+  The 175Crops2000 data set, valuable for its basis in per-crop
+  agricultural production statistics, is used as a guide to further
+  decompose the cropland areas into a set of crop-specific
+  sub-categories designed to facilitate the economic modeling goals of
+  the simulations that will be initialized by this data product.  The
+  final classification scheme, now conceptually analogous to a stack
+  of spectral bands that are constrained to sum to unity, is a mixture
+  of a simplified version of the IGBP schema used in MLCT and a
+  disaggregation of the monolithic cropland class that differentiates
+  among the world's major commodity crops. \todo{It remains to be seen
+    how well the disaggregation of commodities will work. We may have
+    to leave it out.}  At each step of refinement we show that overall
+  spatial distribution of cropland across the study area improves
+  relative to the Aglands2000 data set.  We close with a discussion of
+  how this method might be applied globally and to successive years in
+  the MLCT time series.
 \end{abstract}
+
 
 \chapter*{Acknowledgements}
 
-\todo{Fix indent and paragraph breaks in acknowledgements}
+\noindent This thesis is dedicated to my son, Leo.  Son, I began
+working on this degree before you were born and my commitment to
+completing it was sustained by my desire to demonstrate to you that in
+life we finish what we have started.
 
-This thesis is dedicated to my son, Leo.  Son, I began working on this
-degree before you were born and my commitment to completing it was
-sustained by my desire to demonstrate to you that in life we finish
-what we have started.
+\vspace{12pt}
+\noindent I could not have completed this paper over the past year
+and, by extension, my degree over more years than I care to mention
+without the support of my loving wife, Laura.
 
-I could not have completed this paper over the past year and, by
-extension, my degree over more years than I care to mention without the
-support of my loving wife, Laura.
+\vspace{12pt}
+\noindent I want to thank Dr. Nicholas Kouchoukos of Lanworth,
+Inc. for throwing me in the deep end of applying the open-source
+geospatial software tool chain to spatial analysis of agriculture.
 
-This work was made possible through the support of my
-employer, the Computation Institute at the University of Chicago, and its
-director, Dr. Ian Foster.  
+\vspace{12pt}
+\noindent This work was made possible through the support of my
+employer, the Computation Institute at the University of Chicago, and
+its director, Dr. Ian Foster under the Community Integrated Model of
+Economic and Resource Trajectories for Humankind project (CIM-EARTH,
+\url{http://www.cim-earth.org/}).
 
-My thesis committee was comprised of Dr. Monika Mihir (chair),
-Dr. Erick Howenstine (department head), both of the Department of
-Geography \& Environmental Studies at Northeastern Illinois
-University, and Dr. Joshua Elliott from the Computation Institute.  I
-deeply appreciate their guidance and support through all stages of
-this phase of my education.
+\vspace{12pt}
+\noindent My thesis committee was comprised of Dr. Monika Mihir
+(chair), Dr. Erick Howenstine (department head), both of the
+Department of Geography \& Environmental Studies at Northeastern
+Illinois University, and Dr. Joshua Elliott from the Computation
+Institute.  I deeply appreciate their guidance and support through all
+stages of this project.
 
 
 \tableofcontents 
@@ -106,17 +133,24 @@ this phase of my education.
 \chapter{List of Abbreviations}
 
 \begin{symbollist*}
-\item[MODIS] Moderate-resolution Imaging Spectroradiometer
-\item[MLCT] MODIS Land Cover Type \citep{MLCT}
 \item[175Crops2000] Harvested Area and Yields of 175 crops (M3-Crops
   Data) \citep{Monfreda2008}
 \item[Agland2000] Agricultural Lands in the Year 2000 (M3-Cropland and
   M3-Pasture Data) \citep{Ramankutty2008}
-\item[NLCD] National Land-Cover Database, 2001 \citep{Homer2004}
 \item[arcmin] minute of arc, 1/60th of a degree
-\item[arcsec] secondof arc, 1/60th of a minute, 1/3600th of a degree
+\item[arcsec] second of arc, 1/60th of a minute, 1/3600th of a degree
+\item[AVHRR] Advanced Very High Resolution Radiometer
+\item[cUSA] conterminous (contiguous) Unites States of America, the ``lower 48''
+\item[GLC2000] Global Land Cover 2000 \citep{EC2003}
 \item[GRASS] Geographic Resources Analysis Support System, \url{http://grass.osgeo.org}
+\item[IGBP] International Geosphere-Biosphere Programme
+\item[LULC] land use / land cover
+\item[MODIS] Moderate Resolution Imaging Spectroradiometer
+\item[MLCT] MODIS Land Cover Type \citep{MLCT}
+\item[NLCD] National Land-Cover Database, 2001 \citep{Homer2004}
 \item[RMSE] root of the mean squared error
+\item[SPAM] Spatial Production Allocation Model
+\item[SPOT] Syst\`eme pour l'Observation de la Terre
 
 \end{symbollist*}
 
@@ -131,6 +165,8 @@ this phase of my education.
   classification confidence level and $A_{min}$
 \item[$A_p$] Sub-pixel fraction of primary cover type, function of
   classification confidence level and $A_{min}$
+\item[$\hat\theta$] Predicted sub-pixel fraction
+\item[$\theta$] Observed sub-pixel fraction
 \end{symbollist}
 
 \mainmatter
@@ -143,7 +179,7 @@ this phase of my education.
 \include{analysis2}
 
 \chapter{Conclusions}
-
+\label{cha:conclusions}
 
 
 

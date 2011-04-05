@@ -2,64 +2,331 @@
 \chapter{Introduction}
 \label{cha:introduction}
 
+\section{Background}
+\label{sec:background}
+
+The continuing evolution and commoditization of high-performance
+computing infrastructure is constantly opening new horizons in spatial
+modeling of human\slash environment interactions.  Increases in
+processing throughput, affordability of tera- and petabyte-scale
+storage resources, and ubiquity of parallelization tools and
+techniques create opportunities for formulating models of spatial
+processes of increasing extent, granularity, dimensionality, and
+complexity.  The intersection of geography, economics, and computer
+science is a fertile frontier where researchers capable of harnessing
+the utility of available technology are presented with an
+unprecedented opportunity to contribute to resolving the urgent
+questions of our time regarding humankind's outlooks for survival,
+stewardship, and prosperity in coming decades and centuries.  These
+issues generally revolve around characterizations of our manipulation
+of natural processes, notably food production, the side effects of
+those activities, being alterations of biogeochemical fluxes of matter
+and energy within and into the biosphere \citep{Sellers1997}, and the
+economic exchanges that mediate these activities as modulated by
+policy.  Meaningful abstractions of these processes in the form of
+iterative, process-based models that we can formulate in order to
+derive descriptions of their dynamics and forecasts of their unfolding
+are not possible without some characterization of the ecological
+disposition of the earth's surface.  This ecology is to be inclusive
+of human ecology, which is to say settlement, development,
+utilization, and transformation of natural resources.  The general
+form of such a characterization is a land use\slash land cover (LULC)
+map which depicts landscapes according to categories of anthropogenic
+and natural phenomena \citep{Fisher2005a}.  \todo{Warning--page
+  numbers missing in Fisher2005a} These maps are necessarily functions
+of history, climate, geology, hydrology and are formulated according
+to some design or convention with regard to their constituent types
+and their definitions, which make possible myriad representations of a
+given landscape regardless of scale.  When conducting analysis in this
+space it is typically necessary to tailor the analysis to accommodate
+available data or create new data from raw physical measurements and
+observations, but a third option of fusing aspects of multiple
+available data sets is also available, as we will demonstrate here.
+
+Arguably the most significant intersection of land use and land cover
+is agriculture.  Agricultural activity has transformed all but the
+most inhospitable, impervious, and inaccessible corners of the globe
+and serves as a crucial underpinning of civilization, but is still an
+expression of variability in weather, soils, and biology, natural
+phenomena beyond humans' control, across the face of the earth.  In
+the face of uncertainty regarding food security, availability of raw
+materials for industry and trade, impacts and dynamics of
+deforestation, desertification, and climate change, and sensitivity to
+these alarming trends due to a burgeoning global population, reliable
+forecasts of agricultural production and productivity over the long
+term are objects of much desire in the corridors of government,
+finance, and industry.
+
+Recent years have seen a significant increase in the availability of
+global land cover data sets including the University of Maryland
+Global Land Cover Classification, Global Land Cover 2000 (GLC2000),
+and MODIS Land Cover Type (MLCT).  At the regional level the National
+Land-cover Database (NLCD) provides high-resolution LULC data for the United States and Puerto Rico.  These data sets are
+summarized in Table \ref{tab:lulc} with pertinent references and
+attributes of their collection.  The proliferation of these data sets
+reflects the diversification and technological advances among
+space-borne sensors in recent years, resulting in improved resolution,
+both spatial and temporal, as well as innovation in post-processing
+and classification algorithms that transform raw sensor data into the
+thematic data that is more approachable to theoretical modeling.
+
+%\begin{table}[ht]
+%  \begin{center}
+\begin{sidewaystable}
+      \begin{tabular}{lp{2in}p{0.75in}lp{1.5in}}
+        \hline
+        Data set & Reference & Sensor & Resolution & Time Span \\
+        \hline
+        UMD GLobal Land Cover 1998 & \citet{Hansen2000} & AVHRR & 1km & 1981 -- 1994 (composite) \\
+        Global Land Cover 2000 & \citet{EC2003,Bartholome2005} & SPOT & 1km & Nov~1999~--~Dec 2000 (composite) \\
+        National Landcover Database (NLCD) & \citet{Homer2004,Homer2007} & Landsat & 30 m & 2001 \\
+        MODIS Land Cover Type v005 & \citet{MLCT,Friedl2010} & MODIS (Aqua~\&~Terra) & 500m & 2001~--~2008 (annual~time~series) \\
+        \hline
+      \end{tabular}
+    \caption{Summary of global LULC data sets}
+    \label{tab:lulc}
+%  \end{center}
+%\end{table}
+\end{sidewaystable}
+
+Similarly there has also been a proliferation of data sets that
+describe the distribution and intensity of global agricultural
+activity.  Some such as the Global Irrigated Areas Map (GIAM)
+\citep{Thenkabail2008} and the Global Map of Rainfed Crop Areas
+(GMRCA) \citep{Biradar2009} are the product of applying classification
+techniques to large collections of remote sensing and GIS data.
+Others such as Agricultural Land in the Year 2000 (Agland200)
+\citep{Ramankutty2008}, Harvested Area and Yields of 175 Crops
+(175Crops2000) \citep{Monfreda2008}, and the Spatial Production
+Allocation Model (SPAM) \citep{You2006} \todo{Warning--there's a
+  number but no series in You2006} are further informed by
+agricultural production data published at national and sub-national
+levels and disaggregated to grid cells within those boundaries
+according to an optimization method described by \citet{YouWood2006}.
+Data sets such as these have the potential to complement those of the
+general comprehensive LULC category by offering additional information
+on how to differentiate areas of cropland according to cultivars, and
+farming practices such as crop rotation, multiple cropping, and
+irrigation.
+
+
 \section{Objective}
 \label{sec:objective}
 
-Recent years have seen a significant increase in the availability of
-global land cover data sets inclding the UMD Global Land Cover
-Classification product of 1998 \citep{Hansen2000}, Global Land Cover
-2000 (GLC2000) \todo{GLC2000 citation}, 
-MODIS Land Cover Type (MLCT) \todo{MLCT citation}.  MLCT stands out
-among these due to its spatial resolution, nominally 500m, and its
-distinction as a time series rather than a snapshot.  Economic models
-of land use and land conversion require information that describes a
-complete, albeit simplified, description of land cover and
-land-intensive econommic activity in order to produce meaningful
-statements and predictions about the evolution of land use patterns.
-``Complete'' in this context means that all cover types or uses for a
-given portion of land area are assigned a category in the model.
-However while MLCT does satisfy this condition of completeness it
-presents two new complications that we must first address.
+The Community Integrated Model of Economic and Resource Trajectories
+for Humankind (CIM-EARTH) project at the University of Chicago's
+Computation Institute, \href{http://www.cimearth.org/}, seeks to
+provide a framework in which to combine the best of modern
+computational and economic science to guide climate and energy policy.
+A major facet of this work involves forecasting of land use change
+over coming decades in the face of market pressures and hypothetical
+climate change scenarios.  The supply side of this market analysis
+depends, among other industries, on agriculture.  Prices of
+agricultural commodities are sure to change in years ahead in response
+to changes in technology, both of production itself and the products
+and materials that are derived from them, changes in aggregate demand
+for food and its attendant political ramifications, and changes to the
+environments where agricultural occurs.  Rents and prices of land will
+follow from the profitability, adaptiblity, and risks associated with
+the commodities that are possible to produce on it, as well as costs
+of energy and inputs needed to bring those goods to market.  A
+spatially explicit model of not only agricultural production, but also
+the conversion of land into and out of active, profitable cultivation
+is needed in order to make statements about the magnitude, trend,
+volatility, and sustainability of agricultural output to guide
+decisions about investment and policy.  We call this the Partial
+Equilibrium Economic Land-use (PEEL) model, which refers to the
+assumption of long-term demand trajectories as given inputs and
+calculates the likely distribution of production needed to meet that
+demand.  The foundation of this modeling effort would have to be a
+LULC data set that is ``Complete'' in the sense that it assigns all
+land, coastal, and inland water areas to one category or another, and
+that differentiates among crops to provide a modeling environment
+where shifts in production factor allocation can be driven by market
+and physical variables.  None of the data sets considered so far
+exhibit these qualities; the LULC data sets treat cropland as a
+homogenous categgory and the agricultural maps do not depict other
+uses and covers.  Hence the motivation to develop a hybrid data set
+that satisfies these criteria.
 
-The first is that MLCT presents an embarassment of riches in terms of
-detail.  Regardless of its classification accuracy, which is discussed
-below, the 15-arcsecond resolution, nominally 500m, is simply too much
-information to be able to run the economic models in a reasonable
-amount of time even on world-class high-performance computing
-platforms.  A current standard resolution for global models of many
-types and global data sets is 5-arcminutes, which is equivalent to a
-400:1 pixel count reduction.  Other data sets featured in this
-analysis use this resolution which is convenient for formulation.
+The mathematical properties of the PEEL model dictate a somewhat
+unconventional data model for representing the allocation of land area
+to the various LULC\slash crop categories.  Rather than assigning individual
+grid cells to discrete categories as is typically done for LULC maps,
+PEEL is formulated in a sub-pixel analysis framework, such that for
+each cell a fraction is assigned to each category to represent the
+degree to which that LULC type is present across the area of the grid
+cell.  In a tabular representation the data would show cells in rows
+and the LULC types in columns with a constraint that the values in
+each row sum to unity.  In terms of geospatial mapping this is
+equivalent to assigning a layer or band in a stacked image set to each
+category, as is done for spectral bands in radiometric data, subject
+to the same constraint for each pixel.  An advantage to this approach
+is that errors of false spatial precision in higher-resolution data
+sets from which our inputs are derived, meaning that pixels in the
+mother data set are aggregated into an expression of probability
+across the larger model grid cell versus the definite location implied
+by the thematic data.  It also means that we will have an avenue for
+increasing model complexity and the raw size of the data set by a
+linear factor by increasing the depth of the data array rather than
+the quadratic increase that accompanies increases in resolution.  The
+primary purpose of this design choice is to strike a balance between
+locational specificity and a convenient accounting mechanism for land
+use conversion that would only confer false precision if expressed
+spatially.  In other words, the land area of a pixel is considered to
+be a single location whose internal arrangement is unspecified.  The
+model can incorporate constraints governing the iterative transition
+of those fractions that are stated algebraically in order to exclude
+protected natural areas from conversion or require a degree of
+autocorrelation among neighbors to prevent unrealistic divergences in
+development patterns among grid cell neighborhoods, for example.
 
-The second requirement for the new complete land cover data set that
-we wish to produce is that it provide greater information regarding
-agricultural activity.  MLCT presents a single class for cropland but
-we wish to further disaggregate the areas of agricultural production
-according to a few major commodities in order to incorporate greater
-detail of agronomic and commercial factors into the models.  As we
-will see, \citet{Monfreda2008} provides a wealth of data in this
-regard by harvested area and yield for 175 crops globally, but does
-not provide a complete land cover description.  
+A disadvantage of this data model is apparent when attempting to
+visualize the data.  A thematic map can be viewed in a single pass
+given a well-designed palette that has a reasonable number of classes
+and the relative proportions and distributions of classes can be
+readily perceived by the viewer.  For the sub-pixel data model a
+cognitive adjustment is necessary in order to consider multiple
+classes simultaneously.  Although it is possible to employ the
+false-color approach typically used for viewing multispectral data,
+this limits a given map to portraying three classes simultaneously, or
+else picking two of primary interest and lumping the remaining
+fractions into a catch-all category.  This method is not quite as
+applicable to categorical data that we are discussing as it is to
+spectral data because a set of three spectral bands are typically left
+in long-to-short wavelength order and reassigned to red, green and
+blue, which amounts to shifting their frequencies into the visible
+spectrum, in order to produce a false-color image.  It would be
+difficult to interpret the mixing of thematic hues or the arbitrary
+assignment of categories to primary hues.  The approach to
+visualization taken for this paper is to render maps in individual
+layers with a uniform palette to express the fractional expression of
+the classes and distinguish zero from null outside the set of pixels
+included by the analysis mask.  Interpretation is aided by presenting
+these maps in collections called facets in Wilkinson's
+\citeyearpar{Wilkinson2005} grammar of graphics to convey the full
+depth of information in consideration.
 
-\section{Tools}
-\label{sec:tools}
+Given that the CIM-EARTH modeling framework is in a prototype phase we
+are taking a conservative posture towards the degree of detail that we
+wish to capture in early applications.  This is expressed by the
+choice of resolution of our model grid and the number of LULC
+categories, including crop sub-categories, to which each cell can be
+allocated.  With an ultimate goal of running simulations at global
+extents we wanted to err on the side of prudence before measuring the
+computational requirements of processing time and storage of a working
+prototype.  Early tests gauging the computational requirements for
+carrying out these simulations have indicated that operating on a
+5-arc-minute grid cell globally is not prohibitively costly in time,
+memory, or storage and that the design, implement, evaluate iterative
+development cycle can proceed at a satisfactory pace.  This choice of
+resolution is not as arbitrary as it may seem given that it equates to
+roughly 10km at the equator and happens to be the resolution of some
+of the base data employed in this exercise.
 
-A secondary objective of this paper is to demonstrate the capabilities
-of a set of open-source geospatial, analytical, and publishing
-software that includes \href{http://www.gdal.org/}{GDAL},
-\href{http://grass.osgeo.org/}{GRASS} \citep{GRASS},
-\href{http://www.r-project.org/}{R} \citep{R} , and
-\href{http://www.latex-project.org/}{\LaTeX} \citep{Lamport1994} .
-The last two members of this list are bridged by
-\href{http://www.stat.uni-muenchen.de/~leisch/Sweave/}{Sweave}
-\citep{Leisch2002} which allows embedding of analytical code written
-in the R language within a \LaTeX document so that one step towards
-producing a publication-quality PDF is running the analysis and
-injecting its results directly into the content of the paper,
-including tables, charts, and maps.  The underlying analysis code will
-appear as an appendix.  This is a demonstration of reproducible
-research as described in \citet{Gentleman2007}.
+The algorithm described here will be peformed on the subset of the
+global 5-arc-minute grid that contain land area of the 48 contiguous
+states of these United States but is intended to be applied globally.
+As we will discuss in Chapter \ref{cha:datasets} when the base data
+sets are described in greater detail the MLCT is chosen as the
+foundation of this method because of its global coverage and greatest
+resolution.  As the technique presented in Chapter \ref{cha:analysis}
+matures it will be applied globally and also extended in time to
+convert the proceeding years of the MLCT time series to a form useful
+in the PEEL model.  This will be important for model validation to
+show that the model is capable of producing an evolution of the
+overall state of land use that corresponds to available observations.
+As we will see the necessary information needed to obtain a realistic
+distribution of areas for all classes is not currently available.  We
+use the NLCD to complement MLCT for certain classes that are too small
+to resolve at 500m, hence the restricted extent for which this method
+is currently feasible.  In Chapter \ref{cha:conclusions} we wrap up
+with a discussion of the merits of this endeavor and propose future
+avenues of research based thereon.
 
-\todo{ cite R packages (reshape, ggplot2, raster)}
+At this time we are not aware of any other systematic attempt to
+incorporate the full depth of information offered by MLCT, which is a
+collection of three map layers: a primary cover class, a confidence
+level for that primary classification, and a secondary classification.
+Rather than interpret the secondary classification as the next most
+likely possibility we accept this triplet as an expression of the
+sub-pixel composition of that area.  Aggregation of MLCT from 15
+arc-seconds to 5 arc-minutes will blur the spatial precision implied
+by this formula and treat the local $20 \times 20 \times 3$ array as a
+probabilistic expression of the local landscape composition.  We will
+show that this approach, given a principled assumption about the
+relationship between confidence level and sub-pixel area, that
+aggregate acreage estimates of the LULC classes, particularly
+cropland, are improved through this method.  More on this in Section~\ref{sec:mlct}.
 
-% http://cran.r-project.org/web/packages/reshape/citation.html
+\section{Reproducible Research}
+\label{sec:reproducible}
+
+We maintain that the manner in which we execute this analysis is as
+significant, if not more so, to the practice of geospatial analysis as
+the product of the analysis itself.  The second objective of this
+paper is to demonstrate the concept of reproducible resarch in
+geospatial analysis that has been made possible by a suite of
+open-source software tools.  Previous to employing the quite of tools
+described below, our typical research experience with widely available
+GIS software, both free and commerical, is to conduct the analysis in
+a graphical user interface (GUI) environment and capture outputs for
+publication by exporting maps and charts as images and transcribing
+quantitative results from on-screen displays.  Whenever an adjustment
+is made the maps, charts, tables, and quantities in the paper must be
+updated manually.  The open-source GIS software package
+\href{http://grass.osgeo.org/}{\texttt{GRASS}} \citep{GRASS} employs a
+command-line oriented interface as its basic mode of user interaction
+which makes recording of steps in an analysis in the form of a script
+a more approachable undertaking once the user develops familiarity
+with the necessary commands, but due to GRASS's decades-long Unix
+heritage, this scripting is done using the Bash shell, a system that
+was designed primarily for system administration and suffers from a
+byzantine syntax and a dearth of native data structures, making
+succinct, expressive programming difficult.
+
+The \href{http://www.r-project.org/}{\texttt{R}} statistical package
+addresses these shortcomings \citep{R} by virtue of its design's
+orientation towards mathematical and statistical analysis.  Using
+Robert Hijmans' \citeyearpar{Hijman2011} \texttt{raster} package for R
+provides an interface for accessing and analyzing geospatial raster
+data sets without being forced to load the entire data set into
+memory, a constraint that has historically been the case with R data
+in general.  Friedrich Leisch's \citeyearpar{Leisch2002}
+\texttt{Sweave} package for R is a tool for embedding R code within a
+\href{http://www.latex-project.org/}{\LaTeX} \citep{Lamport1994}
+document for inline code evaluation and dynamic injection of figures,
+tables, and text into a document prior to final typesetting.  The
+utilization of these tools results in a software environment where the
+princples of reproducible research described and demonstrated by
+\citet{Gentleman2007} can be applied.  An academic paper produced
+under this pradigm is analogous to a piece of open-source software
+where the majority of ``users'' will simply want the compiled binary
+version in the form of a PDF document, but the author also provides
+access to the the source code behind the production of that document
+for inspection, re-execution, and adaptation for follow-on research.
+This approach lowers the costs of reproduction and verification of
+scientific analyses, a central tenet of the scientific method that has
+effectively fallen out of practice due to these costs, and has gained
+a foothold in numerous desciplines from statistics to medical imaging.
+
+The tables, charts, and maps included in this document will generated
+by R code which will be included as an appendix.  The maps and charts
+are produced using Hadley Wickham's \citeyearpar{Wickham2009}
+\texttt{ggplot2} package, employing the grammar of graphics mentioned
+above.  David Dahl's \texttt{xtables} package is used to convert R
+data frames into tables marked-up for typesetting.  \texttt{Sweave}
+itself provides a facility for injecting the results of evaluating
+arbitrary R expressions in the text body, making it possible to render
+pieces of data, such as total acreages, in a dynamic fashion.
+
+The source code of this paper will be submitted on optical media to
+Northeastern Illinois University's Graduate college along with the
+final draft.  It will also be available via GitHub at
+\url{https://github.com/nbest937/thesis}.  The initial, intermediate,
+and final data products will be made available for download either
+through \url{http://www.ci.uchicago.edu/~nbest} and\slash or
+{http://www.cimearth.org/} by request to
+\url{mailto:nbest@ci.uchicago.edu} or \url{mailto:nbest@alum.mit.edu}.
+
+

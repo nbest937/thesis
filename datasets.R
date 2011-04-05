@@ -53,21 +53,23 @@ igbpLegend <- igbpLegend[ igbpLegend != "#000000"]
 
 thumb <- mlctReclass( thumb, mlctReclassMatrix, overwrite= overwriteRasters)
 
-thumbPlots <- list( pri= peelMap( thumb$pri, 0.4),
-                    sec= peelMap( thumb$sec, 0.4))
+if( overwriteFigures) {
+  thumbPlots <- list( pri= peelMap( thumb$pri, 0.4),
+                     sec= peelMap( thumb$sec, 0.4))
 
-thumbPlots$pct <- ggplotRaster( thumb$pct, 0.4) + 
-  scale_fill_gradientn( "% confidence", 
-                       colours= rev( brewer.pal( 7, "YlGn")), 
-                       limits= c( 100, 0),
-                       breaks= seq( 100, 0, by= -20))
+  thumbPlots$pct <- ggplotRaster( thumb$pct, 0.4) + 
+    scale_fill_gradientn( "% confidence", 
+                         colours= rev( brewer.pal( 7, "YlGn")), 
+                         limits= c( 100, 0),
+                         breaks= seq( 100, 0, by= -20))
+}
 
 
 
 ###################################################
 ### chunk number 4: fig_thumb_pri_reclass
 ###################################################
-#line 151 "/home/nbest/thesis/datasets.Rnw"
+#line 153 "/home/nbest/thesis/datasets.Rnw"
 setwd( texWd)
 if( overwriteFigures) {
   png( file="fig_thumb_pri_reclass.png")
@@ -80,7 +82,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 5: fig_thumb_sec_reclass
 ###################################################
-#line 171 "/home/nbest/thesis/datasets.Rnw"
+#line 173 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
@@ -94,7 +96,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 6: fig_thumb_pct
 ###################################################
-#line 192 "/home/nbest/thesis/datasets.Rnw"
+#line 194 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
@@ -108,7 +110,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 7: fig_thumb_pri_facet
 ###################################################
-#line 220 "/home/nbest/thesis/datasets.Rnw"
+#line 222 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
@@ -124,7 +126,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 8: fig_thumb_sec_facet
 ###################################################
-#line 243 "/home/nbest/thesis/datasets.Rnw"
+#line 245 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
@@ -140,7 +142,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 9: mlct
 ###################################################
-#line 269 "/home/nbest/thesis/datasets.Rnw"
+#line 271 "/home/nbest/thesis/datasets.Rnw"
 
 ## repeat for cUSA
 setwd( dataWd)
@@ -149,25 +151,29 @@ mlct <- mlctList( "2001_lct1.tif",
                   "2001_lct1_pct.tif")
 mlct  <- mlctReclass( mlct, mlctReclassMatrix, overwrite= overwriteRasters, datatype="INT1U", progress="text")
 
-mlctPlots <- list( pri= peelMap( mlct$pri, 0.01),
+if( overwriteFigures) {
+  mlctPlots <- list( pri= peelMap( mlct$pri, 0.01),
                     sec= peelMap( mlct$sec, 0.01))
+  mlctPlots$pct <- ggplotRaster( mlct$pct, 0.01) + 
+    scale_fill_gradientn( "% confidence", colours=rev( brewer.pal( 7, "YlGn")), 
+                         limits= c( 100, 0),
+                         breaks= seq( 100, 0, by= -20))
+}
 
-mlctPlots$pct <- ggplotRaster( mlct$pct, 0.01) + 
-  scale_fill_gradientn( "% confidence", colours=rev( brewer.pal( 7, "YlGn")), 
-                       limits= c( 100, 0),
-                       breaks= seq( 100, 0, by= -20))
+
 
 
 ###################################################
 ### chunk number 10: fig_mlct_pri_reclass
 ###################################################
-#line 291 "/home/nbest/thesis/datasets.Rnw"
+#line 296 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
   png( file="fig_mlct_pri_reclass.png")
   print( mlctPlots$pri + coord_equal())
   dev.off()
+  system( "convert -trim fig_mlct_pri_reclass.png fig_mlct_pri_reclass_trim.png")
 }
 
 
@@ -175,13 +181,15 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 11: fig_mlct_sec_reclass
 ###################################################
-#line 312 "/home/nbest/thesis/datasets.Rnw"
+#line 318 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
   png( file="fig_mlct_sec_reclass.png")
   print( mlctPlots$sec + coord_equal())
   dev.off()
+  system( "convert -trim fig_mlct_sec_reclass.png fig_mlct_sec_reclass_trim.png")
+
 }
 
 
@@ -189,13 +197,14 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 12: fig_mlct_pct
 ###################################################
-#line 333 "/home/nbest/thesis/datasets.Rnw"
+#line 341 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
   png( file="fig_mlct_pct.png")
   print( mlctPlots$pct + coord_equal())
   dev.off()
+  system( "convert -trim fig_mlct_pct.png fig_mlct_pct_trim.png")
 }
 
 
@@ -203,7 +212,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 13: fig_mlct_pri_facet
 ###################################################
-#line 358 "/home/nbest/thesis/datasets.Rnw"
+#line 367 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
@@ -220,7 +229,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 14: fig_mlct_sec_facet
 ###################################################
-#line 382 "/home/nbest/thesis/datasets.Rnw"
+#line 391 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
@@ -239,7 +248,8 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 15: thumbPlots
 ###################################################
-#line 480 "/home/nbest/thesis/datasets.Rnw"
+#line 489 "/home/nbest/thesis/datasets.Rnw"
+
 
 setwd( dataWd)
 
@@ -253,23 +263,24 @@ thumb  <- aggregateFractions( thumb, overwrite= overwriteRasters, progress= "tex
 thumb1 <- aggregateFractions( thumb1, overwrite= overwriteRasters, progress= "text")
 
 ## seems like brick() has a bug such that the filenames have no paths
-thumb$fracs <- brick( paste( getwd(), filename( thumb$fracs), sep="/"))
-thumb1$fracs <- brick( paste( getwd(), filename( thumb1$fracs), sep="/"))
-thumb$agg <- brick( paste( getwd(), filename( thumb$agg), sep="/"))
-thumb1$agg <- brick( paste( getwd(), filename( thumb1$agg), sep="/"))
+## thumb$fracs <- brick( paste( getwd(), filename( thumb$fracs), sep="/"))
+## thumb1$fracs <- brick( paste( getwd(), filename( thumb1$fracs), sep="/"))
+## thumb$agg <- brick( paste( getwd(), filename( thumb$agg), sep="/"))
+## thumb1$agg <- brick( paste( getwd(), filename( thumb1$agg), sep="/"))
 
-
-thumbPlots <- list( fracs= coverMaps( thumb$fracs, 0.4),
-                   agg= coverMaps( thumb$agg, 1))
-thumbPlots1 <- list( fracs= coverMaps( thumb1$fracs, 0.4),
-                   agg= coverMaps( thumb1$agg, 1))
+if( overwriteFigures) {
+  thumbPlots <- list( fracs= coverMaps( thumb$fracs, 0.4),
+                     agg= coverMaps( thumb$agg, 1))
+  thumbPlots1 <- list( fracs= coverMaps( thumb1$fracs, 0.4),
+                      agg= coverMaps( thumb1$agg, 1))
+}
 
 
 
 ###################################################
 ### chunk number 16: fig_thumb_fracs
 ###################################################
-#line 510 "/home/nbest/thesis/datasets.Rnw"
+#line 521 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
@@ -283,7 +294,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 17: fig_thumb1_fracs
 ###################################################
-#line 530 "/home/nbest/thesis/datasets.Rnw"
+#line 541 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
@@ -297,7 +308,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 18: fig_thumb_agg
 ###################################################
-#line 551 "/home/nbest/thesis/datasets.Rnw"
+#line 562 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
@@ -311,7 +322,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 19: fig_thumb1_agg
 ###################################################
-#line 571 "/home/nbest/thesis/datasets.Rnw"
+#line 582 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
@@ -325,7 +336,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 20: thumbAggDiff
 ###################################################
-#line 592 "/home/nbest/thesis/datasets.Rnw"
+#line 603 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( dataWd)
 
@@ -338,17 +349,19 @@ thumbAggDiff <-
   } else brick( "thumb_agg_diff.tif")
 layerNames( thumbAggDiff) <- layerNames( thumb$agg)
 
-thumbAggDiffPlot <- coverMaps( thumbAggDiff) + 
-  scale_fill_gradientn( "diff", colours= rev( brewer.pal( 11, "BrBG")), 
+if( overwriteFigures) {
+  thumbAggDiffPlot <- coverMaps( thumbAggDiff) + 
+    scale_fill_gradientn( "diff", colours= rev( brewer.pal( 11, "BrBG")), 
                          limits= c( 0.1, -0.1),
                          breaks= seq( 0.1, -0.1, by= -0.02))
+}
 
 
 
 ###################################################
 ### chunk number 21: fig_thumb_agg_diff
 ###################################################
-#line 615 "/home/nbest/thesis/datasets.Rnw"
+#line 628 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
@@ -362,19 +375,21 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 22: thumbNomos
 ###################################################
-#line 673 "/home/nbest/thesis/datasets.Rnw"
+#line 686 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( dataWd)
 thumb  <- decomposeMosaic( thumb, overwrite= overwriteRasters, progress= "text")
 thumb1 <- decomposeMosaic( thumb1, overwrite= overwriteRasters, progress= "text")
-thumb$nomos <- brick( paste( getwd(), filename( thumb$nomos), sep="/"))
-thumb1$nomos <- brick( paste( getwd(), filename( thumb1$nomos), sep="/"))
-thumb$delta <- brick( paste( getwd(), filename( thumb$delta), sep="/"))
-thumb1$delta <- brick( paste( getwd(), filename( thumb1$delta), sep="/"))
 
+## thumb$nomos <- brick( paste( getwd(), filename( thumb$nomos), sep="/"))
+## thumb1$nomos <- brick( paste( getwd(), filename( thumb1$nomos), sep="/"))
+## thumb$delta <- brick( paste( getwd(), filename( thumb$delta), sep="/"))
+## thumb1$delta <- brick( paste( getwd(), filename( thumb1$delta), sep="/"))
 
-thumbPlots$nomos <- coverMaps( thumb$agg, 1)  
-thumbPlots1$nomos <- coverMaps( thumb1$agg, 1)  
+if( overwriteFigures) {
+  thumbPlots$nomos <- coverMaps( thumb$agg, 1)
+  thumbPlots1$nomos <- coverMaps( thumb1$agg, 1)  
+}
 
 thumbNomosDiff <- 
   if( overwriteRasters) {
@@ -385,8 +400,9 @@ thumbNomosDiff <-
   } else brick( "thumb_nomos_diff.tif")
 layerNames( thumbNomosDiff) <- layerNames( thumb$agg)
 
-thumbNomosDiffPlot <- coverMaps( thumbNomosDiff) + 
-  scale_fill_gradientn( "diff", colours= rev( brewer.pal( 11, "BrBG")), 
+if( overwriteFigures) {
+  thumbNomosDiffPlot <- coverMaps( thumbNomosDiff) + 
+    scale_fill_gradientn( "diff", colours= rev( brewer.pal( 11, "BrBG")), 
                          limits= c( 0.32, -0.32),
                          ## breaks= { b <- c( 0.3, 0.15, 0.075, 0.075/2, 0.075/4)
                          ##           c( b, 0, rev( -b))
@@ -394,13 +410,14 @@ thumbNomosDiffPlot <- coverMaps( thumbNomosDiff) +
                          breaks= { b <- c( 0.01, 0.02, 0.04, 0.08, 0.16, 0.32)
                                    c( rev( b), 0, -b)
                                  })
+}
 
 
 
 ###################################################
 ### chunk number 23: fig_thumb_nomos
 ###################################################
-#line 711 "/home/nbest/thesis/datasets.Rnw"
+#line 728 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
@@ -414,7 +431,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 24: fig_thumb1_nomos
 ###################################################
-#line 732 "/home/nbest/thesis/datasets.Rnw"
+#line 749 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
@@ -428,7 +445,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 25: fig_thumb_nomos_diff
 ###################################################
-#line 753 "/home/nbest/thesis/datasets.Rnw"
+#line 770 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures ) {
@@ -442,7 +459,7 @@ if( overwriteFigures ) {
 ###################################################
 ### chunk number 26: mlct1
 ###################################################
-#line 776 "/home/nbest/thesis/datasets.Rnw"
+#line 793 "/home/nbest/thesis/datasets.Rnw"
 
 
 setwd( dataWd)
@@ -465,27 +482,86 @@ mlct1  <- decomposeMosaic( mlct1, overwrite= overwriteRasters, progress="text")
 
 
 ###################################################
-### chunk number 27: agland2000 eval=FALSE
+### chunk number 27: agland
 ###################################################
-## #line 820 "/home/nbest/thesis/datasets.Rnw"
-## 
-## setwd( "~/thesis/data/agland2000")
-## agland <- stack( list.files( patt= "2000_5min.nc$"))
-## layerNames(agland) <- c("crop", "pasture")
-## agland <- setMinMax( agland)
-##   
-## thumbAgland <- crop( agland,
-##                     extent(-83.5, -(82+25/60), 42+55/60, 44+5/60),
-##                     filename= "thumbAgland.tif",
-##                     progress="text")
-## 
-## 
+#line 837 "/home/nbest/thesis/datasets.Rnw"
+
+setwd( dataWd)  
+setwd( "agland")
+
+agland <- stack( list.files( patt="(cropland|pasture).tif$"))
+layerNames(agland) <- c("crop", "open")
+agland <- setMinMax( agland)
+  
+thumbAgland <-
+  if( overwriteRasters) {
+    crop( agland,
+         extent(-83.5, -(82+25/60),
+                42+55/60, 44+5/60),
+         filename= "thumbAgland.tif",
+         progress="text",
+         overwrite= overwriteRasters)
+  } else brick( list.files( getwd(),
+                           "thumbAgland.tif",
+                           full.names= TRUE,
+                           recursive= TRUE))
+layerNames( thumbAgland) <- c("crop", "open")
+                                        # crop() returns a brick
+
+## overwriteFigures <- TRUE
+
+if( overwriteFigures) {
+  thumbAglandPlot <- coverMaps( thumbAgland, 1) + coord_equal()
+  aglandPlot <- coverMaps( agland, 0.4) + coord_equal()
+}
+
+##     sapply( layerNames( thumbAgland),
+##            function( cover) {
+##              ggplotRaster( agland[[ cover]]) + 
+##                scale_fill_gradientn( paste("%", cover),
+##                                     colours=rev( brewer.pal( 7, "YlGn")), 
+##                                     limits= c( 100, 0),
+##                                     breaks= seq( 100, 0, by= -20))
+##            })
+## }
+
+
 
 
 ###################################################
-### chunk number 28: mlu eval=FALSE
+### chunk number 28: fig_thumb_agland
 ###################################################
-## #line 846 "/home/nbest/thesis/datasets.Rnw"
+#line 885 "/home/nbest/thesis/datasets.Rnw"
+
+setwd( texWd)
+if( overwriteFigures) {
+  png( file="fig_thumb_agland.png")
+  print( thumbAglandPlot)
+  dev.off()
+}
+
+
+
+###################################################
+### chunk number 29: fig_agland
+###################################################
+#line 905 "/home/nbest/thesis/datasets.Rnw"
+
+setwd( texWd)
+if( overwriteFigures) {
+  png( file="fig_agland.png")
+  print( aglandPlot +coord_equal() +facet_wrap( ~ variable, ncol= 1))
+  dev.off()
+}
+
+
+
+###################################################
+### chunk number 30: mlu eval=FALSE
+###################################################
+## #line 934 "/home/nbest/thesis/datasets.Rnw"
+## 
+## setwd( texWd)
 ## 
 ## cusaDf <- readOGR("PG:host=db dbname=cim","gadm.cusa")
 ## 
@@ -506,356 +582,170 @@ mlct1  <- decomposeMosaic( mlct1, overwrite= overwriteRasters, progress="text")
 
 
 ###################################################
-### chunk number 29: nlcd
+### chunk number 31: thumb_nlcd
 ###################################################
-#line 889 "/home/nbest/thesis/datasets.Rnw"
+#line 979 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( dataWd)
-
 setwd( "nlcd")
 nlcdWd <- getwd()
 
-thumbNlcd <- list( pri=raster( "thumb_nlcd2001.tif"))
-thumbNlcd <- sapply( thumbNlcd, setMinMax)
-
-## thumbNlcdResamp <- raster( thumbNlcd$pri)
-## res(thumbNlcdResamp) <- 1.25/3600
-## thumbNlcdResamp <- resample( thumbNlcd$pri, thumbNlcdResamp,
-##                             method="ngb",
-##                             filename="thumb_nlcd2001_resamp.tif",
-##                             progress="text")
-## thumbNlcd$pri <- thumbNlcdResamp
-
-
-#nlcd <- list( pri=raster( "nlcd_geo.tif"))
-#nlcd <- sapply( nlcd, setMinMax)
+thumbNlcd <- list( pri=raster( "thumbNlcd.tif"))
+## thumbNlcd <- sapply( thumbNlcd, setMinMax)
 
 
 
 ###################################################
-### chunk number 30: nlcd-reclass
+### chunk number 32: thumb_nlcd_reclass
 ###################################################
-#line 918 "/home/nbest/thesis/datasets.Rnw"
+#line 996 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( nlcdWd)
 
 
+thumbNlcd <- mlctReclass( thumbNlcd, nlcdReclassMatrix,
+                         overwrite= overwriteRasters,
+                         progress="text")
 
-thumbNlcd <- mlctReclass( thumbNlcd, nlcdReclassMatrix, overwrite= overwriteRasters, progress="text")
-
-thumbNlcdPlot <- peelMap(thumbNlcd$pri, 0.05)
-
-
-thumbNlcd$Amin <- 1
-thumbNlcd <- coverFractions( thumbNlcd, mosaic=FALSE, overwrite= overwriteRasters, progress= "text")
-thumbNlcd <- aggregateFractions( thumbNlcd, overwrite= overwriteRasters, progress="text")
-
-thumbNlcdMask <-
-  if( overwriteRasters) {
-    calc( thumbNlcd$pri,
-         function( x) {
-           ifelse( x %in% peelClasses[ c( "water", "wetland", "urban")],
-                  x, NA)
-         },
-         datatype= "INT2U",
-         overwrite= TRUE,
-         filename= "thumbNlcdMask.tif",
-         progress= "text")
-  } else {
-    raster( "thumbNlcdMask.tif")
-  }
-thumbNlcdMask <- setMinMax( thumbNlcdMask)
-
-
-## system( "gdalwarp -of VRT -ts $(( 260*12)) 0  thumb_2001_lct1_reclass.tif thumb_2001_lct1_reclass_resamp.vrt")
-## thumbResamp <- raster( "thumb_2001_lct1_reclass_resamp.vrt")
-
-thumbResamp <-
-  if( overwriteRasters) {
-    resample( thumb$pri, thumbNlcd$pri,
-             method="ngb",
-             datatype= "INT2U",
-             overwrite= TRUE,
-             filename= "thumbResamp.tif",
-             progress= "text")
-  } else raster( "thumbResamp.tif")
-
-thumbResampSec <-
-  if( overwriteRasters) {
-    resample( thumb$sec, thumbNlcd$pri,
-             method="ngb",
-             datatype= "INT2U",
-             overwrite= TRUE,
-             filename= "thumbResampSec.tif",
-             progress= "text")
-  } else raster( "thumbResampSec.tif")
-
-thumbResampAp <-
-  if( overwriteRasters) {
-    resample( thumb$Ap, thumbNlcd$pri,
-             method="ngb",
-             datatype= "FLT4S",
-             overwrite= TRUE,
-             filename= "thumbResampAp.tif",
-             progress= "text")
-  } else raster( "thumbResampAp.tif")
-
-thumbNlcdMlct <-
-  if( overwriteRasters) {
-    mask( thumbResamp,
-         thumbNlcdMask,
-         datatype= "INT2U",
-         overwrite= TRUE,
-         filename= "thumbNlcdMlct.tif",
-         progress= "text")
-  } else {
-    raster( "thumbNlcdMlct.tif")
-  }
-
-thumbNlcdMlctSec <-
-  if( overwriteRasters) {
-    mask( thumbResampSec,
-         thumbNlcdMask,
-         datatype= "INT2U",
-         overwrite= TRUE,
-         filename= "thumbNlcdMlctSec.tif",
-         progress= "text")
-  } else {
-    raster( "thumbNlcdMlctSec.tif")
-  }
-
-thumbNlcdMlctAp <-
-  if( overwriteRasters) {
-    mask( thumbResampAp,
-         thumbNlcdMask,
-         datatype= "FLT4S",
-         overwrite= TRUE,
-         filename= "thumbNlcdMlctAp.tif",
-         progress= "text")
-  } else {
-    raster( "thumbNlcdMlctAp.tif")
-  }
-
-##crosstab( thumbNlcdMlct, thumbNlcdMask)
-
-## thumbOffsetsInput <-
-##   if( overwriteRasters) {
-##     brick( stack( "thumbNlcdMlct.tif", "thumbNlcdMask.tif"),
-##           filename= "thumbOffsets_input.tif",
-##           overwrite= TRUE)
-##   } else brick( "thumbOffsets_input.tif")
-
-## thumbOffsetsInputAp <-
-##   if( overwriteRasters) {
-##     brick( stack( "thumbNlcdMlct.tif",
-##                  "thumbNlcdMlctSec.tif",
-##                  "thumbNlcdMlctAp.tif",
-##                  "thumbNlcdMask.tif"),
-##           filename= "thumbOffsetsInputAp.tif",
-##           overwrite= TRUE)
-##   } else brick( "thumbOffsetsInputAp.tif")
-
-thumbOffsetsInputAp <-
-  if( overwriteRasters) {
-    brick( stack( thumbNlcdMlct,
-                 thumbNlcdMlctSec,
-                 thumbNlcdMlctAp,
-                 thumbNlcdMask),
-          filename= "thumbOffsetsInputAp.tif",
-          overwrite= TRUE,
-          progress= "text")
-  } else brick( "thumbOffsetsInputAp.tif")
-
-
-
-
-##offsetCalcFunWater <- offsetCalcFun(0)
-
-## offsetCalcFunApWater <- offsetCalcFunAp(0)
-## debug( offsetCalcFunApWater)
-
-## thumbOffsets$water <-
-##   calc( thumbOffsets$input,
-##        fun= offsetCalcFunWater, #offsetCalcFun( 0),
-##        datatype= "INT2S",
-##        overwrite= TRUE,
-##        filename= "thumbOffsets_water.tif",
-##        progress= "text")
-
-## thumbOffsetsAp$water <-
-##   calc( thumbOffsetsInputAp,
-##        fun= offsetCalcFunApWater, #offsetCalcFun( 0),
-##        datatype= "INT2S",
-##        overwrite= TRUE,
-##        filename= "thumbOffsetsAp_water.tif",
-##        progress= "text")
-
-## thumbOffsets <-
-##   sapply( grep( "water|wetland|urban",
-##                names(peelClasses), value=TRUE),
-##          function( cover) {
-##            fn <- paste( "thumbOffsets",
-##                   paste( cover, "tif", sep= "."),
-##                   sep= "_")
-##            print( paste(cover, fn))
-##            if( overwriteRasters || !( file.access( fn) ==0))
-##              calc( thumbOffsetsInput,
-##                   fun= offsetCalcFun( peelClasses[[ cover]]),
-##                   datatype= "INT2S",
-##                   overwrite= TRUE,
-##                   filename= fn,
-##                   progress= "text")
-##            else brick( fn)
-##          })
-
-## thumbOffsets <-
-##   sapply( names( thumbOffsets),
-##          function( cover) {
-##            fn <- paste( "thumbOffsets",
-##                        cover, "agg.tif", sep= "_")
-##            print( paste( cover, fn))
-##            if( overwriteRasters || !( file.access( fn) ==0))
-##              aggregate( thumbOffsets[[ cover]],
-##                        fact= 5/60 /res( thumbOffsets[[ cover]]),
-##                        expand= FALSE,
-##                        filename= fn,
-##                        datatype= "FLT4S",
-##                        overwrite= TRUE)
-##            else brick( fn)
-##          })
-
-offsetCalcFunAp <- function( class) {
-  fun <- function( st) {
-    pri <- st[ 1]
-    sec <- st[ 2]
-    Ap <- st[ 3]
-    nlcd <- st[ 4]
-    result <- matrix( 0, nrow= 1, ncol= 9)
-    if( !is.na( pri) &&nlcd ==class) {
-      result[ 1, pri +1] <- -Ap
-      result[ 1, sec +1] <- Ap -1
-      result[ 1, nlcd +1] <- result[ 1, nlcd +1] +1
-    }
-    result
-  }
-  fun
+if( overwriteFigures) {
+  thumbNlcdPlot <- peelMap(thumbNlcd$pri, 0.05)
 }
 
-thumbOffsetsAp <-
-  sapply( grep( "water|wetland|urban",
-               names(peelClasses), value=TRUE),
-         function( cover) {
-           fn <- paste( "thumbOffsetsAp",
-                  paste( cover, "tif", sep= "."),
-                  sep= "_")
-           print( paste(cover, fn))
-           if( overwriteRasters || !( file.access( fn) ==0)) {
-             calc( thumbOffsetsInputAp,
-                  fun= offsetCalcFunAp( peelClasses[[ cover]]),
-                  datatype= "FLT4S",
-                  overwrite= TRUE,
-                  filename= fn,
-                  progress= "text")
-           } else brick( fn)
-         })
-
-
-thumbOffsetsAp <-
-  sapply( names( thumbOffsetsAp),
-         function( cover) {
-           fn <- paste( "thumbOffsetsAp",
-                       cover, "agg.tif", sep= "_")
-           print( paste( cover, fn))
-           if( overwriteRasters || !( file.access( fn) ==0))
-             aggregate( thumbOffsetsAp[[ cover]],
-                       fact= 5/60 /res( thumbOffsetsAp[[ cover]]),
-                       expand= FALSE,
-                       filename= fn,
-                       datatype= "FLT4S",
-                       overwrite= TRUE,
-                       progress= "text")
-           else brick( fn)
-         })
-
-thumbOffsetsAp <-
-  sapply( thumbOffsetsAp,
-         function( r) {
-           layerNames( r) <- names( peelClasses)
-           r
-         })
-
-
-thumbOffsetsApTotal <-
-  writeRaster( thumbOffsetsAp$water +
-              thumbOffsetsAp$wetland +
-              thumbOffsetsAp$urban,
-              filename= "thumbOffsetsAp_total.tif",
-              overwrite=TRUE)
-
-
-thumbOffsetsApTotal <-
-  do.call( overlay,
-          c( unlist( thumbOffsetsAp, use.names= FALSE),
-               fun= sum,
-               filename= "thumbOffsetsAp_total.tif",
-               overwrite= TRUE,
-               progress= "text"))
-
-thumbAdj <- thumb
-thumbAdj$agg <- 
-  overlay( thumbAdj$agg, thumbOffsetsApTotal,
-          fun= sum,
-          filename= "thumbAdj.tif",
-          overwrite= TRUE)
-
-                  
-thumbAdj  <- decomposeMosaic( thumbAdj, overwrite= overwriteRasters, progress= "text")
-
-
-           
 
 
 ###################################################
-### chunk number 31: nlcd-aggr eval=FALSE
+### chunk number 33: fig_thumb_nlcd_reclass
 ###################################################
-## #line 1208 "/home/nbest/thesis/datasets.Rnw"
-## 
+#line 1015 "/home/nbest/thesis/datasets.Rnw"
+
+setwd( texWd)
+if( overwriteFigures) {
+  png( file="fig_thumb_nlcd_reclass.png")
+  print( thumbNlcdPlot + coord_equal())
+  dev.off()
+}
+
+
+
+###################################################
+### chunk number 34: fig_thumb_nlcd_facet
+###################################################
+#line 1035 "/home/nbest/thesis/datasets.Rnw"
+
+setwd( texWd)
+if( overwriteFigures) {
+  png( file="fig_thumb_nlcd_facet.png")
+  print( thumbNlcdPlot + 
+        facet_wrap(~ values) + 
+        opts( legend.position= "none"))
+  dev.off()
+}
+
+
+
+###################################################
+### chunk number 35: thumb_nlcd_aggr
+###################################################
+#line 1066 "/home/nbest/thesis/datasets.Rnw"
+
+setwd( nlcdWd)
+## overwriteRasters <- TRUE
+thumbNlcd$Amin <- 1
+thumbNlcd <-
+  coverFractions( thumbNlcd, mosaic=FALSE,
+                 overwrite= overwriteRasters,
+                 progress= "text")
+thumbNlcd <-
+  aggregateFractions( thumbNlcd,
+                     overwrite= overwriteRasters,
+                     progress="text")
+
+if( overwriteFigures) {
+  thumbNlcdAggPlot <- coverMaps( thumbNlcd$agg, 1)
+}
+
 ## overwriteRasters <- FALSE
-## overwriteFigures <- FALSE
-## 
-## 
-## setwd( nlcdWd)
-## 
-## nlcd <- mlctReclass( nlcd, nlcdReclassMatrix, overwrite= overwriteRasters, progress="text")
-## nlcd$Amin <- 1
-## nlcd <- coverFractions( nlcd, mosaic= FALSE, overwrite= overwriteRasters, progress="text")
-## nlcd <- aggregateFractions( nlcd, overwrite= overwriteRasters, progress="text")
-## 
 
 
 ###################################################
-### chunk number 32: cdl eval=FALSE
+### chunk number 36: fig_thumb_nlcd_agg
 ###################################################
-## #line 1241 "/home/nbest/thesis/datasets.Rnw"
+#line 1090 "/home/nbest/thesis/datasets.Rnw"
+
+## overwriteRasters <- TRUE
+## overwriteFigures <- TRUE
+
+
+setwd( texWd)
+if( overwriteFigures) {
+  png( file="fig_thumb_nlcd_agg.png")
+  print( thumbNlcdAggPlot)
+  dev.off()
+}
+
+
+
+###################################################
+### chunk number 37: nlcd
+###################################################
+#line 1115 "/home/nbest/thesis/datasets.Rnw"
+
+setwd( dataWd)
+
+## nlcd <- stack( paste( "nlcd", names( peelClasses[ -8]), "5min.tif", sep="_"))
+
+nlcd <- stack( sapply( names( peelClasses[ -8]),
+                      function( cover) {
+                        list.files( paste( dataWd, "nlcd", sep="/"),
+                                   patt= paste( "nlcd", cover, "5min.tif$", sep="_"),
+                                   full.names= TRUE)
+                      }))
+nlcd <- setMinMax( nlcd)
+layerNames(nlcd) <- names( peelClasses[ -8])
+
+nlcdPlot <- coverMaps( nlcd, 0.1)
+
+
+
+
+###################################################
+### chunk number 38: fig_nlcd
+###################################################
+#line 1138 "/home/nbest/thesis/datasets.Rnw"
+
+setwd( texWd)
+if( overwriteFigures) {
+  png( file="fig_nlcd.png")
+  print( nlcdPlot)
+  dev.off()
+}
+
+
+
+###################################################
+### chunk number 39: cdl eval=FALSE
+###################################################
+## #line 1179 "/home/nbest/thesis/datasets.Rnw"
 ## 
 ## 
 ## cdl <- list( pri= raster( "/gpfs/pads/projects/see/data/raw/cdl/vrt/cdl_2001.vrt"))
 ## 
 ## cdlReclassMatrix <- 
-##   matrix( c( 83,  83,  0,               # water
-##              85,  85,  0,
-##              63,  63,  1,               # forest
-##                                         # no shrub
-##              62,  62,  3,               # open
-##              88,  88,  3,
-##              87,  87,  4,               # wetland
-##               1,  61,  5,               # crop
-##              90,  90,  5,
-##              82,  82,  6,               # urban
-##              84,  84,  6,
-##              86,  86,  6),
-##                                         # no mosaic
-##                                         # no barren
+##   matrix( c(
+##             83,  83,  0,               # water
+##             85,  85,  0,
+##             63,  63,  1,               # forest
+##                                        # no shrub
+##             62,  62,  3,               # open
+##             88,  88,  3,
+##             87,  87,  4,               # wetland
+##              1,  61,  5,               # crop
+##             90,  90,  5,
+##             82,  82,  6,               # urban
+##             84,  84,  6,
+##             86,  86,  6),
+##                                        # no mosaic
+##                                        # no barren
 ##          ncol= 3, byrow= TRUE)
 ## 
 ## cdl  <- mlctReclass( cdl, cdlReclassMatrix, overwrite= overwriteRasters, progress= "text")
@@ -871,5 +761,99 @@ thumbAdj  <- decomposeMosaic( thumbAdj, overwrite= overwriteRasters, progress= "
 ## cdl_il <- coverFractions( cdl_il, mosaic= FALSE, overwrite= TRUE, progress="text")
 ## cdl_il <- aggregateFractions( cdl_il, overwrite=TRUE, progress="text")
 ## 
+
+
+###################################################
+### chunk number 40: 175crops eval=FALSE
+###################################################
+## #line 1249 "/home/nbest/thesis/datasets.Rnw"
+## 
+## cropsWd <- path.expand( "~/see/data/raw/175crops2000/nc")
+## list.files( cropsWd, "vrt$")
+## 
+## cropTable <- read.csv( "/home/nbest/see/data/raw/175crops2000/monfreda2008 table1.csv", header= TRUE)
+## 
+## ## For now we consider only herbaceous crops
+## ## assume that forage crops will be classified "open"
+## 
+## herbNotForage <- cropTable$type=="herbaceous" & cropTable$group != "Forage"
+## 
+## 
+## cropTable$cat <- NA
+## cropTable <- within( cropTable, {
+##   cat[ map == "maize"] <- "maize"
+##   cat[ map == "soybean"] <- "soybean"
+##   cat[ map == "wheat"] <- "wheat"
+##   cat[ map == "rice"] <- "rice"
+##   cat[ group == "Cereals" & is.na( cat)] <- "cereals"
+##   cat[ map == "sugarcane"] <- "sugarcane"
+##   cat[ type == "herbaceous" & group == "Forage"] <- "forage"
+##   cat[ type == "herbaceous" & is.na( cat)] <- "field_crop"
+##   cat[ type == "shrub"] <- "shrub_crop"
+##   cat[ type == "tree"] <- "tree_crop"
+## })
+## 
+## 
+## catLists <- dlply( cropTable, .(cat), function( row) row$map)
+## 
+## mapNcName <- function( map) {
+##   paste( cropsWd,
+##         paste( map, "5min.vrt",
+##               sep="_"),
+##         sep="/")
+## }
+## 
+## catStacks <- llply( catLists, function( maps) {
+##   if( length( maps) ==1) {
+##     subset( brick( mapNcName( maps[ 1])), 1)
+##   } else {
+##     do.call( stack, llply( maps, function( map) {
+##       subset( brick( mapNcName( map)), 1)
+##     }))
+##   }})
+## 
+## cusaMask <- raster( list.files( getwd(),
+##                                "mask_cusa.tif",
+##                                recursive= TRUE))
+## cusaExtent <- extent( cusaMask)
+## 
+## catCropped <- llply( names( catStacks), function( c) {
+##   fn <- paste( c, "crop.tif", sep="_")
+##   if( overwriteRasters) {
+##     crop( catStacks[[ c]], cusaExtent,
+##          filename= fn,
+##          overwrite= TRUE)
+##   } else brick( list.files( getwd(), fn, full.names=TRUE))
+## })
+## names( catCropped) <- names( catStacks)
+## 
+## catMasked <- llply( names( catCropped), function( c) {
+##   r <- if( nlayers( catCropped[[ c]]) ==1) {
+##     catCropped[[ c]]
+##   } else overlay( catCropped[[ c]], fun= sum)
+##   mask( r, cusaMask,
+##        filename= paste( c, "tif", sep="."),
+##        overwrite= TRUE)
+## })
+## names( catMasked) <- names( catStacks)
+## 
+## 
+
+
+###################################################
+### chunk number 41: fig_crops
+###################################################
+#line 1326 "/home/nbest/thesis/datasets.Rnw"
+
+setwd( texWd)
+if( overwriteFigures) {
+  cropsMap <- coverMaps( stack( catMasked), 0.2) +
+    coord_equal() +
+      facet_grid( variable ~ .)
+  ggsave( "fig_crops.png", width=5.5, height=8)
+}
+setwd( dataWd)
+
+
 
 

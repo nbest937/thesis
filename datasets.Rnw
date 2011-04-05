@@ -2,7 +2,7 @@
 
 \SweaveOpts{ results=hide}
 \SweaveOpts{ include=FALSE}
-\SweaveOpts{ echo=TRUE}
+\SweaveOpts{ echo=FALSE}
 \SweaveOpts{ engine=R}
 \SweaveOpts{ keep.source=TRUE}
 \SweaveOpts{ eval=TRUE}
@@ -25,8 +25,8 @@ overwriteFigures <- FALSE
 
 @ 
 
-\chapter{Data}
-\label{cha:data}
+\chapter{Data Sets}
+\label{cha:datasets}
 
 This chapter presents some summary descriptions of the various data
 sets that are relevant to this analysis and further discussion on how
@@ -857,7 +857,8 @@ thumbAgland <-
 layerNames( thumbAgland) <- c("crop", "open")
                                         # crop() returns a brick
 
-overwriteFigures <- TRUE
+## overwriteFigures <- TRUE
+
 if( overwriteFigures) {
   thumbAglandPlot <- coverMaps( thumbAgland, 1) + coord_equal()
   aglandPlot <- coverMaps( agland, 0.4) + coord_equal()
@@ -918,6 +919,7 @@ if( overwriteFigures) {
 \end{figure} 
 
 
+\begin{comment}
 \section{Major Land Uses (MLU)}
 \label{sec:mlu}
 
@@ -949,6 +951,7 @@ system( "gdal_translate -ot UInt16 -a_nodata 0 foo.tif gadm1_cusa.tif")
 system( "gdal_rasterize -at -a id_1 -ot UInt16 -l gadm.cusa 'PG:host=db dbname=cim' gadm1_cusa.tif")
 
 @ %def 
+\end{comment}
 
 \section{National Land-cover Database 2001 (NLCD)}
 \label{sec:nlcd}
@@ -956,19 +959,18 @@ system( "gdal_rasterize -at -a id_1 -ot UInt16 -l gadm.cusa 'PG:host=db dbname=c
 \citet{Homer2004}
 
 
-The NLCD gives a higer-resolution (30m) snapshot of land use / land
-cover circa 2001.  \todo{check whether/how urban, water, wetland are
-  informed with priors in NLCD}  Reclassifying and aggregating this
-data to 5-arcmin resolution in a fashion similar to that used for the
-MLCT is expected to give better estimations of aggregate area for
-detailed features like rural transportation networks and small stream
-and wetland features.  This will compensate for MLCT's bias against
-these finely detailed structures due to it's resolution.  It is the
-availability of this information that makes it difficult to apply this
-analysis beyond the United States without access to a comparable data
-set with global extents.  The analysis is restricted to the
-conterminous US because of the relative paucity of agricultural
-activity in Hawaii and Alaska.
+The NLCD gives a higer-resolution (30m) snapshot of LULC circa 2001.
+\todo{check whether/how urban, water, wetland are informed with priors
+  in NLCD} Reclassifying and aggregating this data to 5-arcmin
+resolution in a fashion similar to that used for the MLCT is expected
+to give better estimations of aggregate area for detailed features
+like rural transportation networks and small stream and wetland
+features.  This will compensate for MLCT's bias against these finely
+detailed structures due to it's resolution.  It is the availability of
+this information that makes it difficult to apply this analysis beyond
+the United States without access to a comparable data set with global
+extents.  The analysis is restricted to the conterminous US because of
+the relative paucity of agricultural activity in Hawaii and Alaska.
 
 As with the MLCT the process of reclassification and aggregation is
 performed for both the detail region and the complete region.
@@ -1059,11 +1061,11 @@ expensive due to the NLCD's high resolution.
 
 \todo{Include GRASS code for aggregating NLCD}
 
-@ 
+ 
 <<thumb_nlcd_aggr>>=
 
 setwd( nlcdWd)
-overwriteRasters <- TRUE
+## overwriteRasters <- TRUE
 thumbNlcd$Amin <- 1
 thumbNlcd <-
   coverFractions( thumbNlcd, mosaic=FALSE,
@@ -1078,16 +1080,16 @@ if( overwriteFigures) {
   thumbNlcdAggPlot <- coverMaps( thumbNlcd$agg, 1)
 }
 
-overwriteRasters <- FALSE
+## overwriteRasters <- FALSE
 @ 
 
 \begin{figure} 
 \begin{center}
   
-<<fig-thumb-nlcd-agg>>= 
+<<fig_thumb_nlcd_agg>>= 
 
-overwriteRasters <- TRUE
-overwriteFigures <- TRUE
+## overwriteRasters <- TRUE
+## overwriteFigures <- TRUE
 
 
 setwd( texWd)
@@ -1150,6 +1152,7 @@ if( overwriteFigures) {
 \label{fig:nlcd}
 \end{figure} 
 
+\begin{comment}
 \section{Cropland Data Layer (CDL)}
 \label{sec:cdl}
 
@@ -1178,20 +1181,21 @@ data set.
 cdl <- list( pri= raster( "/gpfs/pads/projects/see/data/raw/cdl/vrt/cdl_2001.vrt"))
 
 cdlReclassMatrix <- 
-  matrix( c( 83,  83,  0,               # water
-             85,  85,  0,
-             63,  63,  1,               # forest
-                                        # no shrub
-             62,  62,  3,               # open
-             88,  88,  3,
-             87,  87,  4,               # wetland
-              1,  61,  5,               # crop
-             90,  90,  5,
-             82,  82,  6,               # urban
-             84,  84,  6,
-             86,  86,  6),
-                                        # no mosaic
-                                        # no barren
+  matrix( c(
+            83,  83,  0,               # water
+            85,  85,  0,
+            63,  63,  1,               # forest
+                                       # no shrub
+            62,  62,  3,               # open
+            88,  88,  3,
+            87,  87,  4,               # wetland
+             1,  61,  5,               # crop
+            90,  90,  5,
+            82,  82,  6,               # urban
+            84,  84,  6,
+            86,  86,  6),
+                                       # no mosaic
+                                       # no barren
          ncol= 3, byrow= TRUE)
 
 cdl  <- mlctReclass( cdl, cdlReclassMatrix, overwrite= overwriteRasters, progress= "text")
@@ -1215,7 +1219,7 @@ cdl_il <- aggregateFractions( cdl_il, overwrite=TRUE, progress="text")
 
 \subsection{Aggregation}
 \label{sec:cdl-aggr}
-
+\end{comment}
 
 \section{Harvested Area and Yields of 175 Crops (175crops2000)}
 \label{sec:175crops2000}
@@ -1239,6 +1243,104 @@ cereals into their own class, and combine all remaining crops as a
 catch-all ``other'' category.  Field crops will be distinguished from
 orchard / plantation crops that would likely fall under areas
 classified by MLCT as forest or shrub in this step.
+
+@ 
+<<175crops, eval=FALSE>>=
+
+cropsWd <- path.expand( "~/see/data/raw/175crops2000/nc")
+list.files( cropsWd, "vrt$")
+
+cropTable <- read.csv( "/home/nbest/see/data/raw/175crops2000/monfreda2008 table1.csv", header= TRUE)
+
+## For now we consider only herbaceous crops
+## assume that forage crops will be classified "open"
+
+herbNotForage <- cropTable$type=="herbaceous" & cropTable$group != "Forage"
+
+
+cropTable$cat <- NA
+cropTable <- within( cropTable, {
+  cat[ map == "maize"] <- "maize"
+  cat[ map == "soybean"] <- "soybean"
+  cat[ map == "wheat"] <- "wheat"
+  cat[ map == "rice"] <- "rice"
+  cat[ group == "Cereals" & is.na( cat)] <- "cereals"
+  cat[ map == "sugarcane"] <- "sugarcane"
+  cat[ type == "herbaceous" & group == "Forage"] <- "forage"
+  cat[ type == "herbaceous" & is.na( cat)] <- "field_crop"
+  cat[ type == "shrub"] <- "shrub_crop"
+  cat[ type == "tree"] <- "tree_crop"
+})
+
+
+catLists <- dlply( cropTable, .(cat), function( row) row$map)
+
+mapNcName <- function( map) {
+  paste( cropsWd,
+        paste( map, "5min.vrt",
+              sep="_"),
+        sep="/")
+}
+
+catStacks <- llply( catLists, function( maps) {
+  if( length( maps) ==1) {
+    subset( brick( mapNcName( maps[ 1])), 1)
+  } else {
+    do.call( stack, llply( maps, function( map) {
+      subset( brick( mapNcName( map)), 1)
+    }))
+  }})
+
+cusaMask <- raster( list.files( getwd(),
+                               "mask_cusa.tif",
+                               recursive= TRUE))
+cusaExtent <- extent( cusaMask)
+
+catCropped <- llply( names( catStacks), function( c) {
+  fn <- paste( c, "crop.tif", sep="_")
+  if( overwriteRasters) {
+    crop( catStacks[[ c]], cusaExtent,
+         filename= fn,
+         overwrite= TRUE)
+  } else brick( list.files( getwd(), fn, full.names=TRUE))
+})
+names( catCropped) <- names( catStacks)
+
+catMasked <- llply( names( catCropped), function( c) {
+  r <- if( nlayers( catCropped[[ c]]) ==1) {
+    catCropped[[ c]]
+  } else overlay( catCropped[[ c]], fun= sum)
+  mask( r, cusaMask,
+       filename= paste( c, "tif", sep="."),
+       overwrite= TRUE)
+})
+names( catMasked) <- names( catStacks)
+
+
+@ 
+
+\begin{figure} 
+\begin{center} 
+
+<<fig_crops>>= 
+
+setwd( texWd)
+if( overwriteFigures) {
+  cropsMap <- coverMaps( stack( catMasked), 0.2) +
+    coord_equal() +
+      facet_grid( variable ~ .)
+  ggsave( "fig_crops.png", width=5.5, height=8)
+}
+setwd( dataWd)
+
+
+@ 
+
+\includegraphics{fig_crops}
+\end{center} 
+\caption{175Crops2000 category maps} 
+\label{fig:crops} 
+\end{figure} 
 
 
 %%% Local Variables: 

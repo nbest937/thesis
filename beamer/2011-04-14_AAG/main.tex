@@ -1,37 +1,25 @@
-% $Header: /cvsroot/latex-beamer/latex-beamer/solutions/conference-talks/conference-ornate-20min.en.tex,v 1.7 2007/01/28 20:48:23 tantau Exp $
-
 \documentclass{beamer}
 
-% This file is a solution template for:
+% based on solutions/conference-talks/conference-ornate-20min.en.tex
+% from latex-beamer-3.07-2, Ubuntu 10.10
 
-% - Talk at a conference/colloquium.
-% - Talk length is about 20min.
-% - Style is ornate.
-
-
-
-% Copyright 2004 by Till Tantau <tantau@users.sourceforge.net>.
-%
-% In principle, this file can be redistributed and/or modified under
-% the terms of the GNU Public License, version 2.
-%
-% However, this file is supposed to be a template to be modified
-% for your own needs. For this reason, if you use this file as a
-% template and not specifically distribute it as part of a another
-% package/program, I grant the extra permission to freely copy and
-% modify this file as you see fit and even to delete this copyright
-% notice. 
-
+\graphicspath{%
+  {images/}%
+  {/home/nbest/thesis/datasets/}%
+  {/home/nbest/thesis/analysis/}}
 
 \mode<presentation>
 {
-  \usetheme{Warsaw}
+  \usetheme{Madrid}
+  \usecolortheme{seagull}
   % or ...
 
   \setbeamercovered{transparent}
   % or whatever (possibly just delete it)
 }
 
+\addtobeamertemplate{frametitle}{
+  \let\insertframetitle\insertsectionhead}{}
 
 \usepackage[english]{babel}
 % or whatever
@@ -39,43 +27,51 @@
 \usepackage[latin1]{inputenc}
 % or whatever
 
-\usepackage{times}
-\usepackage[T1]{fontenc}
+%\usepackage{times}
+\usepackage{arev}
+%\usepackage[T1]{fontenc}
 % Or whatever. Note that the encoding and the font should match. If T1
 % does not look nice, try deleting the line with the fontenc.
 
+\usepackage{todonotes}
+\presetkeys{todonotes}{inline}{}
 
-\title[Short Paper Title] % (optional, use only with long paper titles)
-{Title As It Is In the Proceedings}
+\usepackage{verbatim}
 
-\subtitle
-{Include Only If Paper Has a Subtitle}
+\title[LULC Data Set for Agriculture]%
+{Synthesis of a complete land use\slash land cover data set for the
+  conterminous United States emphasizing accuracy in area and
+  distribution of agricultural activity}
 
-\author[Author, Another] % (optional, use only with lots of authors)
-{F.~Author\inst{1} \and S.~Another\inst{2}}
+% \subtitle
+% {Include Only If Paper Has a Subtitle}
+
+\author[Best, et. al] % (optional, use only with lots of authors)
+{N.~Best\inst{1,2} \and M.~Mihir\inst{1} \and J.~Elliott\inst{2}}
 % - Give the names in the same order as the appear in the paper.
 % - Use the \inst{?} command only if the authors have different
 %   affiliation.
 
-\institute[Universities of Somewhere and Elsewhere] % (optional, but mostly needed)
+% \institute[Universities of Somewhere and Elsewhere] % (optional, but mostly needed)
+\institute[G\&ES, NEIU; CI, UofC]%
 {
   \inst{1}%
-  Department of Computer Science\\
-  University of Somewhere
+  Department of Geography \& Environmental Studies \\
+  Northeastern Illinois University
   \and
   \inst{2}%
-  Department of Theoretical Philosophy\\
-  University of Elsewhere}
+  Computation Institute \\
+  University of Chicago}
 % - Use the \inst command only if there are several affiliations.
 % - Keep it simple, no one is interested in your street address.
 
-\date[CFP 2003] % (optional, should be abbreviation of conference name)
-{Conference on Fabulous Presentations, 2003}
+\date[AAG 2011] % (optional, should be abbreviation of conference name)
+{Association of American Geographers \\ Annual Meeting, 2011}
 % - Either use conference name or its abbreviation.
 % - Not really informative to the audience, more for people (including
 %   yourself) who are reading the slides online
 
-\subject{Theoretical Computer Science}
+\subject{Land Use\slash Land Cover Change 2}
 % This is only inserted into the PDF information catalog. Can be left
 % out. 
 
@@ -85,10 +81,18 @@
 % is a graphic format that can be processed by latex or pdflatex,
 % resp., then you can add a logo as follows:
 
-% \pgfdeclareimage[height=0.5cm]{university-logo}{university-logo-filename}
-% \logo{\pgfuseimage{university-logo}}
+%\pgfdeclareimage[height=0.5cm]{logo}{logo}
+%\logo{\pgfuseimage{logo}}
+
+\logo{\includegraphics[height=2cm]{logo}}
 
 
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>{Outline}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
 
 % Delete this, if you do not want the table of contents to pop up at
 % the beginning of each subsection:
@@ -112,8 +116,12 @@
   \titlepage
 \end{frame}
 
+% \begin{frame}
+%   \listoftodos
+% \end{frame}
+
 \begin{frame}{Outline}
-  \tableofcontents
+  \tableofcontents[pausesections]
   % You might wish to add the option [pausesections]
 \end{frame}
 
@@ -135,88 +143,485 @@
 % - If you omit details that are vital to the proof/implementation,
 %   just say so once. Everybody will be happy with that.
 
-\section{Motivation}
 
-\subsection{The Basic Problem That We Studied}
+\section{Introduction}
 
-\begin{frame}{Make Titles Informative. Use Uppercase Letters.}{Subtitles are optional.}
-  % - A title should summarize the slide in an understandable fashion
-  %   for anyone how does not follow everything on the slide itself.
-
-  \begin{itemize}
-  \item
-    Use \texttt{itemize} a lot.
-  \item
-    Use very short sentences or short phrases.
-  \end{itemize}
+\begin{frame}
+  \frametitle{Introduction}
+  \framesubtitle{CIM-EARTH}
+  \begin{columns}[c]
+  \column{2.0in}
+  \includegraphics[width=2.0in]{cim-earth}
+  \column{2.0in}
+  \textbf{C}ommunity \\
+  \textbf{I}ntegrated \\
+  \textbf{M}odel of \\
+  \textbf{E}conomic \\
+  \textbf{a}nd \\
+  \textbf{R}esource \\
+  \textbf{T}rajectories for \\
+  \textbf{H}umankind
+  \end{columns}
 \end{frame}
 
-\begin{frame}{Make Titles Informative.}
+% \begin{frame}
+%   \frametitle{Introduction}
+%   \framesubtitle{PEEL model}
+%   \begin{columns}[c]
+%   \column{1.5in}
+%   \includegraphics[width=1.5in]{farm}
+%   \column{1.5in}
+%   \textbf{P}artial \\
+%   \textbf{E}quilibrium \\
+%   \textbf{E}conomic \\
+%   \textbf{L}and Use
+%   \end{columns}
+% \end{frame}
 
-  You can create overlays\dots
-  \begin{itemize}
-  \item using the \texttt{pause} command:
+\begin{frame}
+  \frametitle{Introduction}
+  \framesubtitle{PEEL model}
+  \begin{columns}[c]
+    \column{2.0in}
+    \includegraphics[width=2.0in]{farm} \\
+    \vspace{0.25in}
+    \textbf{P}artial \\
+    \textbf{E}quilibrium \\
+    \textbf{E}conomic \\
+    \textbf{L}and Use
+    \column{2.5in}
+    For forecasting\dots
+    \pause
     \begin{itemize}
-    \item
-      First item.
+    \item 
+      Land use conversion to\slash from cropland
       \pause
-    \item    
-      Second item.
+    \item 
+      Choice among locally viable crops for cultivation under profit maximization
     \end{itemize}
-  \item
-    using overlay specifications:
-    \begin{itemize}
-    \item<3->
-      First item.
-    \item<4->
-      Second item.
-    \end{itemize}
-  \item
-    using the general \texttt{uncover} command:
-    \begin{itemize}
-      \uncover<5->{\item
-        First item.}
-      \uncover<6->{\item
-        Second item.}
-    \end{itemize}
+  \end{columns}
+\end{frame}
+
+
+\section{Objectives}
+
+% \subsection{Data Set Synthesis}
+% \begin{frame}{Data Set Synthesis}{Application}
+% PEEL model will forecast\dots
+% \begin{itemize}
+%   \item 
+%     \pause
+%     Land conversion to\slash from cropland
+%   \item 
+%     \pause
+%     Local blends of crops planted
+%   \end{itemize}
+% \end{frame}
+
+\begin{frame}
+  \frametitle{Objectives}
+  \framesubtitle{Data Set Synthesis}
+  Requirements
+  \begin{itemize}
+  \item 
+    5 arc-minute resolution
+    \pause
+  \item 
+    Sub-pixel analysis
+    \pause
+  \item 
+    Global extent (eventually)
+    \pause
+  \item 
+    Annual time series (eventually)
   \end{itemize}
 \end{frame}
 
 
-\subsection{Previous Work}
-
-\begin{frame}{Make Titles Informative.}
-\end{frame}
-
-\begin{frame}{Make Titles Informative.}
-\end{frame}
-
-
-
-\section{Our Results/Contribution}
-
-\subsection{Main Results}
-
-\begin{frame}{Make Titles Informative.}
-\end{frame}
-
-\begin{frame}{Make Titles Informative.}
-\end{frame}
-
-\begin{frame}{Make Titles Informative.}
+\begin{frame}
+  \frametitle{Objectives}
+  \framesubtitle{Reproducible Research}
+  Advantages
+  \begin{itemize}
+  \item 
+    Analysis runs like a program
+    \pause
+  \item 
+    Final output is a publication-quality PDF
+    \pause
+  \item 
+    Maps, charts, tables updated in place
+    \pause
+  \item 
+    Source code and base data subject to review
+  \end{itemize}
 \end{frame}
 
 
-\subsection{Basic Ideas for Proofs/Implementation}
-
-\begin{frame}{Make Titles Informative.}
+\begin{frame}
+  \frametitle{Objectives}
+  \framesubtitle{Reproducible Research}
+  Software Tools
+  \begin{columns}[c]
+    \column{1.0in}
+    \includegraphics[width=1.0in]{latex}
+    \vspace{0.5in}
+    \includegraphics[width=0.75in]{r}
+    \column{2.0in}  
+    \begin{itemize}
+    \item 
+      \LaTeX \\ (typesetting)
+      \pause
+    \item 
+      R \\ (analysis) 
+      \pause
+    \item 
+      Sweave \\ (preprocessing)
+      \pause
+    \item 
+      other R add-on packages \\
+      ( raster, ggplot2)
+    \end{itemize}
+  \end{columns}
 \end{frame}
 
-\begin{frame}{Make Titles Informative.}
+\section{Data Sets}
+
+% \begin{frame}
+%   \frametitle{Data Sets}
+%   \framesubtitle{MODIS Land Cover Type (MLCT)}
+%   \begin{itemize}
+%   \item Resolution: $\sim$500 m (15$''$)
+% % try \second from mathabx if $''$ doesn't work
+%   \item 3 layers
+%     \begin{itemize}
+%     \item Primary class
+%     \item Secondary class
+%     \item Confidence level
+%     \end{itemize}
+%   \item 17 classes simplified to 9
+%   \item Mosaic contains 40--60\% crop
+%   \item Annual time series 2001--2008
+%   \end{itemize}
+% \end{frame}
+
+% \begin{frame}{Data Sets}{Detail of MLCT Primary Class}
+%   \begin{center}
+%     \includegraphics[height=2.75in]{fig_thumb_pri_reclass}
+%   \end{center}
+% \end{frame}
+
+
+\begin{frame}
+  \frametitle{Data Sets}
+  \framesubtitle{MODIS Land Cover Type (MLCT)}
+  \begin{columns}
+    \column{2.5in}
+    \includegraphics[height=2.75in]{fig_thumb_pri_reclass}
+    \column{2.5in}
+    \begin{itemize}
+      \pause
+    \item Resolution: $\sim$500 m (15$''$)
+    \item 3 layers
+      \begin{itemize}
+        \pause
+      \item Primary class
+        \pause
+      \item Secondary class
+        \pause
+      \item Confidence level
+      \end{itemize}
+      \pause
+    \item 17 classes simplified to 9
+      \pause
+    \item Mosaic contains 40--60\% crop
+      \pause
+    \item Annual time series 2001--2008
+    \end{itemize}
+  \end{columns}
 \end{frame}
 
-\begin{frame}{Make Titles Informative.}
+\begin{frame}
+  \frametitle{Data Sets}
+  \framesubtitle{MODIS Land Cover Type (MLCT)}
+  \begin{columns}
+    \column{2.5in}
+    \includegraphics[height=2.75in]{fig_thumb_sec_reclass}
+    \column[T]{2.5in}
+    MLCT Secondary Class
+  \end{columns}
 \end{frame}
+
+\begin{frame}
+  \frametitle{Data Sets}
+  \framesubtitle{MODIS Land Cover Type (MLCT)}
+  \begin{columns}
+    \column{2.5in}
+    \includegraphics[height=2.75in]{fig_thumb_pct}
+    \column[T]{2.5in}
+    MLCT Confidence Level
+  \end{columns}
+\end{frame}
+
+% \begin{frame}
+%   \frametitle{Data Sets}
+%   \framesubtitle{National Land Cover Database (NLCD)}
+%   \begin{itemize}
+%     \item Resolution: $\sim$30 m (1.25$''$)
+%     \item Single thematic layer
+%     \item 29 classes simplified to 8
+%     \item No mosaic class
+%     \item 2001 only
+%   \end{itemize}
+% \end{frame}
+
+% \begin{frame}
+%   \frametitle{Data Sets}
+%   \framesubtitle{Detail of NLCD}
+%   \begin{center}
+%     \includegraphics[height=2.75in]{fig_thumb_nlcd_reclass}    
+%   \end{center}
+% \end{frame}
+
+\begin{frame}
+  \frametitle{Data Sets}
+  \framesubtitle{National Land Cover Database (NLCD)}
+  \begin{columns}
+    \column{2.5in}
+    \includegraphics[height=2.75in]{fig_thumb_nlcd_reclass}    
+    \column{2.5in}
+    \begin{itemize}
+      \pause
+    \item Resolution: $\sim$30 m (1.25$''$)
+      \pause
+    \item Single thematic layer
+      \pause
+    \item 29 classes simplified to 8
+      \pause
+    \item No mosaic class
+      \pause
+    \item 2001 only
+    \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Data Sets}
+  \framesubtitle{Comparison of MLCT Primary and NLCD}
+  \begin{columns}
+    \column{2.5in}
+    \includegraphics[width=2.5in]{fig_thumb_nlcd_reclass}    
+    \column{2.5in}
+    \includegraphics[width=2.5in]{fig_thumb_pri_reclass}    
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Data Sets}
+  \framesubtitle{Agland2000 (Ramankutty, et al.; 2008)}
+  \begin{itemize}
+  \item Advantages
+    \begin{itemize}
+    \item Census-based
+    \item 5$'$ resolution
+    \end{itemize}
+  \item Challenges
+    \begin{itemize}
+    \item Different land mask
+    \item Be aware of circularity w\slash{}MLCT!
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+% \begin{frame}
+%   \frametitle{Data Sets}
+%   \framesubtitle{175Crops2000 (Monfreda, et al.; 2008)}
+%   \begin{itemize}
+%   \item Advantages 
+%     \begin{itemize}
+%     \item Census-based
+%     \item 5$'$ resolution
+%     \item disaggregated by crop
+%     \end{itemize}
+%   \item Challenges
+%     \begin{itemize}
+%     \item Different land mask
+%     \item Too many sub-classes
+%     \end{itemize}
+%   \end{itemize}
+% \end{frame}
+
+
+\section{Data Processing}
+\label{sec:subpix}
+
+\begin{frame}
+  \frametitle{Data Processing}
+  \framesubtitle{Detail of MLCT Primary Class in Facets}
+  \begin{center}
+    \includegraphics[height=2.75in]{fig_thumb_pri_facet}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Data Processing}
+  \framesubtitle{Detail of MLCT Secondary Class in Facets}
+  \begin{center}
+    \includegraphics[height=2.75in]{fig_thumb_sec_facet}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Data Processing}
+  \framesubtitle{Sub-pixel Areas and Aggregation}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Data Processing}
+  \framesubtitle{Mosaic Decomposition}
+\end{frame}
+
+
+\section{Comparison and Adjustment}
+\label{sec:analysis}
+
+\begin{frame}
+  \frametitle{Comparison and Adjustment}
+  \framesubtitle{Total Areas}
+  \begin{center}
+    \includegraphics[height=2.75in]{fig_areas}    
+  \end{center}
+\end{frame}
+
+\begin{frame}[label=scatPlot1]
+  \frametitle{Comparison and Adjustment}
+  \framesubtitle{MLCT Crop vs. Agland2000, $A_{min}=1.0$}
+  \begin{center}
+    \includegraphics[height=2.75in]{fig_scatPlot1}    
+  \end{center}
+\end{frame}
+
+\begin{frame}[label=scatPlot05]
+  \frametitle{Comparison and Adjustment}
+  \framesubtitle{MLCT Crop vs. Agland2000, $A_{min}=0.5$}
+  \begin{center}
+    \includegraphics[height=2.75in]{fig_scatPlot05}    
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Comparison and Adjustment}
+  \framesubtitle{NLCD Offsets}
+  \begin{center}
+    \includegraphics[height=2.75in]{fig_offsets}    
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Comparison and Adjustment}
+  \framesubtitle{Total Areas, Adjusted}
+  \begin{center}
+    \includegraphics[height=2.75in]{fig_areasAdj}    
+  \end{center}
+\end{frame}
+
+\againframe{scatPlot1}
+
+\againframe{scatPlot05}
+
+\begin{frame}
+  \frametitle{Comparison and Adjustment}
+  \framesubtitle{MLCT Crop vs. Agland2000, $A_{min}=0.5$ plus NLCD offsets}
+  \begin{center}
+    \includegraphics[height=2.75in]{fig_scatPlotAdj}    
+  \end{center}
+\end{frame}
+
+
+% \section{Motivation}
+
+% \subsection{The Basic Problem That We Studied}
+
+% \begin{frame}{Make Titles Informative. Use Uppercase Letters.}{Subtitles are optional.}
+%   % - A title should summarize the slide in an understandable fashion
+%   %   for anyone how does not follow everything on the slide itself.
+
+%   \begin{itemize}
+%   \item
+%     Use \texttt{itemize} a lot.
+%   \item
+%     Use very short sentences or short phrases.
+%   \end{itemize}
+% \end{frame}
+
+% \begin{frame}{Make Titles Informative.}
+
+%   You can create overlays\dots
+%   \begin{itemize}
+%   \item using the \texttt{pause} command:
+%     \begin{itemize}
+%     \item
+%       First item.
+%       \pause
+%     \item    
+%       Second item.
+%     \end{itemize}
+%   \item
+%     using overlay specifications:
+%     \begin{itemize}
+%     \item<3->
+%       First item.
+%     \item<4->
+%       Second item.
+%     \end{itemize}
+%   \item
+%     using the general \texttt{uncover} command:
+%     \begin{itemize}
+%       \uncover<5->{\item
+%         First item.}
+%       \uncover<6->{\item
+%         Second item.}
+%     \end{itemize}
+%   \end{itemize}
+% \end{frame}
+
+
+% \subsection{Previous Work}
+
+% \begin{frame}{Make Titles Informative.}
+% \end{frame}
+
+% \begin{frame}{Make Titles Informative.}
+% \end{frame}
+
+
+
+% \section{Our Results/Contribution}
+
+% \subsection{Main Results}
+
+% \begin{frame}{Make Titles Informative.}
+% \end{frame}
+
+% \begin{frame}{Make Titles Informative.}
+% \end{frame}
+
+% \begin{frame}{Make Titles Informative.}
+% \end{frame}
+
+
+% \subsection{Basic Ideas for Proofs/Implementation}
+
+% \begin{frame}{Make Titles Informative.}
+% \end{frame}
+
+% \begin{frame}{Make Titles Informative.}
+% \end{frame}
+
+% \begin{frame}{Make Titles Informative.}
+% \end{frame}
+
+  
 
 
 

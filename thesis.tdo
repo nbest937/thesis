@@ -1,31 +1,23 @@
 \contentsline {todo}{{It remains to be seen how well the disaggregation of commodities will work. We may have to leave it out.}}{iii}{section*.2}
-\contentsline {todo}{{Warning--page numbers missing in Fisher2005a}}{3}{section*.10}
-\contentsline {todo}{{Warning--there's a number but no series in You2006}}{4}{section*.11}
-\contentsline {todo}{Figure: {Generate a summary table of data sets (raster/tabular, resolution, citation)}}{11}{chapter.2}
-\contentsline {todo}{Figure: {MLCT reclassification table}}{12}{subsection.2.1.1}
-\contentsline {todo}{{Fix artifacts in confidence figure}}{15}{section*.14}
-\contentsline {todo}{{Describe characteristics of MLCT reclass maps and confidence at cUSA extents}}{15}{section*.15}
-\contentsline {todo}{{cite email from Friedl}}{17}{section*.16}
-\contentsline {todo}{{crossref histograms showing confidence distribution}}{17}{section*.17}
-\contentsline {todo}{{ cross ref analysis section where aggregated MLCT crop is campared to Agland}}{18}{section*.19}
-\contentsline {todo}{{ move cUSA aggregation to sec:agg-analysis-area}}{18}{section*.21}
-\contentsline {todo}{{cite Friedl email}}{21}{section*.22}
-\contentsline {todo}{{Expect something to be wrong with no-mosaic plots when this section gets sweaved (``swoven''?)}}{21}{section*.23}
-\contentsline {todo}{{illustrate/demonstrate the RMSE test on the 5-arcmin MLCT data sets}}{21}{section*.24}
-\contentsline {todo}{{Describe Agland2000 data set}}{24}{section*.25}
-\contentsline {todo}{{check whether/how urban, water, wetland are informed with priors in NLCD}}{24}{section*.26}
-\contentsline {todo}{Figure: {NLCD reclassification table}}{25}{subsection.2.3.1}
-\contentsline {todo}{{Include GRASS code for aggregating NLCD}}{27}{section*.27}
+\contentsline {todo}{{Warning--page numbers missing in Fisher2005a}}{2}{section*.10}
+\contentsline {todo}{{Does everyone agree that we can do without this passage?}}{5}{section*.11}
+\contentsline {todo}{Figure: {MLCT reclassification table}}{11}{subsection.2.1.1}
+\contentsline {todo}{{Is this figure any better placed than others?}}{11}{section*.12}
+\contentsline {todo}{{cite email from Friedl}}{16}{section*.13}
+\contentsline {todo}{{consider including histograms showing confidence distribution}}{16}{section*.14}
+\contentsline {todo}{{cite Friedl email}}{22}{section*.15}
+\contentsline {todo}{{check whether/how urban, water, wetland are informed with priors in NLCD}}{25}{section*.16}
+\contentsline {todo}{{Incorporate Joshua's suggestion to show further NLCD detail to better illustrate the discrepancy in developed areas}}{27}{section*.17}
+\contentsline {todo}{Figure: {NLCD reclassification table}}{27}{subsection.2.3.1}
 \contentsline {todo}{Figure: {Table of crops and types reproduced from \citep {Monfreda2008}}}{27}{section.2.4}
-\contentsline {todo}{Figure: {Summary table of crop aggregations for our model}}{27}{section.2.4}
-\contentsline {todo}{{Adress issue of smaller land mask for 175crops2000 and Agland2000}}{28}{section*.28}
-\contentsline {todo}{Figure: {error map for ``nomos'' vs. Agland2000 crop}}{31}{table.3.1}
-\contentsline {todo}{Figure: { NLCD mask facet map}}{32}{Item.9}
-\contentsline {todo}{Figure: { MLCT resampled and masked facet(?) map(s?)}}{32}{Item.9}
-\contentsline {todo}{Figure: {Facet map of thumb offsets}}{33}{Item.9}
-\contentsline {todo}{Figure: {Difference map, thumb adjusted vs. original after mosaic decomposition}}{33}{Item.9}
-\contentsline {todo}{{Reference / hyperlink NLCD offset GRASS script in appendix}}{33}{section*.29}
-\contentsline {todo}{Figure: {Facet map of cUSA NLCD offsets}}{33}{section*.29}
-\contentsline {todo}{{hyperlink to section where MLCT was aggregated}}{34}{section*.30}
-\contentsline {todo}{{Should the RMSE tables be rearranged?}}{34}{section*.31}
-\contentsline {todo}{{Decide what to do with old code in Analysis chapter}}{34}{section*.32}
+\contentsline {todo}{Figure: {Summary table of crop aggregations for our model}}{29}{section.2.4}
+\contentsline {todo}{{Address issue of smaller land mask for 175crops2000 and Agland2000}}{29}{section*.18}
+\contentsline {todo}{Figure: {error map for ``nomos'' vs. Agland2000 crop}}{33}{figure.3.1}
+\contentsline {todo}{Figure: { NLCD mask facet map}}{36}{Item.9}
+\contentsline {todo}{Figure: { MLCT resampled and masked facet(?) map(s?)}}{36}{Item.9}
+\contentsline {todo}{Figure: {Facet map of thumb offsets}}{37}{Item.9}
+\contentsline {todo}{Figure: {Difference map, thumb adjusted vs. original after mosaic decomposition}}{37}{Item.9}
+\contentsline {todo}{{Reference / hyperlink NLCD offset GRASS script in appendix}}{37}{section*.19}
+\contentsline {todo}{Figure: {Facet map of cUSA NLCD offsets}}{37}{section*.19}
+\contentsline {todo}{{hyperlink to section where MLCT was aggregated}}{38}{section*.20}
+\contentsline {todo}{{Should the RMSE tables be rearranged?}}{38}{section*.21}

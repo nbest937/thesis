@@ -47,6 +47,7 @@ names( peelClasses) <- c("water", "forest", "shrub", "open", "wetland", "crop", 
 ## paste( deparse( peelLegend), collapse="")
 
 peelLegend <- c("#2041B3", "#069228", "#85AA5B", "#A4D07E", "#73ABAE", "#CCD253", "#D90000", "#9DE36E", "#949494")
+names( peelLegend) <- names( peelClasses)
 
 nlcdReclassMatrix <- 
   matrix( c( 11,  11,  0,               # water
@@ -351,8 +352,14 @@ decomposeMosaic <- function( mlct, overwrite= FALSE, ...) {
             filename= deltaBrickFile,
             overwrite= overwrite, ...)
   } else {
-    mlct$nomos <- brick( list.files( getwd(), patt=nomosBrickFile, full.names=TRUE))
-    mlct$delta <- brick( list.files( getwd(), patt=deltaBrickFile, full.names=TRUE))
+    mlct$nomos <- brick( list.files( getwd(),
+                                    patt= nomosBrickFile,
+                                    full.names= TRUE,
+                                    recursive= TRUE ))
+    mlct$delta <- brick( list.files( getwd(),
+                                    patt= deltaBrickFile,
+                                    full.names= TRUE,
+                                    recursive= TRUE))
   }
   layerNames( mlct$nomos) <-
     c( names( peelClasses)[ names( peelClasses) !="mosaic"],
@@ -367,11 +374,14 @@ ggplotRaster <- function( r, samp) {
                                       asRaster=TRUE), 
                        "SpatialGridDataFrame"))
   ## names(df)[ 1:length( layerNames( r))] <- layerNames( r)
+  ext <- extent( r)
   ggplot( data= df) +
     geom_tile( aes( x= s1, y= s2, fill= values)) +
     theme_bw() +
-    scale_x_continuous( expand= c( 0,0)) +
-    scale_y_continuous( expand= c( 0,0)) +
+    scale_x_continuous( limits= c( ext@xmin, ext@xmax),
+                       expand= c( 0,0)) +
+    scale_y_continuous(  limits= c( ext@ymin, ext@ymax),
+                       expand= c( 0,0)) +
     opts( panel.grid.minor= theme_blank(),
           panel.grid.major= theme_blank(),
           panel.background= theme_blank(),
@@ -420,6 +430,11 @@ coverMaps <- function( r, samp=1, ...) {
                          limits= c( 1, 0),
                          breaks= seq( 1, 0, by= -0.2)) +
     facet_wrap(~ variable)
+}
+
+my.ggsave <- function(filename = default_name(plot),
+                      height= 3.5, width= 3.5, dpi= 72, ...) {
+  ggsave(filename=filename, height=height, width=width, dpi=dpi, ...)
 }
 
 ## coverDiffMaps <- function( r, samp= 1, ...) {

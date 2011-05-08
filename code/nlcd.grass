@@ -1,0 +1,29 @@
+g.mapset NLCD
+
+cat <<EOF | r.reclass input=nlcd2001 output=nlcd2001_r
+11 98 99 = 0 water
+41 thru 43 = 5 forest
+51 52 94 = 7 shrub
+71 thru 74 81 = 10 open
+90 thru 93 95 thru 97 = 11 wetland
+82 = 12 crop
+21 thru 24 = 13 urban
+12 31 32 = 16 barren
+* = 99 other
+EOF
+
+g.mapset nlcd
+
+for lct_label in $(r.category nlcd2001_r cats=0-99 fs=, | grep -v ',$'); do
+    lct=$(echo $lct_label | cut -d, -f1)
+    label=$(echo $lct_label | cut -d, -f2)
+    cat <<EOF | r.reclass --overwrite input=nlcd2001_r output=nlcd_${label}
+$lct = 1
+* = 0
+EOF
+done
+
+g.region -p res=0:05 align=grid_5min
+for label in $(r.category map=nlcd2001_r cats=0-99 fs=, | grep -v ',$' | cut -d, -f2); do
+    r.resamp.stats -w input=nlcd_${label} output=nlcd_${label}_5min method=average
+done

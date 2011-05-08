@@ -16,8 +16,8 @@
 
 
 
-% latex table generated in R 2.12.2 by xtable 1.5-6 package
-% Mon Apr  4 18:09:34 2011
+% latex table generated in R 2.13.0 by xtable 1.5-6 package
+% Sun May  8 10:56:35 2011
 \begin{table}[ht]
 \begin{center}
 {\small
@@ -25,16 +25,16 @@
   \hline
  & Agland2000 & NLCD & \pbox[c][][c]{3in}{Aggregated\\$A_{min}=0.5$} & \pbox[c][][c]{3in}{Aggregated\\$A_{min}=1.0$} & \pbox[c][][c]{3in}{No Mosaic\\$A_{min}=0.5$} & \smallskip\pbox[c][][c]{3in}{No Mosaic\\$A_{min}=1.0$} \\ 
   \noalign{\smallskip} \hline
-water & 0.0 & 96.5 & 74.3 & 75.0 & 74.3 & 75.0 \\ 
+crop & 446.5 & 310.8 & 378.9 & 369.6 & 495.4 & 488.1 \\ 
+  open & 557.1 & 429.6 & 516.9 & 545.8 & 538.7 & 561.9 \\ 
+  barren & 0.0 & 24.5 & 32.8 & 28.9 & 32.8 & 28.9 \\ 
   forest & 0.0 & 513.2 & 344.7 & 353.6 & 410.8 & 429.9 \\ 
   shrub & 0.0 & 420.1 & 358.7 & 341.8 & 387.2 & 368.0 \\ 
-  open & 557.1 & 429.6 & 516.9 & 545.8 & 538.7 & 561.9 \\ 
-  wetland & 0.0 & 95.0 & 26.0 & 11.0 & 26.0 & 11.0 \\ 
-  crop & 446.5 & 310.8 & 378.9 & 369.6 & 495.4 & 488.1 \\ 
   urban & 0.0 & 102.8 & 27.3 & 29.8 & 27.3 & 29.8 \\ 
+  water & 0.0 & 96.5 & 74.3 & 75.0 & 74.3 & 75.0 \\ 
+  wetland & 0.0 & 95.0 & 26.0 & 11.0 & 26.0 & 11.0 \\ 
   mosaic & 0.0 & 0.0 & 232.9 & 237.0 & 0.0 & 0.0 \\ 
-  barren & 0.0 & 24.5 & 32.8 & 28.9 & 32.8 & 28.9 \\ 
-  (all) & 1003.7 & 1992.5 & 1992.5 & 1992.5 & 1992.5 & 1992.5 \\ 
+  total & 1003.7 & 1992.5 & 1992.5 & 1992.5 & 1992.5 & 1992.5 \\ 
    \noalign{\smallskip} \hline
 \end{tabular}
 }
@@ -42,6 +42,16 @@ water & 0.0 & 96.5 & 74.3 & 75.0 & 74.3 & 75.0 \\
 \label{tab:areas}
 \end{center}
 \end{table}
+\begin{figure}[hpt] 
+\begin{center} 
+
+
+\includegraphics{fig_areas}
+\end{center} 
+\caption{Total Acreages by Map and Cover}
+\label{fig:areas} 
+\end{figure} 
+
 
 After decomposing the mosaic class The MLCT indicates
 495.4Ma (200.5Mha) of cropland for
@@ -100,10 +110,29 @@ Agland2000 data set.
 
 
 
+\begin{figure}[hpt]
+  \begin{center} 
 
 
-% latex table generated in R 2.12.2 by xtable 1.5-6 package
-% Mon Apr  4 18:09:36 2011
+\includegraphics{fig_scatPlot1}
+  \end{center} 
+  \caption{Scatter plot of MLCT crop ($A_{min}=1.0$, no mosaic) versus Agland2000 cropland}
+  \label{fig:scatplot1} 
+\end{figure} 
+
+\begin{figure}[hpt]
+  \begin{center} 
+
+
+
+\includegraphics{fig_scatPlot05}
+  \end{center} 
+  \caption{Scatter plot of MLCT crop ($A_{min}=0.5$, no mosaic) versus Agland2000 cropland}
+  \label{fig:scatplot05} 
+\end{figure} 
+
+% latex table generated in R 2.13.0 by xtable 1.5-6 package
+% Sun May  8 10:56:56 2011
 \begin{table}[ht]
 \begin{center}
 \begin{tabular}{rr}
@@ -133,7 +162,7 @@ all information imparted by the MLCT data.
 
 
 \section{NLCD Offsets}
-\label{nlcd_offsets}
+\label{sec:nlcd_offsets}
 
 
 From Table \ref{tab:areas} it is apparent that the MLCT results are
@@ -230,8 +259,8 @@ max values  : 3.6e-11 1.9e-09 2.3e-09 2.5e-09 5.4e-11 5.1e-10 1.1e-16 1.8e-09 1.
 \end{Soutput}
 \end{Schunk}
 
-% latex table generated in R 2.12.2 by xtable 1.5-6 package
-% Mon Apr  4 18:11:04 2011
+% latex table generated in R 2.13.0 by xtable 1.5-6 package
+% Sun May  8 10:57:45 2011
 \begin{table}[ht]
 \begin{center}
 \begin{tabular}{rrrr}
@@ -258,8 +287,8 @@ improved overall cropland accuracy we can perform the same error
 calculation from above and extend Table~\ref{tab:rmse} with the new
 result, giving us Table~\ref{tab:rmse2}.
 
-% latex table generated in R 2.12.2 by xtable 1.5-6 package
-% Mon Apr  4 18:11:08 2011
+% latex table generated in R 2.13.0 by xtable 1.5-6 package
+% Sun May  8 10:57:49 2011
 \begin{table}[ht]
 \begin{center}
 \begin{tabular}{lrrr}
@@ -284,8 +313,8 @@ accuracy of the distribution of croplands the next step is to examine
 the total areas for all classes compared with the input data sets.  
 
 
-% latex table generated in R 2.12.2 by xtable 1.5-6 package
-% Mon Apr  4 18:11:08 2011
+% latex table generated in R 2.13.0 by xtable 1.5-6 package
+% Sun May  8 10:57:49 2011
 \begin{table}[ht]
 \begin{center}
 {\small
@@ -310,10 +339,40 @@ water & 0.0 & 96.5 & 74.3 & 74.3 & 23.7 & 98.0 & 98.0 \\
 \label{tab:areas2}
 \end{center}
 \end{table}
+\begin{figure}[hpt]
+  \centering
+
+ 
+
+  \includegraphics{fig_offsets}
+  \caption{Total offsets calculated from NLCD}
+  \label{fig:offsets}
+\end{figure}
+
+
+\begin{figure}[hpt]
+  \centering
+
+
+  \includegraphics{fig_areasAdj}
+  \caption{Area totals after NLCD adjustment}
+  \label{fig:areasAdj}
+\end{figure}
+
+\begin{figure}[hpt] 
+  \begin{center} 
+
+
+    \includegraphics{fig_scatPlotAdj}
+  \end{center} 
+  \caption{Scatter plot of MLCT adjusted crop versus Agland2000 cropland}
+  \label{fig:scatPlotAdj} 
+\end{figure} 
 
 
 
-\begin{figure} 
+
+\begin{figure}[hpt] 
 \begin{center} 
 
 
@@ -331,6 +390,7 @@ blah blah blah
 
 
 
+\begin{comment}
 \todo[inline,caption={Decide what to do with old code in Analysis
   chapter}]{The remaining code in this draft of the Analysis chapter
   has fallen out of date.  The maps are based on old data that has
@@ -354,7 +414,7 @@ adjustment of the cell-by-cell cropland areas to match Agland2000.
 
 
 
-\begin{figure} 
+\begin{figure}[hpt] 
 \begin{center} 
 
 
@@ -364,7 +424,7 @@ adjustment of the cell-by-cell cropland areas to match Agland2000.
 \label{fig:nlcd} 
 \end{figure} 
 
-\begin{figure} 
+\begin{figure}[hpt] 
 \begin{center} 
 
 
@@ -374,7 +434,7 @@ adjustment of the cell-by-cell cropland areas to match Agland2000.
 \label{fig:diff} 
 \end{figure} 
 
-\begin{figure} 
+\begin{figure}[hpt] 
 \begin{center} 
 
 \includegraphics{fig_cordiff}
@@ -386,6 +446,8 @@ adjustment of the cell-by-cell cropland areas to match Agland2000.
 The elements of the matrix have been reordered according to the
 clustering forumla given in \citet[sec. 6.2.3]{Sarkar2008} in order to
 achieve a degree of visual clustering among the correlation vectors.
+
+\end{comment}
 
 
 %%% Local Variables: 

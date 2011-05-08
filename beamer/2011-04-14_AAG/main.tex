@@ -11,6 +11,7 @@
 \mode<presentation>
 {
   \usetheme{Madrid}
+  % \usetheme{default}
   \usecolortheme{seagull}
   % or ...
 
@@ -18,8 +19,20 @@
   % or whatever (possibly just delete it)
 }
 
-\addtobeamertemplate{frametitle}{
-  \let\insertframetitle\insertsectionhead}{}
+% from http://tex.stackexchange.com/questions/15427/automatic-frame-titles-and-subtitles
+%
+% this is supposed to add automatic frame titles and subtitles
+% but it didn't work
+%
+% \addtobeamertemplate{frametitle}{
+%   \let\insertframetitle\insertsectionhead}{}
+% \addtobeamertemplate{frametitle}{
+%    \let\insertframesubtitle\insertsubsectionhead}{}
+%
+% \makeatletter
+%   \CheckCommand*\beamer@checkframetitle{\@ifnextchar\bgroup\beamer@inlineframetitle{}}
+%   \renewcommand*\beamer@checkframetitle{\global\let\beamer@frametitle\relax\@ifnextchar\bgroup\beamer@inlineframetitle{}}
+% \makeatother
 
 \usepackage[english]{babel}
 % or whatever
@@ -162,6 +175,8 @@
   \textbf{T}rajectories for \\
   \textbf{H}umankind
   \end{columns}
+  \centering
+  \url{http://www.cimearth.org/}
 \end{frame}
 
 % \begin{frame}
@@ -312,16 +327,49 @@
 % \end{frame}
 
 
+% \begin{frame}
+%   \frametitle{Data Sets}
+%   \framesubtitle{MODIS Land Cover Type (MLCT)}
+%   \begin{columns}
+%     \column{2.5in}
+%     \includegraphics[width=2.5in]{fig_thumb_pri_reclass}
+%     \column{2.5in}
+%     \begin{itemize}
+%       \pause
+%     \item Resolution: $\sim$500 m (15$''$)
+%       \pause
+%     \item 17 classes simplified to 9
+%       \pause
+%     \item Mosaic contains 40--60\% crop
+%       \pause
+%     \item Annual time series 2001--2008
+%     \item 3 layers
+%       \begin{itemize}
+%         \pause
+%       \item Primary class
+%       \end{itemize}
+%     \end{itemize}
+%   \end{columns}
+% \end{frame}
+
 \begin{frame}
   \frametitle{Data Sets}
   \framesubtitle{MODIS Land Cover Type (MLCT)}
   \begin{columns}
     \column{2.5in}
-    \includegraphics[height=2.75in]{fig_thumb_pri_reclass}
+      \includegraphics<-6>[width=2.5in]{fig_thumb_pri_reclass}
+      \includegraphics<7>[width=2.5in]{fig_thumb_sec_reclass}
+      \includegraphics<8>[width=2.5in]{fig_thumb_pct}
     \column{2.5in}
     \begin{itemize}
-      \pause
     \item Resolution: $\sim$500 m (15$''$)
+      \pause
+    \item 17 classes simplified to 9
+      \pause
+    \item Mosaic contains 40--60\% crop
+      \pause
+    \item Annual time series 2001--2008
+      \pause
     \item 3 layers
       \begin{itemize}
         \pause
@@ -329,39 +377,33 @@
         \pause
       \item Secondary class
         \pause
-      \item Confidence level
+      \item Confidence level        
       \end{itemize}
-      \pause
-    \item 17 classes simplified to 9
-      \pause
-    \item Mosaic contains 40--60\% crop
-      \pause
-    \item Annual time series 2001--2008
     \end{itemize}
   \end{columns}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Data Sets}
-  \framesubtitle{MODIS Land Cover Type (MLCT)}
-  \begin{columns}
-    \column{2.5in}
-    \includegraphics[height=2.75in]{fig_thumb_sec_reclass}
-    \column[T]{2.5in}
-    MLCT Secondary Class
-  \end{columns}
-\end{frame}
+% \begin{frame}
+%   \frametitle{Data Sets}
+%   \framesubtitle{MODIS Land Cover Type (MLCT)}
+%   \begin{columns}
+%     \column{2.5in}
+%     \includegraphics[width=2.5in]{fig_thumb_sec_reclass}
+%     \column[T]{2.5in}
+%     Secondary class
+%   \end{columns}
+% \end{frame}
 
-\begin{frame}
-  \frametitle{Data Sets}
-  \framesubtitle{MODIS Land Cover Type (MLCT)}
-  \begin{columns}
-    \column{2.5in}
-    \includegraphics[height=2.75in]{fig_thumb_pct}
-    \column[T]{2.5in}
-    MLCT Confidence Level
-  \end{columns}
-\end{frame}
+% \begin{frame}
+%   \frametitle{Data Sets}
+%   \framesubtitle{MODIS Land Cover Type (MLCT)}
+%   \begin{columns}
+%     \column{2.5in}
+%     \includegraphics[width=2.5in]{fig_thumb_pct}
+%     \column[T]{2.5in}
+%     Confidence level
+%   \end{columns}
+% \end{frame}
 
 % \begin{frame}
 %   \frametitle{Data Sets}
@@ -388,7 +430,7 @@
   \framesubtitle{National Land Cover Database (NLCD)}
   \begin{columns}
     \column{2.5in}
-    \includegraphics[height=2.75in]{fig_thumb_nlcd_reclass}    
+    \includegraphics[width=2.5in]{fig_thumb_nlcd_reclass}    
     \column{2.5in}
     \begin{itemize}
       \pause
@@ -419,18 +461,30 @@
 \begin{frame}
   \frametitle{Data Sets}
   \framesubtitle{Agland2000 (Ramankutty, et al.; 2008)}
-  \begin{itemize}
-  \item Advantages
+  \begin{columns}
+    \column{2.5in}
+    \includegraphics[width=2.5in]{fig_thumb_agland}    
+    \column{2.5in}
     \begin{itemize}
-    \item Census-based
-    \item 5$'$ resolution
+    \item Advantages
+      \begin{itemize}
+        \pause
+      \item Census-based
+        \pause
+      \item 5$'$ resolution
+        \pause
+      \item Global extent
+      \end{itemize}
+      \pause
+    \item Challenges
+      \begin{itemize}
+        \pause
+      \item Different land mask
+        \pause
+      \item Be aware of circularity w\slash{}MLCT!
+      \end{itemize}
     \end{itemize}
-  \item Challenges
-    \begin{itemize}
-    \item Different land mask
-    \item Be aware of circularity w\slash{}MLCT!
-    \end{itemize}
-  \end{itemize}
+  \end{columns}
 \end{frame}
 
 % \begin{frame}
@@ -457,30 +511,51 @@
 
 \begin{frame}
   \frametitle{Data Processing}
-  \framesubtitle{Detail of MLCT Primary Class in Facets}
-  \begin{center}
-    \includegraphics[height=2.75in]{fig_thumb_pri_facet}
-  \end{center}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Data Processing}
-  \framesubtitle{Detail of MLCT Secondary Class in Facets}
-  \begin{center}
-    \includegraphics[height=2.75in]{fig_thumb_sec_facet}
-  \end{center}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Data Processing}
   \framesubtitle{Sub-pixel Areas and Aggregation}
+  \begin{center}
+    \includegraphics<1>[height=2.75in]{fig_thumb_fracs}
+    \includegraphics<2>[height=2.75in]{fig_thumb_agg}
+  \end{center}
+\end{frame}
+
+% \begin{frame}
+%   \frametitle{Data Processing}
+%   \framesubtitle{Detail of MLCT Secondary Class in Facets}
+%   \begin{center}
+%     \includegraphics[height=2.75in]{fig_thumb_sec_facet}
+%   \end{center}
+% \end{frame}
+
+% \begin{frame}
+%   \frametitle{Data Processing}
+%   \framesubtitle{Sub-pixel Areas and Aggregation}
+%   \begin{center}
+%     \includegraphics[height=2.75in]{fig_thumb_agg}
+%   \end{center}
+% \end{frame}
+
+\begin{frame}
+  \frametitle{Data Processing}
+  \framesubtitle{Mosaic Decomposition}
+  \begin{itemize}
+  \item Mosaic land is 50\% crop land
+    \pause
+  \item Remainder is blend of forest, open, and shrub (by definition)
+    \pause
+  \item That blend is proportional to their presence elsewhere in the same 5$''$ grid cell (our assumption)
+    \pause
+  \item If none of those classes are represented we assume an equal blend of all three
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Data Processing}
   \framesubtitle{Mosaic Decomposition}
+  \begin{center}
+    \includegraphics<1>[width=2.5in]{fig_thumb_agg}
+    \includegraphics<2>[width=2.5in]{fig_thumb_nomos}
+  \end{center}
 \end{frame}
-
 
 \section{Comparison and Adjustment}
 \label{sec:analysis}
@@ -537,153 +612,87 @@
   \end{center}
 \end{frame}
 
-
-% \section{Motivation}
-
-% \subsection{The Basic Problem That We Studied}
-
-% \begin{frame}{Make Titles Informative. Use Uppercase Letters.}{Subtitles are optional.}
-%   % - A title should summarize the slide in an understandable fashion
-%   %   for anyone how does not follow everything on the slide itself.
-
-%   \begin{itemize}
-%   \item
-%     Use \texttt{itemize} a lot.
-%   \item
-%     Use very short sentences or short phrases.
-%   \end{itemize}
-% \end{frame}
-
-% \begin{frame}{Make Titles Informative.}
-
-%   You can create overlays\dots
-%   \begin{itemize}
-%   \item using the \texttt{pause} command:
-%     \begin{itemize}
-%     \item
-%       First item.
-%       \pause
-%     \item    
-%       Second item.
-%     \end{itemize}
-%   \item
-%     using overlay specifications:
-%     \begin{itemize}
-%     \item<3->
-%       First item.
-%     \item<4->
-%       Second item.
-%     \end{itemize}
-%   \item
-%     using the general \texttt{uncover} command:
-%     \begin{itemize}
-%       \uncover<5->{\item
-%         First item.}
-%       \uncover<6->{\item
-%         Second item.}
-%     \end{itemize}
-%   \end{itemize}
-% \end{frame}
-
-
-% \subsection{Previous Work}
-
-% \begin{frame}{Make Titles Informative.}
-% \end{frame}
-
-% \begin{frame}{Make Titles Informative.}
-% \end{frame}
-
-
-
-% \section{Our Results/Contribution}
-
-% \subsection{Main Results}
-
-% \begin{frame}{Make Titles Informative.}
-% \end{frame}
-
-% \begin{frame}{Make Titles Informative.}
-% \end{frame}
-
-% \begin{frame}{Make Titles Informative.}
-% \end{frame}
-
-
-% \subsection{Basic Ideas for Proofs/Implementation}
-
-% \begin{frame}{Make Titles Informative.}
-% \end{frame}
-
-% \begin{frame}{Make Titles Informative.}
-% \end{frame}
-
-% \begin{frame}{Make Titles Informative.}
-% \end{frame}
-
-  
-
-
-
 \section*{Summary}
 
-\begin{frame}{Summary}
-
-  % Keep the summary *very short*.
+\begin{frame}
+  \frametitle{Summary}
+  \framesubtitle{Next steps}
   \begin{itemize}
-  \item
-    The \alert{first main message} of your talk in one or two lines.
-  \item
-    The \alert{second main message} of your talk in one or two lines.
-  \item
-    Perhaps a \alert{third message}, but not more than that.
+  \item Investigate spatial structure of 100\% crop cells in Agland2000
+  \item Evaluate magnitude of cropland area classified by MLCT outside of Agland2000 land mask
+  \item Re-allocate cells where Agland2000 crop fraction does not contradict NLCD offsets, i.e.:
+    $A_{crop} \leq 1-A_{water}-A_{wetland}-A_{urban}$
+  \item Disaggregate cropland into sub-categories (corn, soy, wheat, rice, other grains, etc.) using 175Crops2000 data set (Monfreda, et al.; 2008)
+  \item Contribute to the underlying software!
   \end{itemize}
-  
-  % The following outlook is optional.
-  \vskip0pt plus.5fill
+\end{frame}
+
+\begin{frame}
+  \frametitle{Summary}
   \begin{itemize}
-  \item
-    Outlook
-    \begin{itemize}
-    \item
-      Something you haven't solved.
-    \item
-      Something else you haven't solved.
-    \end{itemize}
+  \item A rational framework for constructing a hybrid data set
+  \item A basis for adding a time dimension by using the ensuing MLCT maps
+  \item A repeatable mechanism for incorporating adjustments or evaluating alternatives
+  \item A nicely formatted paper ready for publication somewhere!
   \end{itemize}
 \end{frame}
 
 
+%   % Keep the summary *very short*.
+%   \begin{itemize}
+%   \item
+%     The \alert{first main message} of your talk in one or two lines.
+%   \item
+%     The \alert{second main message} of your talk in one or two lines.
+%   \item
+%     Perhaps a \alert{third message}, but not more than that.
+%   \end{itemize}
+  
+%   % The following outlook is optional.
+%   \vskip0pt plus.5fill
+%   \begin{itemize}
+%   \item
+%     Outlook
+%     \begin{itemize}
+%     \item
+%       Something you haven't solved.
+%     \item
+%       Something else you haven't solved.
+%     \end{itemize}
+%   \end{itemize}
+% \end{frame}
 
-% All of the following is optional and typically not needed. 
-\appendix
-\section<presentation>*{\appendixname}
-\subsection<presentation>*{For Further Reading}
 
-\begin{frame}[allowframebreaks]
-  \frametitle<presentation>{For Further Reading}
+
+% % All of the following is optional and typically not needed. 
+% \appendix
+% \section<presentation>*{\appendixname}
+% \subsection<presentation>*{For Further Reading}
+
+% \begin{frame}[allowframebreaks]
+%   \frametitle<presentation>{For Further Reading}
     
-  \begin{thebibliography}{10}
+%   \begin{thebibliography}{10}
     
-  \beamertemplatebookbibitems
-  % Start with overview books.
+%   \beamertemplatebookbibitems
+%   % Start with overview books.
 
-  \bibitem{Author1990}
-    A.~Author.
-    \newblock {\em Handbook of Everything}.
-    \newblock Some Press, 1990.
+%   \bibitem{Author1990}
+%     A.~Author.
+%     \newblock {\em Handbook of Everything}.
+%     \newblock Some Press, 1990.
  
     
-  \beamertemplatearticlebibitems
-  % Followed by interesting articles. Keep the list short. 
+%   \beamertemplatearticlebibitems
+%   % Followed by interesting articles. Keep the list short. 
 
-  \bibitem{Someone2000}
-    S.~Someone.
-    \newblock On this and that.
-    \newblock {\em Journal of This and That}, 2(1):50--100,
-    2000.
-  \end{thebibliography}
-\end{frame}
+%   \bibitem{Someone2000}
+%     S.~Someone.
+%     \newblock On this and that.
+%     \newblock {\em Journal of This and That}, 2(1):50--100,
+%     2000.
+%   \end{thebibliography}
+% \end{frame}
 
 \end{document}
 

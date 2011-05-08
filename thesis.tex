@@ -1,15 +1,6 @@
 \documentclass[draftthesis]{neiuthesis} 
 
 \usepackage{amsmath}
-\usepackage{hyperref}
-\hypersetup{
-  pdftitle={MA G\&ES NEIU Thesis},%
-  pdfauthor={Neil Best <nbest@alum.mit.edu>},%
-  pdfsubject={land use / land cover},%
-  pdfkeywords={agriculture}{United States},%
-  pdffitwindow=true,%
-  pdfstartview={FitH}
-}
 \usepackage{natbib}
 \usepackage[prependcaption]{todonotes} %[obeyDraft]
 \usepackage{Sweave}
@@ -26,6 +17,17 @@
 \usepackage{pbox}
 \usepackage{verbatim}
 \usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{hyperref}
+\hypersetup{
+  pdftitle={NEIU G\&ES MA Thesis},%
+  pdfauthor={Neil Best <nbest@alum.mit.edu>},%
+  pdfsubject={land use / land cover},%
+  pdfkeywords={agriculture}{United States},%
+  pdffitwindow=true,%
+  pdfstartview={FitH}
+}
+\usepackage[all]{hypcap}
 
 \begin{document} 
 \bibliographystyle{chicago}
@@ -60,17 +62,16 @@
   tailored to serve as an initialization data set for long-term
   economic land use change models.  In order strike a balance between
   spatial precision and local diversity of use and cover the new data
-  set has lower resolution than the MLCT (5 arcminutes vs. 500m) but
+  set has lower resolution than the MLCT (5$'$ vs. 500m) but
   represents consituent cover classes as sub-pixel fractions rather
-  than forcing individual pixels into mutually exclusive thematic
-  categories.  After aggregating to the 5-arcmin grid we present a
-  method for decomposing the natural vegetaion/cropland mosaic class
-  found in MLCT into constituent classes as a function of the local
-  landscape and quantify its contribution to aggregate acreages by
-  class, particularly cropland.  We compensate for the absence of
-  certain fine-grained details from MLCT, such as rural transportation
-  networks, small settlements, linear water features, and wetlands,
-  mainly by virtue of sensor resolution, by incorporating
+  than discrete categories.  After aggregating to the 5$'$ grid we
+  present a method for decomposing the natural vegetaion/cropland
+  mosaic class found in MLCT into constituent classes as a function of
+  the local landscape and quantify its contribution to aggregate
+  acreages by class, particularly cropland.  We compensate for the
+  absence of certain fine-grained details from MLCT, such as rural
+  transportation networks, small settlements, linear water features,
+  and wetlands, mainly due to sensor resolution, by incorporating
   corresponding components of the NLCD, after similar reclassification
   and aggregation, as a set of offsets to the MLCT-derived fractions.
   The 175Crops2000 data set, valuable for its basis in per-crop
@@ -78,17 +79,17 @@
   decompose the cropland areas into a set of crop-specific
   sub-categories designed to facilitate the economic modeling goals of
   the simulations that will be initialized by this data product.  The
-  final classification scheme, now conceptually analogous to a stack
-  of spectral bands that are constrained to sum to unity, is a mixture
-  of a simplified version of the IGBP schema used in MLCT and a
-  disaggregation of the monolithic cropland class that differentiates
-  among the world's major commodity crops. \todo{It remains to be seen
-    how well the disaggregation of commodities will work. We may have
-    to leave it out.}  At each step of refinement we show that overall
-  spatial distribution of cropland across the study area improves
-  relative to the Aglands2000 data set.  We close with a discussion of
-  how this method might be applied globally and to successive years in
-  the MLCT time series.
+  final classification scheme, now conceptually equivalent to a stack
+  of spectral bands with the additional quality that the components of
+  each pixel sum to unity, is a mixture of a simplified version of the
+  IGBP schema used in MLCT and a disaggregation of the monolithic
+  cropland class that differentiates among the world's major commodity
+  crops. \todo{It remains to be seen how well the disaggregation of
+    commodities will work. We may have to leave it out.}  At each step
+  of refinement we show that overall spatial distribution of cropland
+  across the study area improves relative to the Aglands2000 data set.
+  We close with a discussion of how this method might be applied
+  globally and to successive years in the MLCT time series.
 \end{abstract}
 
 
@@ -167,6 +168,8 @@ stages of this project.
   classification confidence level and $A_{min}$
 \item[$\hat\theta$] Predicted sub-pixel fraction
 \item[$\theta$] Observed sub-pixel fraction
+\item[$'$] minute of arc, 1/60th of a degree
+\item[$''$] second of arc, 1/60th of a minute, 1/3600th of a degree
 \end{symbollist}
 
 \mainmatter
@@ -197,6 +200,8 @@ stages of this project.
 \section*{R code embedded in the chapter}
 \lstinputlisting{datasets.R}
 
+\section*{GRASS code used to process NLCD for cUSA}
+\lstinputlisting[language=bash]{code/nlcd.grass}
 
 \chapter{Source Code: Analysis}
 
@@ -206,7 +211,7 @@ stages of this project.
 \section*{R code embedded in the chapter}
 \lstinputlisting{analysis.R}
 
-\section*{GRASS code use to compute NLCD offsets}
+\section*{GRASS code used to compute NLCD offsets}
 \lstinputlisting[language=bash]{code/nlcd_offsets.grass}
 
 \end{document}

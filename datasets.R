@@ -12,14 +12,18 @@ setwd( "~/thesis/datasets")
 ##quartz.options( type="png")
 
 overwriteRasters <- FALSE
-overwriteFigures <- FALSE
+overwriteFigures <- TRUE
 
 
 
 ###################################################
 ### chunk number 2: thumb
 ###################################################
-#line 88 "/home/nbest/thesis/datasets.Rnw"
+#line 99 "/home/nbest/thesis/datasets.Rnw"
+
+texWd <- setwd("../data")
+dataWd <- getwd()
+
 
 ## this works but it's slow
 ##
@@ -28,9 +32,6 @@ overwriteFigures <- FALSE
 ##
 
 ## these are subsets exported from GRASS
-
-texWd <- setwd("../data")
-dataWd <- getwd()
 
 thumb <- mlctList( "thumb_2001_lct1.tif", 
                    "thumb_2001_lct1_sec.tif", 
@@ -41,14 +42,31 @@ igbpLegend <- igbpLegend[ igbpLegend != "#000000"]
 
 ## just in case, save these for later
 ##  paste( deparse( igbpLegend), collapse="")
-## igbpLegend <- c("#2041B3", "#006A0F", "#007C25", "#00A25B", "#00A125", "#069228", "#9E9668", "#C1C48F", "#85AA5B", "#B1B741", "#A4D07E", "#73ABAE", "#CCD253", "#D90000", "#9DE36E", "#B6B5C2", "#949494")"
+
+## igbpLegend <- c("#2041B3",
+##                 "#006A0F",
+##                 "#007C25",
+##                 "#00A25B",
+##                 "#00A125",
+##                 "#069228",
+##                 "#9E9668",
+##                 "#C1C48F",
+##                 "#85AA5B",
+##                 "#B1B741",
+##                 "#A4D07E",
+##                 "#73ABAE",
+##                 "#CCD253",
+##                 "#D90000",
+##                 "#9DE36E",
+##                 "#B6B5C2",
+##                 "#949494")
 
 
 
 ###################################################
 ### chunk number 3: mlct-reclass
 ###################################################
-#line 124 "/home/nbest/thesis/datasets.Rnw"
+#line 153 "/home/nbest/thesis/datasets.Rnw"
 
 
 thumb <- mlctReclass( thumb, mlctReclassMatrix, overwrite= overwriteRasters)
@@ -56,9 +74,8 @@ thumb <- mlctReclass( thumb, mlctReclassMatrix, overwrite= overwriteRasters)
 if( overwriteFigures) {
   thumbPlots <- list( pri= peelMap( thumb$pri, 0.4),
                      sec= peelMap( thumb$sec, 0.4))
-
   thumbPlots$pct <- ggplotRaster( thumb$pct, 0.4) + 
-    scale_fill_gradientn( "% confidence", 
+    scale_fill_gradientn( "% conf", 
                          colours= rev( brewer.pal( 7, "YlGn")), 
                          limits= c( 100, 0),
                          breaks= seq( 100, 0, by= -20))
@@ -69,12 +86,17 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 4: fig_thumb_pri_reclass
 ###################################################
-#line 153 "/home/nbest/thesis/datasets.Rnw"
-setwd( texWd)
+#line 175 "/home/nbest/thesis/datasets.Rnw"
+
 if( overwriteFigures) {
-  png( file="fig_thumb_pri_reclass.png")
-  print( thumbPlots$pri)
-  dev.off()
+  setwd( texWd)
+  ## png( file="fig_thumb_pri_reclass.png")
+  ## print( thumbPlots$pri)
+  ## dev.off()
+  
+  ggsave( "fig_thumb_pri_reclass.png",
+         plot= thumbPlots$pri + coord_equal())
+  
 }
 
 
@@ -82,13 +104,18 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 5: fig_thumb_sec_reclass
 ###################################################
-#line 173 "/home/nbest/thesis/datasets.Rnw"
+#line 209 "/home/nbest/thesis/datasets.Rnw"
 
-setwd( texWd)
+
 if( overwriteFigures) {
-  png( file="fig_thumb_sec_reclass.png")
-  print( thumbPlots$sec)
-  dev.off()
+  ## png( file="fig_thumb_sec_reclass.png")
+  ## print( thumbPlots$sec)
+  ## dev.off()
+  setwd( texWd)
+
+  ggsave( "fig_thumb_sec_reclass.png",
+         plot= thumbPlots$sec + coord_equal())
+
 }
 
 
@@ -96,13 +123,17 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 6: fig_thumb_pct
 ###################################################
-#line 194 "/home/nbest/thesis/datasets.Rnw"
+#line 247 "/home/nbest/thesis/datasets.Rnw"
 
-setwd( texWd)
 if( overwriteFigures) {
-  png( file="fig_thumb_pct.png")
-  print( thumbPlots$pct)
-  dev.off()
+  ## png( file="fig_thumb_pct.png")
+  ## print( thumbPlots$pct)
+  ## dev.off()
+  setwd( texWd)
+
+  ggsave( "fig_thumb_pct.png",
+         plot= thumbPlots$pct + coord_equal())
+
 }
 
 
@@ -110,7 +141,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 7: fig_thumb_pri_facet
 ###################################################
-#line 222 "/home/nbest/thesis/datasets.Rnw"
+#line 291 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
@@ -126,7 +157,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 8: fig_thumb_sec_facet
 ###################################################
-#line 245 "/home/nbest/thesis/datasets.Rnw"
+#line 314 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
@@ -140,9 +171,9 @@ if( overwriteFigures) {
 
 
 ###################################################
-### chunk number 9: mlct
+### chunk number 9: mlct_reclass
 ###################################################
-#line 271 "/home/nbest/thesis/datasets.Rnw"
+#line 357 "/home/nbest/thesis/datasets.Rnw"
 
 ## repeat for cUSA
 setwd( dataWd)
@@ -152,10 +183,11 @@ mlct <- mlctList( "2001_lct1.tif",
 mlct  <- mlctReclass( mlct, mlctReclassMatrix, overwrite= overwriteRasters, datatype="INT1U", progress="text")
 
 if( overwriteFigures) {
-  mlctPlots <- list( pri= peelMap( mlct$pri, 0.01),
-                    sec= peelMap( mlct$sec, 0.01))
-  mlctPlots$pct <- ggplotRaster( mlct$pct, 0.01) + 
-    scale_fill_gradientn( "% confidence", colours=rev( brewer.pal( 7, "YlGn")), 
+  mlctPlots <- list( pri= peelMap( mlct$pri, 8e-4),
+                    sec= peelMap( mlct$sec, 8e-4))
+  mlctPlots$pct <- ggplotRaster( mlct$pct, 8e-4) + 
+    scale_fill_gradientn( "% confidence",
+                         colours= rev( brewer.pal( 7, "YlGn")), 
                          limits= c( 100, 0),
                          breaks= seq( 100, 0, by= -20))
 }
@@ -166,13 +198,15 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 10: fig_mlct_pri_reclass
 ###################################################
-#line 296 "/home/nbest/thesis/datasets.Rnw"
+#line 383 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
-  png( file="fig_mlct_pri_reclass.png")
-  print( mlctPlots$pri + coord_equal())
-  dev.off()
+  ## png( file="fig_mlct_pri_reclass.png")
+  ## print( mlctPlots$pri + coord_equal())
+  ## dev.off()
+  ggsave( "fig_mlct_pri.png",
+         plot= mlctPlots$pri + coord_equal())
   system( "convert -trim fig_mlct_pri_reclass.png fig_mlct_pri_reclass_trim.png")
 }
 
@@ -181,13 +215,15 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 11: fig_mlct_sec_reclass
 ###################################################
-#line 318 "/home/nbest/thesis/datasets.Rnw"
+#line 407 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
-  png( file="fig_mlct_sec_reclass.png")
-  print( mlctPlots$sec + coord_equal())
-  dev.off()
+  ## png( file="fig_mlct_sec_reclass.png")
+  ## print( mlctPlots$sec + coord_equal())
+  ## dev.off()
+  ggsave( "fig_mlct_sec.png",
+         plot= mlctPlots$sec + coord_equal())
   system( "convert -trim fig_mlct_sec_reclass.png fig_mlct_sec_reclass_trim.png")
 
 }
@@ -197,13 +233,15 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 12: fig_mlct_pct
 ###################################################
-#line 341 "/home/nbest/thesis/datasets.Rnw"
+#line 432 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
-  png( file="fig_mlct_pct.png")
-  print( mlctPlots$pct + coord_equal())
-  dev.off()
+  ## png( file="fig_mlct_pct.png")
+  ## print( mlctPlots$pct + coord_equal())
+  ## dev.off()
+  ggsave( "fig_mlct_pct.png",
+         plot= mlctPlots$pct + coord_equal())
   system( "convert -trim fig_mlct_pct.png fig_mlct_pct_trim.png")
 }
 
@@ -212,16 +250,22 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 13: fig_mlct_pri_facet
 ###################################################
-#line 367 "/home/nbest/thesis/datasets.Rnw"
+#line 456 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
-  png( file="fig_mlct_pri_facet.png")
-  print( mlctPlots$pri + 
-        facet_wrap(~ values) + 
-        coord_equal() +
-        opts( legend.position= "none"))
-  dev.off()
+  ## png( file="fig_mlct_pri_facet.png")
+  ## print( mlctPlots$pri + 
+  ##       facet_wrap(~ values) + 
+  ##       coord_equal() +
+  ##       opts( legend.position= "none"))
+  ## dev.off()
+
+  ggsave( "fig_mlct_pri_facet.png",
+         plot= mlctPlots$pri +
+           facet_grid( values ~ .) +
+           coord_equal(),
+         width=4.5, height=8)
 }
 
 
@@ -229,18 +273,24 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 14: fig_mlct_sec_facet
 ###################################################
-#line 391 "/home/nbest/thesis/datasets.Rnw"
+#line 486 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
-  png( file="fig_mlct_sec_facet.png")
-                                        # had to remove some NAs from the data
-  mlctPlots$sec$data <- mlctPlots$sec$data[ !is.na(mlctPlots$sec$data$values),]
-  print( mlctPlots$sec + 
-        facet_wrap(~ values) + 
-        coord_equal() +
-        opts( legend.position= "none"))
-  dev.off()
+  ## png( file="fig_mlct_sec_facet.png")
+  ##                                       # had to remove some NAs from the data
+  ## mlctPlots$sec$data <- mlctPlots$sec$data[ !is.na(mlctPlots$sec$data$values),]
+  ## print( mlctPlots$sec + 
+  ##       facet_wrap(~ values) + 
+  ##       coord_equal() +
+  ##       opts( legend.position= "none"))
+  ## dev.off()
+
+  ggsave( "fig_mlct_sec_facet.png",
+         plot= mlctPlots$sec +
+           facet_grid( values ~ .) +
+           coord_equal(),
+         width=4.5, height=8)
 }
 
 
@@ -248,19 +298,26 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 15: thumbPlots
 ###################################################
-#line 489 "/home/nbest/thesis/datasets.Rnw"
+#line 567 "/home/nbest/thesis/datasets.Rnw"
 
 
 setwd( dataWd)
 
 ## calculate cover fractions and aggregate for detail area
 
-thumb  <- primaryFraction( thumb, Amin=0.5, overwrite= overwriteRasters, progress= "text")
-thumb1 <- primaryFraction( thumb, Amin=1.0, overwrite= overwriteRasters, progress= "text")
-thumb  <- coverFractions( thumb, overwrite= overwriteRasters, progress= "text")
-thumb1 <- coverFractions( thumb1, overwrite= overwriteRasters, progress= "text")
-thumb  <- aggregateFractions( thumb, overwrite= overwriteRasters, progress= "text")
-thumb1 <- aggregateFractions( thumb1, overwrite= overwriteRasters, progress= "text")
+thumb  <- primaryFraction( thumb, Amin=0.5,
+            overwrite= overwriteRasters, progress= "text")
+thumb1 <- primaryFraction( thumb, Amin=1.0,
+            overwrite= overwriteRasters, progress= "text")
+thumb  <- coverFractions( thumb,
+            overwrite= overwriteRasters, progress= "text")
+
+thumb1 <- coverFractions( thumb1,
+            overwrite= overwriteRasters, progress= "text")
+thumb  <- aggregateFractions( thumb,
+            overwrite= overwriteRasters, progress= "text")
+thumb1 <- aggregateFractions( thumb1,
+            overwrite= overwriteRasters, progress= "text")
 
 ## seems like brick() has a bug such that the filenames have no paths
 ## thumb$fracs <- brick( paste( getwd(), filename( thumb$fracs), sep="/"))
@@ -280,7 +337,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 16: fig_thumb_fracs
 ###################################################
-#line 521 "/home/nbest/thesis/datasets.Rnw"
+#line 617 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
@@ -294,7 +351,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 17: fig_thumb1_fracs
 ###################################################
-#line 541 "/home/nbest/thesis/datasets.Rnw"
+#line 644 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
@@ -308,7 +365,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 18: fig_thumb_agg
 ###################################################
-#line 562 "/home/nbest/thesis/datasets.Rnw"
+#line 679 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
@@ -322,7 +379,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 19: fig_thumb1_agg
 ###################################################
-#line 582 "/home/nbest/thesis/datasets.Rnw"
+#line 699 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
@@ -336,7 +393,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 20: thumbAggDiff
 ###################################################
-#line 603 "/home/nbest/thesis/datasets.Rnw"
+#line 729 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( dataWd)
 
@@ -361,7 +418,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 21: fig_thumb_agg_diff
 ###################################################
-#line 628 "/home/nbest/thesis/datasets.Rnw"
+#line 767 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
@@ -373,9 +430,38 @@ if( overwriteFigures) {
 
 
 ###################################################
-### chunk number 22: thumbNomos
+### chunk number 22: mlct_agg
 ###################################################
-#line 686 "/home/nbest/thesis/datasets.Rnw"
+#line 800 "/home/nbest/thesis/datasets.Rnw"
+
+setwd( dataWd)
+
+mlct  <- primaryFraction( mlct, Amin= 0.5, 
+           overwrite= overwriteRasters,
+           progress="text")
+mlct  <- coverFractions( mlct,
+           overwrite= overwriteRasters,
+           progress="text")
+mlct  <- aggregateFractions( mlct,
+           overwrite= overwriteRasters,
+           progress="text")
+
+mlct1 <- primaryFraction( mlct, Amin=1.0,
+           overwrite= overwriteRasters,
+           progress="text")
+mlct1 <- coverFractions( mlct1,
+          overwrite= overwriteRasters,
+          progress="text")
+mlct1 <- aggregateFractions( mlct1,
+          overwrite= overwriteRasters,
+          progress="text")
+
+
+
+###################################################
+### chunk number 23: thumbNomos
+###################################################
+#line 874 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( dataWd)
 thumb  <- decomposeMosaic( thumb, overwrite= overwriteRasters, progress= "text")
@@ -387,8 +473,8 @@ thumb1 <- decomposeMosaic( thumb1, overwrite= overwriteRasters, progress= "text"
 ## thumb1$delta <- brick( paste( getwd(), filename( thumb1$delta), sep="/"))
 
 if( overwriteFigures) {
-  thumbPlots$nomos <- coverMaps( thumb$agg, 1)
-  thumbPlots1$nomos <- coverMaps( thumb1$agg, 1)  
+  thumbPlots$nomos <- coverMaps( thumb$nomos, 1)
+  thumbPlots1$nomos <- coverMaps( thumb1$nomos, 1)  
 }
 
 thumbNomosDiff <- 
@@ -403,21 +489,21 @@ layerNames( thumbNomosDiff) <- layerNames( thumb$agg)
 if( overwriteFigures) {
   thumbNomosDiffPlot <- coverMaps( thumbNomosDiff) + 
     scale_fill_gradientn( "diff", colours= rev( brewer.pal( 11, "BrBG")), 
-                         limits= c( 0.32, -0.32),
-                         ## breaks= { b <- c( 0.3, 0.15, 0.075, 0.075/2, 0.075/4)
-                         ##           c( b, 0, rev( -b))
+                         limits= c( 0.1, -0.1),
+                         breaks= seq( 0.1, -0.1, by= -0.02))
+                         ## limits= c( 0.32, -0.32),
+                         ## breaks= { b <- c( 0.01, 0.02, 0.04,
+                         ##                   0.08, 0.16, 0.32)
+                         ##           c( rev( b), 0, -b)
                          ##         })
-                         breaks= { b <- c( 0.01, 0.02, 0.04, 0.08, 0.16, 0.32)
-                                   c( rev( b), 0, -b)
-                                 })
 }
 
 
 
 ###################################################
-### chunk number 23: fig_thumb_nomos
+### chunk number 24: fig_thumb_nomos
 ###################################################
-#line 728 "/home/nbest/thesis/datasets.Rnw"
+#line 916 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
@@ -429,9 +515,9 @@ if( overwriteFigures) {
 
 
 ###################################################
-### chunk number 24: fig_thumb1_nomos
+### chunk number 25: fig_thumb1_nomos
 ###################################################
-#line 749 "/home/nbest/thesis/datasets.Rnw"
+#line 937 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
@@ -443,35 +529,30 @@ if( overwriteFigures) {
 
 
 ###################################################
-### chunk number 25: fig_thumb_nomos_diff
+### chunk number 26: fig_thumb_nomos_diff
 ###################################################
-#line 770 "/home/nbest/thesis/datasets.Rnw"
+#line 960 "/home/nbest/thesis/datasets.Rnw"
 
-setwd( texWd)
 if( overwriteFigures ) {
-  png( file="fig_thumb_nomos_diff.png")
-  print( thumbNomosDiffPlot)
-  dev.off()
+  ## png( file="fig_thumb_nomos_diff.png")
+  ## print( thumbNomosDiffPlot)
+  ## dev.off()
+  ## setwd( texWd)
+  ggsave( paste( texWd, "fig_thumb_nomos_diff.png", sep="/"),
+         plot= thumbNomosDiffPlot)
 }
 
 
 
 ###################################################
-### chunk number 26: mlct1
+### chunk number 27: mlct_nomos
 ###################################################
-#line 793 "/home/nbest/thesis/datasets.Rnw"
-
+#line 982 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( dataWd)
 
-mlct  <- primaryFraction( mlct, Amin= 0.5, overwrite= overwriteRasters, progress="text")
-mlct  <- coverFractions( mlct, overwrite= overwriteRasters, progress="text")
-mlct  <- aggregateFractions( mlct, overwrite= overwriteRasters, progress="text")
 mlct  <- decomposeMosaic( mlct, overwrite= overwriteRasters, progress="text")
 
-mlct1  <- primaryFraction( mlct, Amin=1.0, overwrite= overwriteRasters, progress="text")
-mlct1  <- coverFractions( mlct1, overwrite= overwriteRasters, progress="text")
-mlct1  <- aggregateFractions( mlct1, overwrite= overwriteRasters, progress="text")
 mlct1  <- decomposeMosaic( mlct1, overwrite= overwriteRasters, progress="text")
 
 ## might be useful to cross-tabulate the primary and secondary
@@ -482,9 +563,9 @@ mlct1  <- decomposeMosaic( mlct1, overwrite= overwriteRasters, progress="text")
 
 
 ###################################################
-### chunk number 27: agland
+### chunk number 28: agland
 ###################################################
-#line 837 "/home/nbest/thesis/datasets.Rnw"
+#line 1046 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( dataWd)  
 setwd( "agland")
@@ -511,8 +592,16 @@ layerNames( thumbAgland) <- c("crop", "open")
 ## overwriteFigures <- TRUE
 
 if( overwriteFigures) {
-  thumbAglandPlot <- coverMaps( thumbAgland, 1) + coord_equal()
-  aglandPlot <- coverMaps( agland, 0.4) + coord_equal()
+  thumbAglandPlot <-
+    coverMaps( thumbAgland, 1) +
+      coord_equal() +
+      facet_grid( variable ~ .)
+
+  aglandPlot <-
+    coverMaps( agland, 0.4) +
+      coord_equal() +
+      facet_grid( variable ~ .)
+
 }
 
 ##     sapply( layerNames( thumbAgland),
@@ -529,37 +618,42 @@ if( overwriteFigures) {
 
 
 ###################################################
-### chunk number 28: fig_thumb_agland
+### chunk number 29: fig_thumb_agland
 ###################################################
-#line 885 "/home/nbest/thesis/datasets.Rnw"
+#line 1102 "/home/nbest/thesis/datasets.Rnw"
 
-setwd( texWd)
+##setwd( texWd)
 if( overwriteFigures) {
-  png( file="fig_thumb_agland.png")
-  print( thumbAglandPlot)
-  dev.off()
+  ## png( file="fig_thumb_agland.png")
+  ## print( thumbAglandPlot)
+  ## dev.off()
+  my.ggsave( paste( texWd, "fig_thumb_agland.png", sep="/"),
+         plot= thumbAglandPlot)
 }
 
 
 
 ###################################################
-### chunk number 29: fig_agland
+### chunk number 30: fig_agland
 ###################################################
-#line 905 "/home/nbest/thesis/datasets.Rnw"
+#line 1124 "/home/nbest/thesis/datasets.Rnw"
 
-setwd( texWd)
 if( overwriteFigures) {
-  png( file="fig_agland.png")
-  print( aglandPlot +coord_equal() +facet_wrap( ~ variable, ncol= 1))
-  dev.off()
+  setwd( texWd)
+  my.ggsave( "fig_agland.png",
+         plot= aglandPlot)
+  ##png( file="fig_agland.png")
+  ##print( aglandPlot) # +coord_equal() +facet_wrap( ~ variable, ncol= 1))
+  ##dev.off()
+  system( "convert -trim fig_agland.png fig_agland_trim.png")
 }
 
 
 
 ###################################################
-### chunk number 30: mlu eval=FALSE
+### chunk number 31: mlu eval=FALSE
 ###################################################
-## #line 934 "/home/nbest/thesis/datasets.Rnw"
+## #line 1156 "/home/nbest/thesis/datasets.Rnw"
 ## 
 ## setwd( texWd)
 ## 
@@ -582,9 +676,9 @@ if( overwriteFigures) {
 
 
 ###################################################
-### chunk number 31: thumb_nlcd
+### chunk number 32: thumb_nlcd
 ###################################################
-#line 979 "/home/nbest/thesis/datasets.Rnw"
+#line 1212 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( dataWd)
 setwd( "nlcd")
@@ -596,9 +690,9 @@ thumbNlcd <- list( pri=raster( "thumbNlcd.tif"))
 
 
 ###################################################
-### chunk number 32: thumb_nlcd_reclass
+### chunk number 33: thumb_nlcd_reclass
 ###################################################
-#line 996 "/home/nbest/thesis/datasets.Rnw"
+#line 1229 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( nlcdWd)
 
@@ -614,9 +708,9 @@ if( overwriteFigures) {
 
 
 ###################################################
-### chunk number 33: fig_thumb_nlcd_reclass
+### chunk number 34: fig_thumb_nlcd_reclass
 ###################################################
-#line 1015 "/home/nbest/thesis/datasets.Rnw"
+#line 1248 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
@@ -628,9 +722,9 @@ if( overwriteFigures) {
 
 
 ###################################################
-### chunk number 34: fig_thumb_nlcd_facet
+### chunk number 35: fig_thumb_nlcd_facet
 ###################################################
-#line 1035 "/home/nbest/thesis/datasets.Rnw"
+#line 1268 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
@@ -644,9 +738,9 @@ if( overwriteFigures) {
 
 
 ###################################################
-### chunk number 35: thumb_nlcd_aggr
+### chunk number 36: thumb_nlcd_aggr
 ###################################################
-#line 1066 "/home/nbest/thesis/datasets.Rnw"
+#line 1298 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( nlcdWd)
 ## overwriteRasters <- TRUE
@@ -668,9 +762,9 @@ if( overwriteFigures) {
 
 
 ###################################################
-### chunk number 36: fig_thumb_nlcd_agg
+### chunk number 37: fig_thumb_nlcd_agg
 ###################################################
-#line 1090 "/home/nbest/thesis/datasets.Rnw"
+#line 1322 "/home/nbest/thesis/datasets.Rnw"
 
 ## overwriteRasters <- TRUE
 ## overwriteFigures <- TRUE
@@ -686,9 +780,9 @@ if( overwriteFigures) {
 
 
 ###################################################
-### chunk number 37: nlcd
+### chunk number 38: nlcd
 ###################################################
-#line 1115 "/home/nbest/thesis/datasets.Rnw"
+#line 1347 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( dataWd)
 
@@ -703,29 +797,29 @@ nlcd <- stack( sapply( names( peelClasses[ -8]),
 nlcd <- setMinMax( nlcd)
 layerNames(nlcd) <- names( peelClasses[ -8])
 
-nlcdPlot <- coverMaps( nlcd, 0.1)
 
 
 
 
 ###################################################
-### chunk number 38: fig_nlcd
+### chunk number 39: fig_nlcd
 ###################################################
-#line 1138 "/home/nbest/thesis/datasets.Rnw"
+#line 1369 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( texWd)
 if( overwriteFigures) {
-  png( file="fig_nlcd.png")
-  print( nlcdPlot)
-  dev.off()
+  nlcdPlot <- coverMaps( nlcd, 0.1) +
+    coord_equal() +
+    facet_grid( variable ~ .)
+  my.ggsave( "fig_nlcd.png", width=5.5, height=8)
 }
 
 
 
 ###################################################
-### chunk number 39: cdl eval=FALSE
+### chunk number 40: cdl eval=FALSE
 ###################################################
-## #line 1179 "/home/nbest/thesis/datasets.Rnw"
+## #line 1411 "/home/nbest/thesis/datasets.Rnw"
 ## 
 ## 
 ## cdl <- list( pri= raster( "/gpfs/pads/projects/see/data/raw/cdl/vrt/cdl_2001.vrt"))
@@ -764,9 +858,9 @@ if( overwriteFigures) {
 
 
 ###################################################
-### chunk number 40: 175crops eval=FALSE
+### chunk number 41: 175crops eval=FALSE
 ###################################################
-## #line 1249 "/home/nbest/thesis/datasets.Rnw"
+## #line 1481 "/home/nbest/thesis/datasets.Rnw"
 ## 
 ## cropsWd <- path.expand( "~/see/data/raw/175crops2000/nc")
 ## list.files( cropsWd, "vrt$")
@@ -841,19 +935,19 @@ if( overwriteFigures) {
 
 
 ###################################################
-### chunk number 41: fig_crops
+### chunk number 42: fig_crops eval=FALSE
 ###################################################
-#line 1326 "/home/nbest/thesis/datasets.Rnw"
-
-setwd( texWd)
-if( overwriteFigures) {
-  cropsMap <- coverMaps( stack( catMasked), 0.2) +
-    coord_equal() +
-      facet_grid( variable ~ .)
-  ggsave( "fig_crops.png", width=5.5, height=8)
-}
-setwd( dataWd)
-
-
+## #line 1558 "/home/nbest/thesis/datasets.Rnw"
+## 
+## setwd( texWd)
+## if( overwriteFigures) {
+##   cropsMap <- coverMaps( stack( catMasked), 0.2) +
+##     coord_equal() +
+##       facet_grid( variable ~ .)
+##   my.ggsave( "fig_crops.png", width=5.5, height=8)
+## }
+## setwd( dataWd)
+## 
+## 
 
 

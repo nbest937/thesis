@@ -1,22 +1,7 @@
-% -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
-
-\SweaveOpts{ results=hide}
-\SweaveOpts{ include=FALSE}
-\SweaveOpts{ echo=FALSE}
-\SweaveOpts{ engine=R}
-\SweaveOpts{ keep.source= TRUE}
-\SweaveOpts{ eval=FALSE}
-\SweaveOpts{ eval=TRUE}
-
-
-\graphicspath{ {analysis/} }
-
-\chapter{Analysis}
-\label{cha:analysis}
-
-% , eval=TRUE>>=
-
-<<init>>=
+###################################################
+### chunk number 1: init
+###################################################
+#line 20 "/home/nbest/thesis/analysis2.Rnw"
 
 options( prompt= " ", continue= " ", width= 60)
 options(error= function(){
@@ -225,11 +210,12 @@ rownames( areasCt) <- levels( areasDf$class)
 
       
       
-@ %def 
 
 
-@
-<<tab_areas, results=tex, eval=TRUE>>=
+###################################################
+### chunk number 2: tab_areas
+###################################################
+#line 233 "/home/nbest/thesis/analysis2.Rnw"
 
 
 local({
@@ -251,12 +237,12 @@ local({
 
 
 
-@ %def 
 
-\begin{figure}[hpt] 
-\begin{center} 
 
-<<fig_areas>>= 
+###################################################
+### chunk number 3: fig_areas
+###################################################
+#line 260 "/home/nbest/thesis/analysis2.Rnw"
 
 if( overwriteFigures) {  
   setwd( texWd)
@@ -264,73 +250,12 @@ if( overwriteFigures) {
 }
 
 
-@ 
-
-\includegraphics{fig_areas}
-\end{center} 
-\caption{Total Acreages by Map and Cover}
-\label{fig:areas} 
-\end{figure} 
 
 
-After decomposing the mosaic class The MLCT indicates
-\Sexpr{printAreas( areasCt[ "crop", "nomos05"])} of cropland for
-$A_{min}=0.5$ and \Sexpr{printAreas( areasCt[ "crop", "nomos1"])} for
-$A_{min}=1.0$ in the cUSA in 2001. 
-
-Pasture indicated by Aglands2000 appears to be a broader
-classification than that of the NLCD's pasture class because much of
-the grazing land east of the Mississippi river counted in the
-Aglands2000 pasture map is absent in the NLCD pasture class.
-
-Aglands2000 indicates roughly
-\Sexpr{printAreas(areasDf["crop","agland"])} of cropland.  The
-inability of the MLCT data set to resolve rural transportation
-networks, minor settlements, and small water or wetland features is a
-major contribution to the surplus of cropland acreage indicated by the
-MLCT.  Due to its greater resolution, ~30m vs. ~500m, the NLCD is
-better suited at discerning developed areas in rural landscapes
-ranging from rural roads to farmsteads to small communities that do
-not show up in the MLCT data. There is a total area of roughly 74 Ma
-(30 Mha) of development remaining after subtracting the MLCT urban
-class from all developed classes in the NLCD where the NLCD shows
-greater development after they have both been aggregated to the
-5-arcmin grid. Applying this area as an offset to the cropland area in
-Aglands2000 brings us closer to the expected acreage under cultivation
-in 2001, although this assumes that all of that development intersects
-with MLCT cropland area.
-
-
-The purpose for processing the MLCT for two values of $A_{min}$ as
-described in the previous chapter is to evaluate whether or not
-information from the secondary cover type contributes positively to
-the accuracy of the data set we seek to synthesize.  The primary
-objective of this synthesis is to achieve accuracy in cropland
-distribution.  Because the cropland layer in the Agland2000 data set
-is derived from county-level production census statistics we adopt
-this as the ground truth and will endeavor to adjust our product
-accordingly.  Although MLCT overstates cropland acreage for both
-$A_{min}=0.5$ and $A_min=1.0$ the discrimination among the two is made
-by the distribution of errors rather than the aggregate error.
-
-\missingfigure{error map for ``nomos'' vs. Agland2000 crop}
-
-These maps show the cell-by-cell differences between the MLCT-derived
-data set that we have calculated after mosaic decomposition and the
-Agland2000 cropland map.  TO summarize and compare these errors we
-calculate the root of the mean squared error (RMSE) given by:
-
-$$
-\operatorname{RMSE}=\sqrt{\frac{\sum_{i=1}^{n}(\hat\theta_i-\theta_i )^2}{n}}
-$$
-
-where $\hat\theta_i$ are the predictions derived from the respective
-MLCT derivations and $\theta_i$ are the observations taken from the
-Agland2000 data set.
-
-
-@
-<<rmse>>=
+###################################################
+### chunk number 4: rmse
+###################################################
+#line 334 "/home/nbest/thesis/analysis2.Rnw"
 
 
 rmseDf <- ldply( list("nomos05", "nomos1"),
@@ -375,12 +300,12 @@ if( overwriteFigures) scatPlot1 <-
   opts( legend.position= "none")
 
 
-@
 
-\begin{figure}[hpt]
-  \begin{center} 
 
-<<fig_scatplot1>>= 
+###################################################
+### chunk number 5: fig_scatplot1
+###################################################
+#line 384 "/home/nbest/thesis/analysis2.Rnw"
 
 if( overwriteFigures) {
   setwd( texWd)
@@ -388,19 +313,12 @@ if( overwriteFigures) {
          plot= scatPlot1)
 }
 
-@ 
-
-\includegraphics{fig_scatPlot1}
-  \end{center} 
-  \caption{Scatter plot of MLCT crop ($A_{min}=1.0$, no mosaic) versus Agland2000 cropland}
-  \label{fig:scatplot1} 
-\end{figure} 
-
-\begin{figure}[hpt]
-  \begin{center} 
 
 
-<<fig_scatplot05>>= 
+###################################################
+### chunk number 6: fig_scatplot05
+###################################################
+#line 404 "/home/nbest/thesis/analysis2.Rnw"
 
 if( overwriteFigures) {
   setwd( texWd)
@@ -414,16 +332,12 @@ if( overwriteFigures) {
 
 
 
-@ 
 
-\includegraphics{fig_scatPlot05}
-  \end{center} 
-  \caption{Scatter plot of MLCT crop ($A_{min}=0.5$, no mosaic) versus Agland2000 cropland}
-  \label{fig:scatplot05} 
-\end{figure} 
 
-@ 
-<<table_rmse, results=tex, eval=TRUE>>=
+###################################################
+### chunk number 7: table_rmse
+###################################################
+#line 427 "/home/nbest/thesis/analysis2.Rnw"
 
 print( xtable( rmseDf,
               caption= "RMSE, MLCT vs. Agland2000 crop",
@@ -432,55 +346,12 @@ print( xtable( rmseDf,
       include.rownames= FALSE,
       sanitize.colnames.function= function(x) x)
 
-@ %def 
-
-The results on Table \ref{tab:rmse} indicate that $A_{min}=0.5$ is
-more representative of the distribution of cropland because although
-the total area indicated is higher there is less error on a
-cell-by-cell basis indicating that it does a better job of
-representing the spatial distribution than $A_{min}=1.0$.  Later when
-we recalculate the cell proportions by accepting the values for
-cropland area from Agland2000 as truth we can expect minimal
-distortion in reconciling its landscape with that given by MLCT.  From
-this point forward we will consider only the statistics derived from
-setting $A_{min}=0.5$ for the aggregation of the MLCT data due to this
-improved fit with Agland2000 cropland and its full consideration of
-all information imparted by the MLCT data.
 
 
-\section{NLCD Offsets}
-\label{sec:nlcd_offsets}
-
-
-From Table \ref{tab:areas} it is apparent that the MLCT results are
-negatively biased in the areas assigned to water, wetland, and urban
-features relative to the NLCD.  It is clear from visual inspection
-that features of these classes tend to have smaller characteristic
-dimensions which causes them to be overlooked in the the MLCT data due
-to its resolution.  The most obvious example are the rural
-transportation networks in areas delineated by the Public Land Survey
-System (PLSS) where roads have been laid out on a generally regular
-grid of square miles.  In the PEEL classification this infrastructure
-is included in the urban class as another form of developed land.  It
-is important to represent wetlands and water features in our input to
-the PEEL model because these areas have high likliehoods of being set
-aside for conservation purposes, which would be represented as a
-constraint on land conversion in the model.
-
-To merge this information from the NLCD we begin by simply accepting
-the areas for water, wetland, and urban classes in the reclassified,
-5$'$-aggregated version of NLCD that we have computed as truth and
-calculate offsets for those classes versus our 5$'$ MLCT data by
-straight subtraction.  The other classes are then adjusted so that
-they are present in proportion to each other as indicated by MLCT but
-in the area remaining after accepting the water, wetland, and urban
-areas from NLCD.  The additive offsets needed to achieve this balance
-and account for the entire area of the cell are calculated so that the
-effects of this process on all classes may be considered on a common
-basis.
-
-@
-<<offsets_calc>>=
+###################################################
+### chunk number 8: offsets_calc
+###################################################
+#line 484 "/home/nbest/thesis/analysis2.Rnw"
 
 nlcdKeep <- stack( llply( names( peelClasses), function( class) {
   if( class %in% c( "water", "wetland", "urban"))
@@ -566,52 +437,36 @@ thumbOffsetsMap <-
 ## thumbOffsetsMap+ geom_tile( aes( x= s1, y=s2, fill=cuts)) +scale_fill_manual( values= brewer.pal( 9, "BrBG"))
 
 
-@ 
 
-\begin{figure}[hpt]
-  \begin{center} 
 
-@ 
-<<fig_offsetsmap1>>=
+###################################################
+### chunk number 9: fig_offsetsmap1
+###################################################
+#line 576 "/home/nbest/thesis/analysis2.Rnw"
 
 if( overwriteFigures) {
   setwd( texWd)
   my.ggsave( "fig_offsets1.png", plot= offsetsMap1, height= 7)
 }
 
-@ %def 
 
-\includegraphics{fig_offsets1}
-  \end{center} 
-  \caption{NLCD offsets}
-  \label{fig:offsets1} 
-\end{figure} 
 
-\begin{figure}[hpt]
-  \begin{center} 
-
-@ 
-<<fig_offsetsmap2>>=
+###################################################
+### chunk number 10: fig_offsetsmap2
+###################################################
+#line 595 "/home/nbest/thesis/analysis2.Rnw"
 
 if( overwriteFigures) {
   setwd( texWd)
   my.ggsave( "fig_offsets2.png", plot= offsetsMap2, height= 7)
 }
 
-@ %def 
-
-\includegraphics{fig_offsets2}
-  \end{center} 
-  \caption{NLCD offsets (cont.)}
-  \label{fig:offsets2} 
-\end{figure} 
 
 
-\autoref{fig:offsets1} and \autoref{fig:offsets2} show the spatial distributions of the offsets calculated based on our assumptions about the water, wetland, and urban classes in the NLCD.
-
-
-@ 
-<<cor_offsets>>=
+###################################################
+### chunk number 11: cor_offsets
+###################################################
+#line 615 "/home/nbest/thesis/analysis2.Rnw"
 
 corOffsets <- cor( data.frame(as( nlcdOffsets, "SpatialGridDataFrame"))[, 1:9])
 colnames( corOffsets) <- names( peelClasses)
@@ -644,22 +499,12 @@ if( overwriteFigures) {
 
 
 
-@ %def 
 
 
-\begin{figure}[hpt]
-  \begin{center} 
-    \includegraphics{fig_corOffsets}
-  \end{center} 
-  \caption{Covariance matrix of NLCD offsets}
-  \label{fig:corOffsets} 
-\end{figure} 
-
-The resulting offsets are added to the aggregated fractions calculated
-from the MLCT with $A_{min}=0.5$.  
-
-
-<<cusa_offset>>=
+###################################################
+### chunk number 12: cusa_offset
+###################################################
+#line 663 "/home/nbest/thesis/analysis2.Rnw"
 
 setwd( rasterWd)
 
@@ -678,13 +523,12 @@ layerNames( mlctAdj$agg) <- names( peelClasses)
 
 mlctAdj  <- decomposeMosaic( mlctAdj, overwrite= overwriteRasters, progress= "text")
 
-@ 
 
 
-
-
-
-<<areas2>>=
+###################################################
+### chunk number 13: areas2
+###################################################
+#line 688 "/home/nbest/thesis/analysis2.Rnw"
 
 # reuse area table code from above; better to implement a function?
 
@@ -754,22 +598,12 @@ rownames( areasCt2) <- areasCt2[, "class"]
 areasCt2 <- areasCt2[, -1]
 areasCt2 <- areasCt2[ c( names( peelClasses), "(all)"), rasterNames2]
 
-@ 
-
-Following these algebraic acrobatics it seems prudent to check our
-accounting with some simple arithmetic.  Working backwards from the
-final result of adding NLCD-derived offsets to the raster stack
-derived from the MLCT with $A_{min}=0.5$ and decomposing the remaining
-mosaic fractions into their constituent cover types, subtracting the
-deltas that came from the mosaic decomposition, subtracting offsets
-calculated from the NLCD, and subtracting the aggregated MLCT data
-from the previous chapter 
-\todo{hyperlink to section where MLCT was aggregated} 
-should produce zeroes everywhere, plus or minus the noise of floating
-point math.
 
 
-<<restack_check>>=
+###################################################
+### chunk number 14: restack_check
+###################################################
+#line 773 "/home/nbest/thesis/analysis2.Rnw"
 
 ## check that everything balances
 ## output of decomposeMosaic is not brick()ed properly
@@ -815,10 +649,12 @@ restackOverlay <- function( rasterList, fun) {
 ## restackOverlay( list( mlctAdj$agg, offset, agg05),
 ##                function( a2, o, a) a2-o-a)
 
-@ 
 
 
-<<results_restack_check, results=verbatim>>=
+###################################################
+### chunk number 15: results_restack_check
+###################################################
+#line 822 "/home/nbest/thesis/analysis2.Rnw"
 
 check <- restackOverlay( c( mlctAdj[ c("nomos", "delta")], nlcdOffsets, agg05),
                function( n, d, o, a) n-d-o-a)
@@ -826,10 +662,12 @@ layerNames(check) <- names( peelClasses)
 
 check
 
-@ %def 
 
-@ 
-<<table_restack_check, results=tex, eval=TRUE>>=
+
+###################################################
+### chunk number 16: table_restack_check
+###################################################
+#line 833 "/home/nbest/thesis/analysis2.Rnw"
   
 checkTable <-
   xtable( cbind( class=peelClasses,
@@ -840,15 +678,12 @@ checkTable <-
 digits( checkTable) <- c( 0, 0,-2,-2)
 print( checkTable)
   
-@ %def 
 
-To assess whether the process of adding in the NLCD offsets has
-improved overall cropland accuracy we can perform the same error
-calculation from above and extend Table~\ref{tab:rmse} with the new
-result, giving us Table~\ref{tab:rmse2}.
 
-@ 
-<<table_rmse2, results=tex, eval=TRUE>>=
+###################################################
+### chunk number 17: table_rmse2
+###################################################
+#line 852 "/home/nbest/thesis/analysis2.Rnw"
 
                                         # add the RMSE for the new crop map
                                         # and an indication of the NLCD offsets' presence
@@ -878,18 +713,12 @@ print( xtable( rmseDf2,
       include.rownames= FALSE,
       sanitize.colnames.function= function(x) x)
 
-@ %def 
-
-\todo[caption=Should the RMSE tables be rearranged?]{Would it make
-  more sense to have the row order and independent variables (first
-  three) reversed in Table \ref{tab:rmse} and \ref{tab:rmse2}?}
-
-Seeing that this modifcation to the data set has improved our overall
-accuracy of the distribution of croplands the next step is to examine
-the total areas for all classes compared with the input data sets.  
 
 
-<<tab_areas2, results=tex, eval=TRUE>>=
+###################################################
+### chunk number 18: tab_areas2
+###################################################
+#line 893 "/home/nbest/thesis/analysis2.Rnw"
 
 
 local({
@@ -987,13 +816,12 @@ if( overwriteFigures) scatPlotAdj <-
 
 
 
-@
 
-\begin{figure}[hpt]
-  \centering
 
- 
-<<fig_offsets>>=
+###################################################
+### chunk number 19: fig_offsets
+###################################################
+#line 997 "/home/nbest/thesis/analysis2.Rnw"
  
 if( overwriteFigures) {
   offsetsPlot <-
@@ -1017,36 +845,24 @@ if( overwriteFigures) {
 
 
 
-@ %def 
-
-  \includegraphics{fig_offsets}
-  \caption{Total offsets calculated from NLCD}
-  \label{fig:offsets}
-\end{figure}
 
 
-\begin{figure}[hpt]
-  \centering
-
-
-@ 
-<<fig_areasAdj>>=
+###################################################
+### chunk number 20: fig_areasAdj
+###################################################
+#line 1034 "/home/nbest/thesis/analysis2.Rnw"
 
 if( overwriteFigures) {
   setwd( texWd)
   ggsave( "fig_areasAdj.pdf", plot= areasPlotAdj)
 }
 
-@ %def
-  \includegraphics{fig_areasAdj}
-  \caption{Area totals after NLCD adjustment}
-  \label{fig:areasAdj}
-\end{figure}
 
-\begin{figure}[hpt] 
-  \begin{center} 
 
-<<fig_scatPlotAdj>>= 
+###################################################
+### chunk number 21: fig_scatPlotAdj
+###################################################
+#line 1050 "/home/nbest/thesis/analysis2.Rnw"
 
 if( overwriteFigures) {
   setwd( texWd)
@@ -1056,18 +872,12 @@ if( overwriteFigures) {
 
 
   
-@ 
-
-    \includegraphics{fig_scatPlotAdj}
-  \end{center} 
-  \caption{Scatter plot of MLCT adjusted crop versus Agland2000 cropland}
-  \label{fig:scatPlotAdj} 
-\end{figure} 
 
 
-
-
-<<agc>>=
+###################################################
+### chunk number 22: agc
+###################################################
+#line 1071 "/home/nbest/thesis/analysis2.Rnw"
 
 ## thumbAgland <- crop( agland,
 ##                     extent(-83.5, -(82+25/60), 42+55/60, 44+5/60),
@@ -1191,12 +1001,12 @@ agcMap <- coverMaps( aglandComplete, 0.4) +
   facet_grid( variable ~ .)
 
 
-@ 
 
-\begin{figure}[hpt] 
-\begin{center} 
 
-<<fig_agc>>= 
+###################################################
+### chunk number 23: fig_agc
+###################################################
+#line 1200 "/home/nbest/thesis/analysis2.Rnw"
 
 setwd( texWd)
 my.ggsave( "fig_agc.png", width=4.5, height=8)
@@ -1207,21 +1017,12 @@ my.ggsave( "fig_agc.png", width=4.5, height=8)
 ## print( agcMap)
 ## dev.off()
 
-@ 
-
-\includegraphics{fig_agc}
-\end{center} 
-\caption{Agland Complete cover maps} 
-\label{fig:agc} 
-\end{figure} 
 
 
-@
-
-blah blah blah
-
-@ 
-<<table_rmse3, results=tex, eval=TRUE>>=
+###################################################
+### chunk number 24: table_rmse3
+###################################################
+#line 1225 "/home/nbest/thesis/analysis2.Rnw"
 
 setwd( rasterWd)  
 
@@ -1251,12 +1052,12 @@ print( rmseXt,
       include.rownames= FALSE,
       sanitize.colnames.function= function(x) x)
 
-@ %def 
 
-\begin{figure}[hpt] 
-  \begin{center} 
 
-<<fig_scatPlotAgc>>= 
+###################################################
+### chunk number 25: fig_scatPlotAgc
+###################################################
+#line 1260 "/home/nbest/thesis/analysis2.Rnw"
 
 if( overwriteFigures) {
   setwd( texWd)
@@ -1266,15 +1067,12 @@ if( overwriteFigures) {
 
 
   
-@ 
 
-    \includegraphics{fig_scatPlotAgc}
-  \end{center} 
-  \caption{Scatter plot of MLCT adjusted crop versus Agland2000 cropland}
-  \label{fig:scatPlotAgc} 
-\end{figure} 
 
-<<tab_areas3, results=tex, eval=TRUE>>=
+###################################################
+### chunk number 26: tab_areas3
+###################################################
+#line 1278 "/home/nbest/thesis/analysis2.Rnw"
 
 areasCt3 <- acreageTable( c( rasterNames2[ c( 1, 2, 4, 7)], "aglandComplete"))
 
@@ -1355,13 +1153,12 @@ agcThemeMap <-
   coord_equal()
 
 
-@
 
 
-\begin{figure}[hpt] 
-  \begin{center} 
-
-<<fig_agcThemeMap>>= 
+###################################################
+### chunk number 27: fig_agcThemeMap
+###################################################
+#line 1365 "/home/nbest/thesis/analysis2.Rnw"
 
 if( overwriteFigures) {
   setwd( texWd)
@@ -1369,16 +1166,12 @@ if( overwriteFigures) {
          plot= agcThemeMap)
 }
 
-@ 
-
-    \includegraphics{fig_agcThemeMap}
-  \end{center} 
-  \caption{Thematic map of conflicts between NLCD offsets and Agland2000}
-  \label{fig:agcThemeMap} 
-\end{figure} 
 
 
-<<crop_cats>>=
+###################################################
+### chunk number 28: crop_cats
+###################################################
+#line 1382 "/home/nbest/thesis/analysis2.Rnw"
 
 setwd( rasterWd)
 ##cropCats <- rep( NA, times=10)
@@ -1450,12 +1243,12 @@ cropSubClassesMap <-
   coord_equal() +
   facet_grid( variable ~ .)
 
-@ 
 
-\begin{figure}[hpt] 
-  \begin{center} 
 
-<<fig_cropSubClassesMap>>= 
+###################################################
+### chunk number 29: fig_cropSubClassesMap
+###################################################
+#line 1459 "/home/nbest/thesis/analysis2.Rnw"
 
 if( overwriteFigures) {
   setwd( texWd)
@@ -1463,45 +1256,18 @@ if( overwriteFigures) {
          plot= cropSubClassesMap)
 }
 
-@ 
-
-    \includegraphics{fig_cropSubClassesMap}
-  \end{center} 
-  \caption{Normalized fractions for crop sub-classes}
-  \label{fig:cropSubClassesMap} 
-\end{figure} 
 
 
-We could assume that forage crops come from open class but we don't
-know enough about the confusion between Aglands2000 pasture and the
-open class in the first place.  The focus here is field crops so that
-is the only class that we are attempting to disaggregate for now.
-Tree and shrub crops could be taken from the corresponding cover
-types, but assuming that they are caught up in that classification is
-a blind leap and their areas are small.  On the other hand, their
-economic impact may be disproportionate to their areas by virute of
-price, but this will have to be studied more carefully.
+###################################################
+### chunk number 30: restack_crops
+###################################################
+#line 1496 "/home/nbest/thesis/analysis2.Rnw"
 
-Double-cropping is ignored for now by normalizing the crop fractions
-by the sum of all crops, which can exceed unity in instances of
-intense double-cropping.  The predominant double-cropping system in
-the cUSA to our knowledge is soy followed by winter wheat, but there
-may be others.  In areas where soy and wheat are double-cropped their
-areas will be underestimated in this data set relative to that given
-in the 175Crops2000 data set, subsequent to the NLCD offset
-adjustment.  This issues also bears further study.
 
-@ 
-<<restack_crops>>=
-@ %def 
-
-@ 
-<<cleanup, eval=TRUE>>=
+###################################################
+### chunk number 31: cleanup
+###################################################
+#line 1500 "/home/nbest/thesis/analysis2.Rnw"
 options( prompt= "> ", continue= "+ ", width= 80)
-@ %def 
 
-%%% Local Variables: 
-%%% mode: latex
-%%% TeX-master: "thesis"
-%%% End: 
 

@@ -7,6 +7,8 @@
 
 
 
+
+
 \graphicspath{ {analysis/} }
 
 \chapter{Analysis}
@@ -17,7 +19,7 @@
 
 
 % latex table generated in R 2.13.0 by xtable 1.5-6 package
-% Sun May  8 10:56:35 2011
+% Wed Jun  8 16:49:13 2011
 \begin{table}[ht]
 \begin{center}
 {\small
@@ -29,11 +31,11 @@ crop & 446.5 & 310.8 & 378.9 & 369.6 & 495.4 & 488.1 \\
   open & 557.1 & 429.6 & 516.9 & 545.8 & 538.7 & 561.9 \\ 
   barren & 0.0 & 24.5 & 32.8 & 28.9 & 32.8 & 28.9 \\ 
   forest & 0.0 & 513.2 & 344.7 & 353.6 & 410.8 & 429.9 \\ 
+  mosaic & 0.0 & 0.0 & 232.9 & 237.0 & 0.0 & 0.0 \\ 
   shrub & 0.0 & 420.1 & 358.7 & 341.8 & 387.2 & 368.0 \\ 
   urban & 0.0 & 102.8 & 27.3 & 29.8 & 27.3 & 29.8 \\ 
   water & 0.0 & 96.5 & 74.3 & 75.0 & 74.3 & 75.0 \\ 
   wetland & 0.0 & 95.0 & 26.0 & 11.0 & 26.0 & 11.0 \\ 
-  mosaic & 0.0 & 0.0 & 232.9 & 237.0 & 0.0 & 0.0 \\ 
   total & 1003.7 & 1992.5 & 1992.5 & 1992.5 & 1992.5 & 1992.5 \\ 
    \noalign{\smallskip} \hline
 \end{tabular}
@@ -132,7 +134,7 @@ Agland2000 data set.
 \end{figure} 
 
 % latex table generated in R 2.13.0 by xtable 1.5-6 package
-% Sun May  8 10:56:56 2011
+% Wed Jun  8 16:49:33 2011
 \begin{table}[ht]
 \begin{center}
 \begin{tabular}{rr}
@@ -169,63 +171,69 @@ From Table \ref{tab:areas} it is apparent that the MLCT results are
 negatively biased in the areas assigned to water, wetland, and urban
 features relative to the NLCD.  It is clear from visual inspection
 that features of these classes tend to have smaller characteristic
-dimensions which causes them to be overlooked in the the MLCT
-classification.  The most obvious example are the rural transportation
-networks in areas delineated by the Public Land Survey System (PLSS)
-where roads have been laid out on a regular grid of square miles
-called sections.  In the PEEL classification this infrastructure is
-included in the urban class as another form of developed land.
+dimensions which causes them to be overlooked in the the MLCT data due
+to its resolution.  The most obvious example are the rural
+transportation networks in areas delineated by the Public Land Survey
+System (PLSS) where roads have been laid out on a generally regular
+grid of square miles.  In the PEEL classification this infrastructure
+is included in the urban class as another form of developed land.  It
+is important to represent wetlands and water features in our input to
+the PEEL model because these areas have high likliehoods of being set
+aside for conservation purposes, which would be represented as a
+constraint on land conversion in the model.
 
-The process of merging this information from the NLCD is as follows:
-
-\begin{enumerate}
-  \item Create a mask comprised of pixels classified as water, wetland,
-    or urban in the reclassified NLCD
-  \item Resample the MLCT layers to NLCD resolution (\~1.25 arcsecs)
-    using this mask
-  \item Compute class-by-class offsets by accepting each NLCD pixel in
-    the mask as a positive increment and each in the MLCT as a negative
-    in proportion to the shares given by the formulas for $A_{pri}$ and
-    $A_{sec}$.  Pixels outside the mask or where the data sets agree are
-    assigned a zero value in this step.
-  \item Aggregate these offsets to 5-arcmin resolution by taking the
-    mean of offset values across a given output grid cell
-  \item Add these offsets to the aggregated MLCT maps prior to the
-    mosaic decomposition step
-  \item Recalculate the mosaic decomposition
-\end{enumerate}
+To merge this information from the NLCD we begin by simply accepting
+the areas for water, wetland, and urban classes in the reclassified,
+5$'$-aggregated version of NLCD that we have computed as truth and
+calculate offsets for those classes versus our 5$'$ MLCT data by
+straight subtraction.  The other classes are then adjusted so that
+they are present in proportion to each other as indicated by MLCT but
+in the area remaining after accepting the water, wetland, and urban
+areas from NLCD.  The additive offsets needed to achieve this balance
+and account for the entire area of the cell are calculated so that the
+effects of this process on all classes may be considered on a common
+basis.
 
 
+\begin{figure}[hpt]
+  \begin{center} 
+
+
+\includegraphics{fig_offsets1}
+  \end{center} 
+  \caption{NLCD offsets}
+  \label{fig:offsets1} 
+\end{figure} 
+
+\begin{figure}[hpt]
+  \begin{center} 
+
+
+\includegraphics{fig_offsets2}
+  \end{center} 
+  \caption{NLCD offsets (cont.)}
+  \label{fig:offsets2} 
+\end{figure} 
+
+
+\autoref{fig:offsets1} and \autoref{fig:offsets2} show the spatial distributions of the offsets calculated based on our assumptions about the water, wetland, and urban classes in the NLCD.
 
 
 
-\missingfigure{ NLCD mask facet map}
 
-
-\missingfigure{ MLCT resampled and masked facet(?) map(s?)}
-
-
-\missingfigure{Facet map of thumb offsets}
-
-\missingfigure{Difference map, thumb adjusted vs. original after mosaic decomposition}
-
-
-Due to performance constraints it was not possible to carry out this
-operation on the full cUSA study area.  The equivalent operation of
-resampling the MLCT to the NLCD resolution of 1.25 arcsecs,
-calculating the offsets for water, wetland, and urban (developed)
-features implemented in a Bash script for use in the GRASS GIS
-environment is given in the appendix.
-
-\todo{Reference / hyperlink NLCD offset GRASS script in appendix}
-
+\begin{figure}[hpt]
+  \begin{center} 
+    \includegraphics{fig_corOffsets}
+  \end{center} 
+  \caption{Covariance matrix of NLCD offsets}
+  \label{fig:corOffsets} 
+\end{figure} 
 
 The resulting offsets are added to the aggregated fractions calculated
 from the MLCT with $A_{min}=0.5$.  
 
 
 
-\missingfigure{Facet map of cUSA NLCD offsets}
 
 
 
@@ -254,28 +262,28 @@ resolution  : 0.08333333, 0.08333333  (x, y)
 extent      : -124.8333, -66.91667, 24.5, 49.33333  (xmin, xmax, ymin, ymax)
 projection  : +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0 
 values      : in memory
-min values  : -2.1e-10 -1.1e-16 -1.1e-16 -1.1e-16 -3.9e-09 -1.1e-16 -1.1e-16 -1.1e-16 -1.1e-16 
-max values  : 3.6e-11 1.9e-09 2.3e-09 2.5e-09 5.4e-11 5.1e-10 1.1e-16 1.8e-09 1.4e-09 
+min values  : -2.8e-17 -1.1e-16 -1.1e-16 -1.1e-16 -5.6e-17 -1.1e-16 -5.6e-17 -1.1e-16 -1.1e-16 
+max values  : 2.8e-17 1.1e-16 1.1e-16 1.1e-16 5.6e-17 1.1e-16 5.6e-17 1.1e-16 1.1e-16 
 \end{Soutput}
 \end{Schunk}
 
 % latex table generated in R 2.13.0 by xtable 1.5-6 package
-% Sun May  8 10:57:45 2011
+% Wed Jun  8 16:51:29 2011
 \begin{table}[ht]
 \begin{center}
 \begin{tabular}{rrrr}
   \hline
  & class & min & max \\ 
   \hline
-water & 0 & -2.09E-10 & 3.58E-11 \\ 
-  forest & 1 & -1.11E-16 & 1.92E-09 \\ 
-  shrub & 2 & -1.11E-16 & 2.32E-09 \\ 
-  open & 3 & -1.11E-16 & 2.49E-09 \\ 
-  wetland & 4 & -3.88E-09 & 5.36E-11 \\ 
-  crop & 5 & -1.11E-16 & 5.05E-10 \\ 
-  urban & 6 & -1.11E-16 & 1.11E-16 \\ 
-  mosaic & 7 & -1.11E-16 & 1.85E-09 \\ 
-  barren & 8 & -1.11E-16 & 1.35E-09 \\ 
+water & 0 & -2.78E-17 & 2.78E-17 \\ 
+  forest & 1 & -1.11E-16 & 1.11E-16 \\ 
+  shrub & 2 & -1.11E-16 & 1.11E-16 \\ 
+  open & 3 & -1.11E-16 & 1.11E-16 \\ 
+  wetland & 4 & -5.55E-17 & 5.55E-17 \\ 
+  crop & 5 & -1.11E-16 & 1.11E-16 \\ 
+  urban & 6 & -5.55E-17 & 5.55E-17 \\ 
+  mosaic & 7 & -1.11E-16 & 1.11E-16 \\ 
+  barren & 8 & -1.11E-16 & 1.11E-16 \\ 
    \hline
 \end{tabular}
 \caption{Balance of adjustment fractions and original MLCT aggregation}
@@ -288,14 +296,14 @@ calculation from above and extend Table~\ref{tab:rmse} with the new
 result, giving us Table~\ref{tab:rmse2}.
 
 % latex table generated in R 2.13.0 by xtable 1.5-6 package
-% Sun May  8 10:57:49 2011
+% Wed Jun  8 16:51:35 2011
 \begin{table}[ht]
 \begin{center}
 \begin{tabular}{lrrr}
   \hline
 offset & $A_{min}$ & $RMSE_{crop}$ & $RMSE_{open}$ \\ 
   \hline
-TRUE & 0.5 & 0.150 & 0.235 \\ 
+TRUE & 0.5 & 0.151 & 0.236 \\ 
   FALSE & 0.5 & 0.165 & 0.242 \\ 
   FALSE & 1.0 & 0.180 & 0.267 \\ 
    \hline
@@ -314,7 +322,7 @@ the total areas for all classes compared with the input data sets.
 
 
 % latex table generated in R 2.13.0 by xtable 1.5-6 package
-% Sun May  8 10:57:49 2011
+% Wed Jun  8 16:51:35 2011
 \begin{table}[ht]
 \begin{center}
 {\small
@@ -322,16 +330,16 @@ the total areas for all classes compared with the input data sets.
   \hline
  & Agland2000 & NLCD & MLCT & \pbox[c][][c]{3in}{MLCT\\No Mosaic} & \pbox[c][][c]{3in}{NLCD\\Offsets} & \pbox[c][][c]{3in}{MLCT\\Adjusted} & \pbox[c][][c]{3in}{\smallskip{}MLCT\\Adjusted\\No Mosaic} \\ 
   \noalign{\smallskip} \hline
-water & 0.0 & 96.5 & 74.3 & 74.3 & 23.7 & 98.0 & 98.0 \\ 
-  forest & 0.0 & 513.2 & 344.7 & 410.8 & -52.4 & 292.3 & 346.4 \\ 
-  shrub & 0.0 & 420.1 & 358.7 & 387.2 & -31.0 & 327.6 & 349.8 \\ 
-  open & 557.1 & 429.6 & 516.9 & 538.7 & -20.6 & 496.3 & 515.9 \\ 
-  wetland & 0.0 & 95.0 & 26.0 & 26.0 & 80.5 & 106.5 & 106.5 \\ 
-  crop & 446.5 & 310.8 & 378.9 & 495.4 & -37.3 & 341.6 & 437.5 \\ 
-  urban & 0.0 & 102.8 & 27.3 & 27.3 & 79.7 & 107.1 & 107.1 \\ 
-  mosaic & 0.0 & 0.0 & 232.9 & 0.0 & -41.1 & 191.8 & 0.0 \\ 
-  barren & 0.0 & 24.5 & 32.8 & 32.8 & -1.4 & 31.4 & 31.4 \\ 
-  (all) & 1003.7 & 1992.5 & 1992.5 & 1992.5 & -0.0 & 1992.5 & 1992.5 \\ 
+water & 0.0 & 96.5 & 74.3 & 74.3 & 22.4 & 62.3 & 62.3 \\ 
+  forest & 0.0 & 513.2 & 344.7 & 410.8 & -44.7 & 300.1 & 355.7 \\ 
+  shrub & 0.0 & 420.1 & 358.7 & 387.2 & -23.8 & 334.9 & 358.0 \\ 
+  open & 557.1 & 429.6 & 516.9 & 538.7 & -21.0 & 495.9 & 514.9 \\ 
+  wetland & 0.0 & 95.0 & 26.0 & 26.0 & 69.0 & 95.0 & 95.0 \\ 
+  crop & 446.5 & 310.8 & 378.9 & 495.4 & -39.0 & 339.9 & 437.6 \\ 
+  urban & 0.0 & 102.8 & 27.3 & 27.3 & 75.4 & 102.8 & 102.8 \\ 
+  mosaic & 0.0 & 0.0 & 232.9 & 0.0 & -37.4 & 195.5 & 0.0 \\ 
+  barren & 0.0 & 24.5 & 32.8 & 32.8 & -0.9 & 31.9 & 31.9 \\ 
+  (all) & 1003.7 & 1992.5 & 1992.5 & 1992.5 & 0.0 & 1958.2 & 1958.2 \\ 
    \noalign{\smallskip} \hline
 \end{tabular}
 }
@@ -372,6 +380,7 @@ water & 0.0 & 96.5 & 74.3 & 74.3 & 23.7 & 98.0 & 98.0 \\
 
 
 
+
 \begin{figure}[hpt] 
 \begin{center} 
 
@@ -386,68 +395,103 @@ water & 0.0 & 96.5 & 74.3 & 74.3 & 23.7 & 98.0 & 98.0 \\
 
 blah blah blah
 
+% latex table generated in R 2.13.0 by xtable 1.5-6 package
+% Wed Jun  8 16:52:47 2011
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{llrrr}
+  \hline
+agland & offset & $A_{min}$ & $RMSE_{crop}$ & $RMSE_{open}$ \\ 
+  \hline
+TRUE & TRUE & 0.5 & 0.017 & 0.208 \\ 
+  FALSE & TRUE & 0.5 & 0.151 & 0.236 \\ 
+  FALSE & FALSE & 0.5 & 0.165 & 0.242 \\ 
+  FALSE & FALSE & 1.0 & 0.180 & 0.267 \\ 
+   \hline
+\end{tabular}
+\caption{RMSE of Agland Complete vs. Agland2000}
+\label{tab:rmse3}
+\end{center}
+\end{table}
+\begin{figure}[hpt] 
+  \begin{center} 
 
 
+    \includegraphics{fig_scatPlotAgc}
+  \end{center} 
+  \caption{Scatter plot of MLCT adjusted crop versus Agland2000 cropland}
+  \label{fig:scatPlotAgc} 
+\end{figure} 
+
+% latex table generated in R 2.13.0 by xtable 1.5-6 package
+% Wed Jun  8 16:52:59 2011
+\begin{table}[ht]
+\begin{center}
+{\small
+\begin{tabular}{rrrrrr}
+  \hline
+ & Agland2000 & NLCD & \pbox[c][][c]{3in}{MLCT\\No Mosaic} & \pbox[c][][c]{3in}{\smallskip{}MLCT\\Adjusted\\No Mosaic} & AgC \\ 
+  \noalign{\smallskip} \hline
+water & 0.0 & 96.5 & 74.3 & 62.3 & 62.3 \\ 
+  forest & 0.0 & 513.2 & 410.8 & 355.7 & 380.9 \\ 
+  shrub & 0.0 & 420.1 & 387.2 & 358.0 & 362.8 \\ 
+  open & 557.1 & 429.6 & 538.7 & 514.9 & 479.1 \\ 
+  wetland & 0.0 & 95.0 & 26.0 & 95.0 & 95.0 \\ 
+  crop & 446.5 & 310.8 & 495.4 & 437.6 & 443.7 \\ 
+  urban & 0.0 & 102.8 & 27.3 & 102.8 & 102.8 \\ 
+  mosaic & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\ 
+  barren & 0.0 & 24.5 & 32.8 & 31.9 & 31.7 \\ 
+  (all) & 1003.7 & 1992.5 & 1992.5 & 1958.2 & 1958.2 \\ 
+   \noalign{\smallskip} \hline
+\end{tabular}
+}
+\caption{Agland Complete (AgC) acreages, $A_{min}=0.5$}
+\label{tab:areas3}
+\end{center}
+\end{table}
+
+\begin{figure}[hpt] 
+  \begin{center} 
 
 
-\begin{comment}
-\todo[inline,caption={Decide what to do with old code in Analysis
-  chapter}]{The remaining code in this draft of the Analysis chapter
-  has fallen out of date.  The maps are based on old data that has
-  been replaced and the tables are probably not going to appear given
-  that the code sections will not be evaluated.  The idea of finding
-  correlations across a set of difference map still seems promising,
-  so I am leaving it in the source code for now.}
-
-
-To assess the impact of this step on the overall accuracy it is useful
-compare the errors and biases of our newly derived ``Agland
-Complete''(AgC) data set for all cover classes before and after the
-adjustment of the cell-by-cell cropland areas to match Agland2000.
-
-
-
-
-
- 
-
+    \includegraphics{fig_agcThemeMap}
+  \end{center} 
+  \caption{Thematic map of conflicts between NLCD offsets and Agland2000}
+  \label{fig:agcThemeMap} 
+\end{figure} 
 
 
 
 \begin{figure}[hpt] 
-\begin{center} 
+  \begin{center} 
 
 
-\includegraphics{fig_nlcd}
-\end{center} 
-\caption{NLCD cover maps} 
-\label{fig:nlcd} 
+    \includegraphics{fig_cropSubClassesMap}
+  \end{center} 
+  \caption{Normalized fractions for crop sub-classes}
+  \label{fig:cropSubClassesMap} 
 \end{figure} 
 
-\begin{figure}[hpt] 
-\begin{center} 
 
+We could assume that forage crops come from open class but we don't
+know enough about the confusion between Aglands2000 pasture and the
+open class in the first place.  The focus here is field crops so that
+is the only class that we are attempting to disaggregate for now.
+Tree and shrub crops could be taken from the corresponding cover
+types, but assuming that they are caught up in that classification is
+a blind leap and their areas are small.  On the other hand, their
+economic impact may be disproportionate to their areas by virute of
+price, but this will have to be studied more carefully.
 
-\includegraphics{fig_diff}
-\end{center} 
-\caption{Difference maps, Aglands Complete minus NLCD} 
-\label{fig:diff} 
-\end{figure} 
+Double-cropping is ignored for now by normalizing the crop fractions
+by the sum of all crops, which can exceed unity in instances of
+intense double-cropping.  The predominant double-cropping system in
+the cUSA to our knowledge is soy followed by winter wheat, but there
+may be others.  In areas where soy and wheat are double-cropped their
+areas will be underestimated in this data set relative to that given
+in the 175Crops2000 data set, subsequent to the NLCD offset
+adjustment.  This issues also bears further study.
 
-\begin{figure}[hpt] 
-\begin{center} 
-
-\includegraphics{fig_cordiff}
-\end{center} 
-\caption{Correlations across cover type in difference maps} 
-\label{fig:cordiff} 
-\end{figure} 
-
-The elements of the matrix have been reordered according to the
-clustering forumla given in \citet[sec. 6.2.3]{Sarkar2008} in order to
-achieve a degree of visual clustering among the correlation vectors.
-
-\end{comment}
 
 
 %%% Local Variables: 

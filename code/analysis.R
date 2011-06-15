@@ -2,6 +2,7 @@ library( raster)
 library( rgdal)
 library( ggplot2)
 library( xtable)
+library( Hmisc)
 
 ## library( lattice)
 ## library( RColorBrewer)

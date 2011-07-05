@@ -74,7 +74,7 @@ library( Hmisc)
 printAreas <- function( acres) {
   return( paste( round( acres /10^6, digits=1), "Ma (",
                 round( acres /10^6 *0.404685642, digits=1), "Mha)",
-                sep=""))
+                sep=" "))
 }
 
 getPeelBand <- function( peelBrick, cover) {

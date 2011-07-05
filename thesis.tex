@@ -28,6 +28,7 @@
   pdfstartview={FitH}
 }
 \usepackage[all]{hypcap}
+\usepackage{multirow}
 
 \begin{document} 
 \bibliographystyle{chicago}
@@ -170,7 +171,11 @@ stages of this project.
 \item[$\theta$] Observed sub-pixel fraction
 \item[$'$] minute of arc, 1/60th of a degree
 \item[$''$] second of arc, 1/60th of a minute, 1/3600th of a degree
+%\item[$ \left[ 0,1 \right] $] interval from 0 to 1, inclusive of 0 and 1; $0 \leq x \leq 1$ 
+%\item[$ \left[ 0,1 \right) $] interval from 0 to 1, inclusive of 0 but but not 1, $0 \leq x < 1$ 
 \end{symbollist}
+
+\todo{fix interval/set-builder notation in symbol list}
 
 \mainmatter
 
@@ -184,9 +189,60 @@ stages of this project.
 \chapter{Conclusions}
 \label{cha:conclusions}
 
+The goal of this study was to produce a LULC data set that was as
+accurate as possible with respect to its representation of the
+distribution of agricultural production and that also offers a
+reasonable characterization of non-crop covers and land use beyond
+those agricultural uses.  We have accomplished that.  In doing so we
+have adopted a sub-pixel data structure for conveying land use and
+land cover information, albeit at a low spatial resolution by today's
+remote sensing and GIS standards.  However, we hope that our readers
+will consider that this data structure has particular mathematical
+properties that may make it useful for their applications.  The
+ability to perform raster algebra on these stacks of maps made it
+possible to apply scaling factors and offsets with concise syntax in
+the \texttt{R} language that would not have been feasible in a
+discrete, categorical framework.
+
+We maintain that the reproducible research aspect of this study was
+critical to its success.  By elaborating the analysis in an
+interactive environment where every component of every data structure
+is subject to inspection many missteps were discovered in the course
+of our work.  In other GIS analysis environments it might have been
+too difficult to perform basic sanity checks on intermediate outputs
+before moving on and too easy to rely on a sense of ``everything looks
+right'' in a GUI environment.  The ability to point to a body of
+source code that expresses the steps of the analysis is a poignant
+example of reproducibility, a pillar of the scientific method that has
+fallen out of vogue because of the complexity of modern spatial
+analysis until the recent emergence of applicable software tools
+coupled with adequate computing resources.
+
+Future directions of investigation:
+
+Model \% cultivation of MLCT cropland and mosaic pixels as function of classification
+confidence and secondary class, for example, in order to make original
+MLCT data more useful for direct analysis of agricultural activity using
+its native resolution and classification.
+
+Model \% urban as a function of population density, agricultural
+productivity, and other economic productivity to develop a proxy for
+the low-density values derived from NLCD in order to extend this
+method globally.
+
+Comparison of this data to other available LULC characterizations,
+particularly the Major Land Use (MLU) data and the Cropland Data Layer
+(CDL) from the USDA, would provide useful validation metrics.
+
 
 
 \backmatter
+
+\todo{Fix problem with LDAAC bibliography entry}
+\todo{Fix problem with Monfreda, 2008 bibliography entry}
+\todo{Clean up source code by removing commented code that is no
+  longer useful}
+\todo{Fix problems with appendix headings}
 
 \bibliography{thesis}
 
@@ -206,6 +262,6 @@ stages of this project.
 \lstinputlisting{code/analysis.R}
 
 \section*{R code embedded in the chapter}
-\lstinputlisting{analysis2.R}
+\lstinputlisting{analysis.R}
 
 \end{document}

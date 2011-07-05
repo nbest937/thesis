@@ -1,10 +1,11 @@
-s% -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
+% -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
 
 \SweaveOpts{ results=hide}
 \SweaveOpts{ include=FALSE}
 \SweaveOpts{ echo=FALSE}
 \SweaveOpts{ engine=R}
 \SweaveOpts{ keep.source=TRUE}
+\SweaveOpts{ eval=FALSE}
 \SweaveOpts{ eval=TRUE}
 
 \graphicspath{ {datasets/} }
@@ -15,10 +16,8 @@ s% -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
                                         # load helper functions
                                         # code will appear in appendix
 source("~/thesis/code/peel.R")
+source("~/thesis/code/maps.R")
 setwd( "~/thesis/datasets")
-
-##setwd( "/gpfs/pads/projects/see/nbest/thesis/data")
-##quartz.options( type="png")
 
 overwriteRasters <- FALSE
 overwriteFigures <- TRUE
@@ -145,8 +144,43 @@ The following table shows the mapping of the IGBP classes used in the
 original MLCT data to the simplified classification designed for the
 PEEL model.
 
-\missingfigure{MLCT reclassification table}
-
+\begin{center}
+  \begin{table}[htbp]
+    \begin{tabular}{|l|l|l|l|}
+      \hline
+      \multicolumn{2}{|c|}{MLCT/IGBP} & \multicolumn{2}{|c|}{PEEL} \\
+      \hline
+      0 & water & 0 & water \\
+      \hline
+      1 & evergreen needleleaf forest & \multirow{5}{*}{1} & \multirow{5}{*}{forest} \\
+      2 & deciduous needleleaf forest & & \\
+      3 & evergreen broadleaf forest & & \\
+      4 & deciduous broadleaf forest & & \\
+      5 & mixed forests & & \\
+      \hline
+      6 & closed shrublands & \multirow{3}{*}{2} & \multirow{3}{*}{shrub} \\
+      7 & open shrublands & & \\
+      8 & woody savannas & & \\
+      \hline
+      9 & savannas & \multirow{2}{*}{3} & \multirow{2}{*}{open} \\
+      10 & grasslands & & \\
+      \hline
+      11 & permanent wetlands & 4 & wetland \\
+      \hline
+      12 & croplands & 5 & crop \\
+      \hline
+      13 & urban & 6 & urban \\
+      \hline
+      14 & cropland / natural vegetation mosaics & 7 & mosaic \\
+      \hline
+      15 & permanent snow and ice & \multirow{2}{*}{8} & \multirow{2}{*}{barren} \\
+      16 & barren or sparsely vegetated & & \\  
+      \hline
+    \end{tabular}
+    \caption{Reclassification of MLCT/IGBP to PEEL}
+    \label{tab:mlct_reclass}
+  \end{table}
+\end{center}
 
 @ 
 <<mlct-reclass>>=
@@ -174,14 +208,8 @@ if( overwriteFigures) {
 <<fig_thumb_pri_reclass>>= 
 
 if( overwriteFigures) {
-  setwd( texWd)
-  ## png( file="fig_thumb_pri_reclass.png")
-  ## print( thumbPlots$pri)
-  ## dev.off()
-  
-  ggsave( "fig_thumb_pri_reclass.png",
-         plot= thumbPlots$pri + coord_equal())
-  
+  my.ggsave( texWd, "fig_thumb_pri_reclass.png",
+            plot= thumbPlots$pri)
 }
 
 @ 
@@ -209,14 +237,8 @@ the primay classification.
 
 
 if( overwriteFigures) {
-  ## png( file="fig_thumb_sec_reclass.png")
-  ## print( thumbPlots$sec)
-  ## dev.off()
-  setwd( texWd)
-
-  ggsave( "fig_thumb_sec_reclass.png",
-         plot= thumbPlots$sec + coord_equal())
-
+  my.ggsave( texWd, "fig_thumb_sec_reclass.png",
+         plot= thumbPlots$sec)
 }
 
 @ 
@@ -246,14 +268,8 @@ deciduous.
 <<fig_thumb_pct>>= 
 
 if( overwriteFigures) {
-  ## png( file="fig_thumb_pct.png")
-  ## print( thumbPlots$pct)
-  ## dev.off()
-  setwd( texWd)
-
-  ggsave( "fig_thumb_pct.png",
-         plot= thumbPlots$pct + coord_equal())
-
+  my.ggsave( texWd, "fig_thumb_pct.png",
+            plot= thumbPlots$pct)
 }
 
 @ 
@@ -289,13 +305,11 @@ primary class in our example detail area and
   
 <<fig_thumb_pri_facet>>= 
 
-setwd( texWd)
 if( overwriteFigures) {
-  png( file="fig_thumb_pri_facet.png")
-  print( thumbPlots$pri + 
-        facet_wrap(~ values) + 
-        opts( legend.position= "none"))
-  dev.off()
+  my.ggsave( texWd, "fig_thumb_pri_facet.png",
+            plot= thumbPlots$pri + 
+              facet_wrap(~ values) +
+              opts( legend.position= "none"))
 }
 
 @ 
@@ -312,13 +326,11 @@ if( overwriteFigures) {
   
 <<fig_thumb_sec_facet>>= 
 
-setwd( texWd)
 if( overwriteFigures) {
-  png( file="fig_thumb_sec_facet.png")
-  print( thumbPlots$sec + 
-        facet_wrap(~ values) +
-        opts( legend.position= "none"))
-  dev.off()
+  my.ggsave( texWd, "fig_thumb_sec_facet.png",
+            plot= thumbPlots$sec + 
+              facet_wrap(~ values) +
+              opts( legend.position= "none"))
 }
 
 @ 
@@ -381,16 +393,11 @@ if( overwriteFigures) {
 @
 <<fig_mlct_pri_reclass>>= 
 
-setwd( texWd)
 if( overwriteFigures) {
-  ## png( file="fig_mlct_pri_reclass.png")
-  ## print( mlctPlots$pri + coord_equal())
-  ## dev.off()
-  ggsave( "fig_mlct_pri.png",
-         plot= mlctPlots$pri + coord_equal())
-  system( "convert -trim fig_mlct_pri_reclass.png fig_mlct_pri_reclass_trim.png")
+  my.ggsave( texWd, "fig_mlct_pri_reclass.png",
+            plot= mlctPlots$pri)
+  system( sprintf( "convert -trim %s/fig_mlct_pri_reclass.png %s/fig_mlct_pri_reclass_trim.png", texWd, texWd))
 }
-
 @ 
 
 \includegraphics{fig_mlct_pri_reclass_trim}
@@ -399,21 +406,17 @@ if( overwriteFigures) {
 \label{fig:mlct_pri_reclass} 
 \end{figure} 
 
+\todo{Make cUSA graphics wider or even turn sideways for full-page}
 
 \begin{figure}[hpt] 
 \begin{center}
   
 <<fig_mlct_sec_reclass>>= 
 
-setwd( texWd)
 if( overwriteFigures) {
-  ## png( file="fig_mlct_sec_reclass.png")
-  ## print( mlctPlots$sec + coord_equal())
-  ## dev.off()
-  ggsave( "fig_mlct_sec.png",
-         plot= mlctPlots$sec + coord_equal())
-  system( "convert -trim fig_mlct_sec_reclass.png fig_mlct_sec_reclass_trim.png")
-
+  my.ggsave( texWd, "fig_mlct_sec_reclass.png",
+            plot= mlctPlots$sec)
+  system( sprintf( "convert -trim %s/fig_mlct_sec_reclass.png %s/fig_mlct_sec_reclass_trim.png", texWd, texWd))
 }
 
 @ 
@@ -430,14 +433,10 @@ if( overwriteFigures) {
   
 <<fig_mlct_pct>>= 
 
-setwd( texWd)
 if( overwriteFigures) {
-  ## png( file="fig_mlct_pct.png")
-  ## print( mlctPlots$pct + coord_equal())
-  ## dev.off()
-  ggsave( "fig_mlct_pct.png",
-         plot= mlctPlots$pct + coord_equal())
-  system( "convert -trim fig_mlct_pct.png fig_mlct_pct_trim.png")
+  my.ggsave( texWd, "fig_mlct_pct.png",
+           plot= mlctPlots$pct)
+  system( sprintf( "convert -trim %s/fig_mlct_pc.png %s/fig_mlct_pct_trim.png", texWd, texWd))
 }
 
 @ 
@@ -454,19 +453,10 @@ if( overwriteFigures) {
   
 <<fig_mlct_pri_facet>>= 
 
-setwd( texWd)
 if( overwriteFigures) {
-  ## png( file="fig_mlct_pri_facet.png")
-  ## print( mlctPlots$pri + 
-  ##       facet_wrap(~ values) + 
-  ##       coord_equal() +
-  ##       opts( legend.position= "none"))
-  ## dev.off()
-
-  ggsave( "fig_mlct_pri_facet.png",
+  my.ggsave( texWd, "fig_mlct_pri_facet.png",
          plot= mlctPlots$pri +
-           facet_grid( values ~ .) +
-           coord_equal(),
+           facet_grid( values ~ .),
          width=4.5, height=8)
 }
 
@@ -478,28 +468,18 @@ if( overwriteFigures) {
 \label{fig:mlct_pri_facet} 
 \end{figure} 
 
+\todo{ Split \autoref{fig:mlct_pri_facet} into two figures.}
 
 \begin{figure}[hpt] 
 \begin{center}
   
 <<fig_mlct_sec_facet>>= 
 
-setwd( texWd)
 if( overwriteFigures) {
-  ## png( file="fig_mlct_sec_facet.png")
-  ##                                       # had to remove some NAs from the data
-  ## mlctPlots$sec$data <- mlctPlots$sec$data[ !is.na(mlctPlots$sec$data$values),]
-  ## print( mlctPlots$sec + 
-  ##       facet_wrap(~ values) + 
-  ##       coord_equal() +
-  ##       opts( legend.position= "none"))
-  ## dev.off()
-
-  ggsave( "fig_mlct_sec_facet.png",
-         plot= mlctPlots$sec +
-           facet_grid( values ~ .) +
-           coord_equal(),
-         width=4.5, height=8)
+  my.ggsave( texWd, "fig_mlct_sec_facet.png",
+            plot= mlctPlots$sec +
+              facet_grid( values ~ .),
+            width=4.5, height=8)
 }
 
 @ 
@@ -510,6 +490,7 @@ if( overwriteFigures) {
 \label{fig:mlct_sec_facet} 
 \end{figure} 
 
+\todo{ Split \autoref{fig:mlct_sec_facet} into two figures.}
 
 \subsection{Aggregation}
 \label{sec:mlct-aggr}
@@ -524,9 +505,12 @@ confidence up to 100\%, and a secondary classification.  The secondary
 cover type is given as the most likely alternative to the primary type
 \citep{Friedl2010}, but for purposes of our analysis we are taking a
 more probabilistic view and incorporating all available information
-from the base data.  Because we are aggregating the data up to
+from the base data.  We are not as concerned about per-pixel
+classification error as users working at the MLCT's native resolution
+might be, which is the original motivation given for providing the
+secondary classification.  Because we are aggregating the data up to
 5-arcmin resolution there is no expectation that the sub-pixel
-fractions at full resolution are spaitally specific, but in the
+fractions at full resolution are spatially specific, but in the
 aggregate our characterization of each grid cell's composition will be
 nuanced by this additional information.  The primary class covers at
 least roughly 50-60\% of a given pixel $x$, and this percent is almost
@@ -576,7 +560,6 @@ thumb1 <- primaryFraction( thumb, Amin=1.0,
             overwrite= overwriteRasters, progress= "text")
 thumb  <- coverFractions( thumb,
             overwrite= overwriteRasters, progress= "text")
-
 thumb1 <- coverFractions( thumb1,
             overwrite= overwriteRasters, progress= "text")
 thumb  <- aggregateFractions( thumb,
@@ -584,11 +567,6 @@ thumb  <- aggregateFractions( thumb,
 thumb1 <- aggregateFractions( thumb1,
             overwrite= overwriteRasters, progress= "text")
 
-## seems like brick() has a bug such that the filenames have no paths
-## thumb$fracs <- brick( paste( getwd(), filename( thumb$fracs), sep="/"))
-## thumb1$fracs <- brick( paste( getwd(), filename( thumb1$fracs), sep="/"))
-## thumb$agg <- brick( paste( getwd(), filename( thumb$agg), sep="/"))
-## thumb1$agg <- brick( paste( getwd(), filename( thumb1$agg), sep="/"))
 
 if( overwriteFigures) {
   thumbPlots <- list( fracs= coverMaps( thumb$fracs, 0.4),
@@ -615,11 +593,9 @@ simply a linear scaling and offset of the latter.  \autoref{fig:thumb_fracs} sho
   
 <<fig_thumb_fracs>>= 
 
-setwd( texWd)
 if( overwriteFigures) {
-  png( file="fig_thumb_fracs.png")
-  print( thumbPlots$fracs)
-  dev.off()
+  my.ggsave( texWd, "fig_thumb_fracs.png",
+            plot= thumbPlots$fracs)
 }
 
 @ 
@@ -639,14 +615,12 @@ closely after aggregating to the 5$'$ grid.
 
 \begin{figure}[hpt] 
 \begin{center}
-  
+
 <<fig_thumb1_fracs>>= 
 
-setwd( texWd)
 if( overwriteFigures) {
-  png( file="fig_thumb1_fracs.png")
-  print( thumbPlots1$fracs)
-  dev.off()
+  my.ggsave( texWd, "fig_thumb1_fracs.png",
+            plot= thumbPlots1$fracs)
 }
 
 @ 
@@ -677,11 +651,9 @@ convenient for properly computing this mean.
   
 <<fig_thumb_agg>>= 
 
-setwd( texWd)
 if( overwriteFigures) {
-  png( file="fig_thumb_agg.png")
-  print( thumbPlots$agg)
-  dev.off()
+  my.ggsave( texWd, "fig_thumb_agg.png",
+            plot= thumbPlots$agg)
 }
 
 @ 
@@ -697,11 +669,9 @@ if( overwriteFigures) {
   
 <<fig_thumb1_agg>>= 
 
-setwd( texWd)
 if( overwriteFigures) {
-  png( file="fig_thumb1_agg.png")
-  print( thumbPlots1$agg)
-  dev.off()
+  my.ggsave( texWd, "fig_thumb1_agg.png",
+            plot= thumbPlots1$agg)
 }
 
 @ 
@@ -765,11 +735,9 @@ indicated by the secondary classes in those areas.
   
 <<fig_thumb_agg_diff>>= 
 
-setwd( texWd)
 if( overwriteFigures) {
-  png( file="fig_thumb_agg_diff.png")
-  print( thumbAggDiffPlot)
-  dev.off()
+  my.ggsave( texWd, "fig_thumb_agg_diff.png",
+            plot= thumbAggDiffPlot)
 }
 
 @ 
@@ -785,11 +753,11 @@ if( overwriteFigures) {
 %\label{sec:agg-analysis-area}
 
 
-We apply the same functions for calculating the 15$''$-resolution map
+We apply the same functions for calculating the $15''$-resolution map
 of the primary cover class as a function of the confidence level $c$
 for the entire cUSA study area, converting those to per-class
 fractions at the same extent and scale, and aggregating those values
-to the 5$'$ grid.  The corresponding figures are not shown because the
+to the $5'$ grid.  The corresponding figures are not shown because the
 decrease in relative resolution makes interpretation difficult.  Based
 on the behavior that these functions exhibited over the detail area we
 can be confident that they will perform correctly over the greater
@@ -914,11 +882,9 @@ if( overwriteFigures) {
   
 <<fig_thumb_nomos>>= 
 
-setwd( texWd)
 if( overwriteFigures) {
-  png( file="fig_thumb_nomos.png")
-  print( thumbPlots$nomos)
-  dev.off()
+  my.ggsave( texWd, "fig_thumb_nomos.png",
+            plot= thumbPlots$nomos)
 }
 
 @ 
@@ -935,11 +901,9 @@ if( overwriteFigures) {
   
 <<fig_thumb1_nomos>>= 
 
-setwd( texWd)
 if( overwriteFigures) {
-  png( file="fig_thumb1_nomos.png")
-  print( thumbPlots1$nomos)
-  dev.off()
+  my.ggsave( texWd, "fig_thumb1_nomos.png",
+            plot= thumbPlots1$nomos)
 }
 
 @ 
@@ -959,11 +923,7 @@ if( overwriteFigures) {
 <<fig_thumb_nomos_diff>>= 
 
 if( overwriteFigures ) {
-  ## png( file="fig_thumb_nomos_diff.png")
-  ## print( thumbNomosDiffPlot)
-  ## dev.off()
-  ## setwd( texWd)
-  ggsave( paste( texWd, "fig_thumb_nomos_diff.png", sep="/"),
+  my.ggsave( texWd, "fig_thumb_nomos_diff.png",
          plot= thumbNomosDiffPlot)
 }
 
@@ -1013,186 +973,32 @@ chapter.
 % test. \todo{illustrate/demonstrate the RMSE test on the 5-arcmin MLCT
 %   data sets}
 
-\section{Agricultural Lands in the Year 2000 (Agland2000)}
-\label{sec:agland2000}
 
-
-The data set described by \citet{Ramankutty2008}, referred to in this
-paper as ``Agland2000'', is the product of an effort to merge
-satellite-derived LULC classifications with census data of
-agricultural actviity compiled at national or sub-national levels
-according to availability on around the turn of the last century.  It
-uses both an older version of the MLCT (known as BU-MODIS) and the
-GLC2000 data set mentioned in \autoref{sec:background} and a mask
-based on climatic criteria and delineations of protected areas to
-allocate the census data to the 5$'$ grid for both cropland and
-pasture.  The ``open'' class in this data set has been renamed from
-``pasture'' in its creator's nomenclature, but it is clear from its
-ditribution shown in \autoref{fig:agland} that it represents a
-phenomena that is not apparent in the MLCT data, so we do not attempt
-to use it or reconcile it here, rather only carry it along to a small
-degree for sake of comparison.  We attribute this discrepancy to
-commingling of managed pasture lands and natural open land in the MLCT
-classification.  It is important to note that Agland2000 is used as an
-input into the classification algorithm of the version of MLCT that we
-are using here and acknowledge the possibility of circularity when
-comparing the two, but because of its basis in census data we will use
-the cropland component of Agland2000 as an ``observed truth'' for the
-purposes of evaluating our incremental adjustments to the maps we
-derive from MLCT in \autoref{cha:analysis}.
-  
-@ 
-<<agland>>=
-
-setwd( dataWd)  
-setwd( "agland")
-
-agland <- stack( list.files( patt="(cropland|pasture).tif$"))
-layerNames(agland) <- c("crop", "open")
-agland <- setMinMax( agland)
-  
-thumbAgland <-
-  if( overwriteRasters) {
-    crop( agland,
-         extent(-83.5, -(82+25/60),
-                42+55/60, 44+5/60),
-         filename= "thumbAgland.tif",
-         progress="text",
-         overwrite= overwriteRasters)
-  } else brick( list.files( getwd(),
-                           "thumbAgland.tif",
-                           full.names= TRUE,
-                           recursive= TRUE))
-layerNames( thumbAgland) <- c("crop", "open")
-                                        # crop() returns a brick
-
-## overwriteFigures <- TRUE
-
-if( overwriteFigures) {
-  thumbAglandPlot <-
-    coverMaps( thumbAgland, 1) +
-      coord_equal() +
-      facet_grid( variable ~ .)
-
-  aglandPlot <-
-    coverMaps( agland, 0.4) +
-      coord_equal() +
-      facet_grid( variable ~ .)
-
-}
-
-##     sapply( layerNames( thumbAgland),
-##            function( cover) {
-##              ggplotRaster( agland[[ cover]]) + 
-##                scale_fill_gradientn( paste("%", cover),
-##                                     colours=rev( brewer.pal( 7, "YlGn")), 
-##                                     limits= c( 100, 0),
-##                                     breaks= seq( 100, 0, by= -20))
-##            })
-## }
-
-
-@ 
-%def 
-
-\begin{figure}[hpt]
-\begin{center}
-  
-<<fig_thumb_agland>>= 
-
-##setwd( texWd)
-if( overwriteFigures) {
-  ## png( file="fig_thumb_agland.png")
-  ## print( thumbAglandPlot)
-  ## dev.off()
-  my.ggsave( paste( texWd, "fig_thumb_agland.png", sep="/"),
-         plot= thumbAglandPlot)
-}
-
-@ 
-
-\includegraphics{fig_thumb_agland}
-\end{center} 
-\caption{Agland2000 distribution in detail area}
-\label{fig:thumb_agland} 
-\end{figure} 
-
-\begin{figure}[hpt]
-\begin{center}
-  
-<<fig_agland>>= 
-
-if( overwriteFigures) {
-  setwd( texWd)
-  my.ggsave( "fig_agland.png",
-         plot= aglandPlot)
-  ##png( file="fig_agland.png")
-  ##print( aglandPlot) # +coord_equal() +facet_wrap( ~ variable, ncol= 1))
-  ##dev.off()
-  system( "convert -trim fig_agland.png fig_agland_trim.png")
-}
-
-@ 
-
-\includegraphics{fig_agland_trim}
-\end{center} 
-\caption{Agland2000 distribution in cUSA study area}
-\label{fig:agland} 
-\end{figure} 
-
-
-\begin{comment}
-\section{Major Land Uses (MLU)}
-\label{sec:mlu}
-
-This is a tabular data set published by the Economic Research Service
-(ERS) at the USDA of land acreages by various uses and covers at a
-state level.  We hope to compare our results to this data on a
-state-by-state basis in order as a check and possibly incorporate some
-of its information as a refinement.
-
-@ 
-<<mlu,eval=FALSE>>=
-
-setwd( texWd)
-
-cusaDf <- readOGR("PG:host=db dbname=cim","gadm.cusa")
-
-cusa <- raster(mlct$pri)
-res(cusa) <- 5/60
-
-cusa <- rasterize( cusaDf, cusa, field= "id_1", filename= "gadm1_cusa.tif")
-
-foo <- raster("nlcd_agg.tif")                  
-gadm <- raster( foo)                 
-res(gadm) <- 15/3600                  
-gadm[] <- 0                  
-writeRaster(gadm, filename= "foo.tif", overwrite=TRUE, NAflag=0)
-system( "gdal_translate -ot UInt16 -a_nodata 0 foo.tif gadm1_cusa.tif")                  
-                  
-system( "gdal_rasterize -at -a id_1 -ot UInt16 -l gadm.cusa 'PG:host=db dbname=cim' gadm1_cusa.tif")
-
-@ %def 
-\end{comment}
 
 \section{National Land-cover Database 2001 (NLCD)}
 \label{sec:nlcd}
 
-\citet{Homer2004}
-
 
 The NLCD gives a higer-resolution (30m) snapshot of LULC circa 2001.
-\todo{check whether/how urban, water, wetland are informed with priors
-  in NLCD} Reclassifying and aggregating this data to 5-arcmin
-resolution in a fashion similar to that used for the MLCT is expected
-to give better estimations of aggregate area for detailed features
-like rural transportation networks and small stream and wetland
-features.  This will compensate for MLCT's bias against these finely
-detailed structures due to it's resolution.  It is the availability of
-this information that makes it difficult to apply this analysis beyond
-the United States without access to a comparable data set with global
-extents.  The analysis is restricted to the conterminous US because of
-the relative paucity of agricultural activity in Hawaii and Alaska.
+Because NLCD's classification was informed by ancillary data sets such
+as population density, buffered roads, and the National Wetland
+Inventory \citep{Homer2004} reclassifying and aggregating this data to
+5-arcmin resolution in a fashion similar to that used for the MLCT is
+expected to give better estimations of aggregate area for detailed
+features like rural transportation networks and small stream and
+wetland features.  This is supported by the statment in
+\citet{Homer2007} that part of the NLCD post-processing algorithm was
+designed ``to allow non-linear features like roads and streams to
+remain intact.''  Although it is unclear from \citet{Homer2004} what
+ancillary data was applied in what consituent mapping zones of the
+NLCD we accept its representation of these fine details to be the best
+available data.  This will compensate for MLCT's bias against these
+finely detailed structures due to it's resolution.  It is the
+availability of this information that makes it difficult to apply this
+analysis beyond the United States without access to a comparable data
+set with global extents.  The analysis is restricted to the
+conterminous US because of the relative paucity of agricultural
+activity in Hawaii and Alaska.
 
 As with the MLCT the process of reclassification and aggregation is
 performed for both the detail region and the complete region.
@@ -1222,7 +1028,54 @@ thumbNlcd <- list( pri=raster( "thumbNlcd.tif"))
 \subsection{Reclassification}
 \label{sec:nlcd-reclass}
 
-\missingfigure{NLCD reclassification table}
+
+\begin{center}
+  \begin{table}[htbp]
+    \begin{tabular}{|l|l|l|l|}
+      \hline
+      \multicolumn{2}{|c|}{NLCD} & \multicolumn{2}{|c|}{PEEL} \\
+      \hline
+      11 & water & \multirow{3}{*}{0} & \multirow{3}{*}{water} \\
+      98 & palustrine aquatic bed* & & \\
+      99 & estuarine aquatic bed* & & \\
+      \hline
+      41 & deciduous forest & \multirow{3}{*}{1} & \multirow{3}{*}{forest} \\
+      42 & evergreen forest & & \\
+      43 & mixed forest & & \\
+      \hline
+      52 & shrub / scrub & \multirow{2}{*}{2} & \multirow{2}{*}{shrub} \\
+      94 & estuarine scrub/shrub wetland & & \\
+      \hline
+      71 & grassland / herbaceous & \multirow{2}{*}{3} & \multirow{2}{*}{open} \\
+      81 & pasture / hay & & \\
+      \hline
+      90--93 & woody wetlands & \multirow{2}{*}{4} & \multirow{2}{*}{wetland} \\
+      % 91 & palustrine forested wetland* & & \\
+      % 92 & palustrine scrub/shrub wetland* & & \\
+      % 93 & estuarine forested wetland* & & \\
+      % 94 & estuarine scub/shrub wetland* & & \\
+      95--97 & emergent herbaceous wetlands & & \\
+      % 96 & palustrine emergent wetland (persistent)* & & \\
+      % 97 & palustrine scrub/shrub wetland* & & \\
+      \hline
+      82 & cultivated crops & 5 & crop \\
+      \hline
+      21 & developed, open space & \multirow{4}{*}{6} & \multirow{4}{*}{urban} \\
+      22 & developed, low intensity & & \\
+      23 & developed, medium intensity & & \\
+      24 & developed, high intensity & & \\
+      \hline
+       & (no equivalent) & 7 & mosaic \\
+      \hline
+      12 & perennial ice/snow & \multirow{2}{*}{8} & \multirow{2}{*}{barren} \\
+      31 & barren land & & \\  
+      32 & unconsolidated shore & & \\  
+      \hline
+    \end{tabular}
+    \caption{Reclassification of NLCD to PEEL}
+    \label{tab:mlct_reclass}
+  \end{table}
+\end{center}
 
 @ 
 <<thumb_nlcd_reclass>>=
@@ -1246,11 +1099,9 @@ if( overwriteFigures) {
 @
 <<fig_thumb_nlcd_reclass>>= 
 
-setwd( texWd)
 if( overwriteFigures) {
-  png( file="fig_thumb_nlcd_reclass.png")
-  print( thumbNlcdPlot + coord_equal())
-  dev.off()
+  my.ggsave( texWd, "fig_thumb_nlcd_reclass.png",
+            plot= thumbNlcdPlot)
 }
 
 @ 
@@ -1266,13 +1117,11 @@ if( overwriteFigures) {
   
 <<fig_thumb_nlcd_facet>>= 
 
-setwd( texWd)
 if( overwriteFigures) {
-  png( file="fig_thumb_nlcd_facet.png")
-  print( thumbNlcdPlot + 
-        facet_wrap(~ values) + 
-        opts( legend.position= "none"))
-  dev.off()
+  my.ggsave( texWd, "fig_thumb_nlcd_facet.png",
+            plot= thumbNlcdPlot + 
+              facet_wrap(~ values) + 
+              opts( legend.position= "none"))
 }
 
 @ 
@@ -1312,7 +1161,6 @@ if( overwriteFigures) {
   thumbNlcdAggPlot <- coverMaps( thumbNlcd$agg, 1)
 }
 
-## overwriteRasters <- FALSE
 @ 
 
 \begin{figure}[hpt] 
@@ -1320,15 +1168,9 @@ if( overwriteFigures) {
   
 <<fig_thumb_nlcd_agg>>= 
 
-## overwriteRasters <- TRUE
-## overwriteFigures <- TRUE
-
-
-setwd( texWd)
 if( overwriteFigures) {
-  png( file="fig_thumb_nlcd_agg.png")
-  print( thumbNlcdAggPlot)
-  dev.off()
+  my.ggsave( texWd, "fig_thumb_nlcd_agg.png",
+            plot= thumbNlcdAggPlot)
 }
 
 @ 
@@ -1340,7 +1182,7 @@ if( overwriteFigures) {
 \label{fig:thumb_nlcd_agg}
 \end{figure} 
 
-
+\todo{ Split \autoref{fig:mlct_nlcd_agg} into two figures.}
 
 @ 
 <<nlcd>>=
@@ -1367,12 +1209,10 @@ layerNames(nlcd) <- names( peelClasses[ -8])
   
 <<fig_nlcd>>= 
 
-setwd( texWd)
 if( overwriteFigures) {
   nlcdPlot <- coverMaps( nlcd, 0.1) +
-    coord_equal() +
     facet_grid( variable ~ .)
-  my.ggsave( "fig_nlcd.png", width=5.5, height=8)
+  my.ggsave( texWd, "fig_nlcd.png", width=5.5, height=8)
 }
 
 @ 
@@ -1452,6 +1292,129 @@ cdl_il <- aggregateFractions( cdl_il, overwrite=TRUE, progress="text")
 \subsection{Aggregation}
 \label{sec:cdl-aggr}
 \end{comment}
+
+\section{Agricultural Lands in the Year 2000 (Agland2000)}
+\label{sec:agland2000}
+
+
+The data set described by \citet{Ramankutty2008}, referred to in this
+paper as ``Agland2000'', is the product of an effort to merge
+satellite-derived LULC classifications with census data of arable land
+and permanent crops compiled at national or sub-national levels
+according to availability of such data at or near the turn of the last
+century.  It uses two classified LULC data sets derived from remote
+sensing data as inputs, an older version of the MLCT (known as
+BU-MODIS) and the GLC2000 data set mentioned in
+\autoref{sec:background}.  Its allocation of cropland and pastures is
+constrained by a mask based on climatic criteria in order tp avoid
+misallocation at higher latitudes, mainly a problem in boreal Canada
+which should have little to no bearing on our study area.  The
+``open'' class in this data set has been renamed from ``pasture'' in
+its creator's nomenclature, but it is clear from its distribution
+shown in \autoref{fig:agland} that it represents a phenomena that is
+not apparent in the MLCT data, so we do not attempt to use it or
+reconcile it here, rather only carry it along to a small degree for
+sake of comparison.  We attribute this discrepancy to commingling of
+managed pasture lands and natural open land in the MLCT
+classification.  It is important to note that Agland2000 is used as an
+input into the classification algorithm of the version of MLCT that we
+are using here and acknowledge the possibility of circularity when
+comparing the two, but because of its basis in census data we will use
+the cropland component of Agland2000 as an ``observed truth'' for the
+purposes of evaluating our incremental adjustments to the maps we
+derive from MLCT in \autoref{cha:analysis}.
+  
+@ 
+<<agland>>=
+
+setwd( dataWd)  
+setwd( "agland")
+
+agland <- stack( list.files( patt="(cropland|pasture).tif$"))
+layerNames(agland) <- c("crop", "open")
+agland <- setMinMax( agland)
+  
+thumbAgland <-
+  if( overwriteRasters) {
+    crop( agland,
+         extent(-83.5, -(82+25/60),
+                42+55/60, 44+5/60),
+         filename= "thumbAgland.tif",
+         progress="text",
+         overwrite= overwriteRasters)
+  } else brick( list.files( getwd(),
+                           "thumbAgland.tif",
+                           full.names= TRUE,
+                           recursive= TRUE))
+layerNames( thumbAgland) <- c("crop", "open")
+                                        # crop() returns a brick
+
+## overwriteFigures <- TRUE
+
+if( overwriteFigures) {
+  thumbAglandPlot <-
+    coverMaps( thumbAgland, 1) +
+      facet_grid( variable ~ .)
+
+  aglandPlot <-
+    coverMaps( agland, 0.4) +
+      facet_grid( variable ~ .)
+
+}
+
+##     sapply( layerNames( thumbAgland),
+##            function( cover) {
+##              ggplotRaster( agland[[ cover]]) + 
+##                scale_fill_gradientn( paste("%", cover),
+##                                     colours=rev( brewer.pal( 7, "YlGn")), 
+##                                     limits= c( 100, 0),
+##                                     breaks= seq( 100, 0, by= -20))
+##            })
+## }
+
+
+@ 
+%def 
+
+\begin{figure}[hpt]
+\begin{center}
+  
+<<fig_thumb_agland>>= 
+
+if( overwriteFigures) {
+  my.ggsave( texWd, "fig_thumb_agland.png",
+            plot= thumbAglandPlot)
+}
+
+@ 
+
+\includegraphics{fig_thumb_agland}
+\end{center} 
+\caption{Agland2000 distribution in detail area}
+\label{fig:thumb_agland} 
+\end{figure} 
+
+\begin{figure}[hpt]
+\begin{center}
+  
+
+<<fig_agland>>= 
+
+if( overwriteFigures) {
+  my.ggsave( texWd, "fig_agland.png",
+         plot= aglandPlot)
+  system( sprintf( "convert -trim %s/fig_agland.png %s/fig_agland_trim.png",
+                  texWd, texWd))
+}
+
+@ 
+
+\includegraphics{fig_agland_trim}
+\end{center} 
+\caption{Agland2000 distribution in cUSA study area}
+\label{fig:agland} 
+\end{figure} 
+
 
 \section{Harvested Area and Yields of 175 Crops (175crops2000)}
 \label{sec:175crops2000}
@@ -1556,12 +1519,12 @@ names( catMasked) <- names( catStacks)
 
 <<fig_crops, eval=FALSE>>= 
 
-setwd( texWd)
 if( overwriteFigures) {
-  cropsMap <- coverMaps( stack( catMasked), 0.2) +
-    coord_equal() +
-      facet_grid( variable ~ .)
-  my.ggsave( "fig_crops.png", width=5.5, height=8)
+  cropsMap <-
+    coverMaps( stack( catMasked), 0.2) +
+    facet_grid( variable ~ .)
+  my.ggsave( texWd, "fig_crops.png",
+            width=5.5, height=8)
 }
 setwd( dataWd)
 
@@ -1574,6 +1537,7 @@ setwd( dataWd)
 \label{fig:crops} 
 \end{figure} 
 
+\todo{ Split \autoref{fig:crops} into two figures and adjust fill limits.}
 
 %%% Local Variables: 
 %%% mode: latex

@@ -1,3 +1,5 @@
+theme_set( theme_bw())
+
 theme_update( panel.grid.minor= theme_blank(),
              panel.grid.major= theme_blank(),
              panel.background= theme_blank(),
@@ -5,6 +7,9 @@ theme_update( panel.grid.minor= theme_blank(),
              axis.text.x= theme_text( angle= 90, hjust=1),
              axis.title.y= theme_blank())
 
+theme_map <- theme_get()
+
+theme_set( theme_bw())
 
 ggplotRaster <- function( r, samp) {
   df <- data.frame( as( sampleRegular( r, ncell( r)*samp, 
@@ -17,15 +22,10 @@ ggplotRaster <- function( r, samp) {
     theme_bw() +
     scale_x_continuous( limits= c( ext@xmin, ext@xmax),
                        expand= c( 0,0)) +
-    scale_y_continuous(  limits= c( ext@ymin, ext@ymax),
-                       expand= c( 0,0)) ##+
-  ## opts( panel.grid.minor= theme_blank(),
-  ##         panel.grid.major= theme_blank(),
-  ##         panel.background= theme_blank(),
-  ##             axis.title.x= theme_blank(),
-  ##              axis.text.x= theme_text( angle= 90, hjust=1),
-  ##             axis.title.y= theme_blank())
-  
+    scale_y_continuous( limits= c( ext@ymin, ext@ymax),
+                       expand= c( 0,0)) +
+    theme_map +
+    coord_equal()
 }
 
 
@@ -39,7 +39,7 @@ peelMap <- function( r, samp) {
                     fill= values)) + 
     scale_fill_manual( "",
                       values= peelLegend, 
-                      breaks= names( peelClasses))
+                      breaks= names( peelClasses)) 
 }
 
              
@@ -50,31 +50,25 @@ coverMaps <- function( r, samp=1, ...) {
                        "SpatialGridDataFrame"))
   names( df)[ grep( "^values", names( df))] <- layerNames( r)
   df <- melt( df, id.vars= c("s1", "s2"))
-  ## name paraameters seem to have no effect -- need to upgrade?
-  ## p <- p %+% reshape2::melt( p$data,
-  ##                           id.vars= c("s1", "s2"),
-  ##                           variable.name= "cover",
-  ##                           value.name= "frac")
   ggplot( data= df) +
     geom_tile( aes( x= s1, y= s2, fill= value)) +
     theme_bw() +
     scale_x_continuous( expand= c( 0,0)) +
     scale_y_continuous( expand= c( 0,0)) +
-    ## opts( panel.grid.minor= theme_blank(),
-    ##       panel.grid.major= theme_blank(),
-    ##       panel.background= theme_blank(),
-    ##           axis.title.x= theme_blank(),
-    ##            axis.text.x= theme_text( angle= 90, hjust=1),
-    ##           axis.title.y= theme_blank()) +
     scale_fill_gradientn( colours= rev( brewer.pal( 6, "YlGn")), 
                          limits= c( 1, 0),
                          breaks= seq( 1, 0, by= -0.2)) +
-    facet_wrap(~ variable)
+    facet_wrap(~ variable) +
+    theme_map +
+    coord_equal()
 }
 
-my.ggsave <- function(filename = default_name(plot),
-                      height= 3.5, width= 3.5, dpi= 72, ...) {
-  ggsave(filename=filename, height=height, width=width, dpi=dpi, ...)
+my.ggsave <- function( wd= getwd(),
+                      filename= default_name(plot),
+                      height= 3.5, width= 3.5, ...) {
+  ggsave(filename= paste( wd, filename, sep= "/"),
+         height= height,
+         width= width, ...)
 }
 
 coverDiffMaps <-

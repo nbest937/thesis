@@ -1,4 +1,5 @@
-s% -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
+% -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
+
 
 
 
@@ -87,8 +88,43 @@ The following table shows the mapping of the IGBP classes used in the
 original MLCT data to the simplified classification designed for the
 PEEL model.
 
-\missingfigure{MLCT reclassification table}
-
+\begin{center}
+  \begin{table}[htbp]
+    \begin{tabular}{|l|l|l|l|}
+      \hline
+      \multicolumn{2}{|c|}{MLCT/IGBP} & \multicolumn{2}{|c|}{PEEL} \\
+      \hline
+      0 & water & 0 & water \\
+      \hline
+      1 & evergreen needleleaf forest & \multirow{5}{*}{1} & \multirow{5}{*}{forest} \\
+      2 & deciduous needleleaf forest & & \\
+      3 & evergreen broadleaf forest & & \\
+      4 & deciduous broadleaf forest & & \\
+      5 & mixed forests & & \\
+      \hline
+      6 & closed shrublands & \multirow{3}{*}{2} & \multirow{3}{*}{shrub} \\
+      7 & open shrublands & & \\
+      8 & woody savannas & & \\
+      \hline
+      9 & savannas & \multirow{2}{*}{3} & \multirow{2}{*}{open} \\
+      10 & grasslands & & \\
+      \hline
+      11 & permanent wetlands & 4 & wetland \\
+      \hline
+      12 & croplands & 5 & crop \\
+      \hline
+      13 & urban & 6 & urban \\
+      \hline
+      14 & cropland / natural vegetation mosaics & 7 & mosaic \\
+      \hline
+      15 & permanent snow and ice & \multirow{2}{*}{8} & \multirow{2}{*}{barren} \\
+      16 & barren or sparsely vegetated & & \\  
+      \hline
+    \end{tabular}
+    \caption{Reclassification of MLCT/IGBP to PEEL}
+    \label{tab:mlct_reclass}
+  \end{table}
+\end{center}
 
 
 
@@ -222,6 +258,7 @@ covers.
 \label{fig:mlct_pri_reclass} 
 \end{figure} 
 
+\todo{Make cUSA graphics wider or even turn sideways for full-page}
 
 \begin{figure}[hpt] 
 \begin{center}
@@ -255,6 +292,7 @@ covers.
 \label{fig:mlct_pri_facet} 
 \end{figure} 
 
+\todo{ Split \autoref{fig:mlct_pri_facet} into two figures.}
 
 \begin{figure}[hpt] 
 \begin{center}
@@ -266,6 +304,7 @@ covers.
 \label{fig:mlct_sec_facet} 
 \end{figure} 
 
+\todo{ Split \autoref{fig:mlct_sec_facet} into two figures.}
 
 \subsection{Aggregation}
 \label{sec:mlct-aggr}
@@ -280,9 +319,12 @@ confidence up to 100\%, and a secondary classification.  The secondary
 cover type is given as the most likely alternative to the primary type
 \citep{Friedl2010}, but for purposes of our analysis we are taking a
 more probabilistic view and incorporating all available information
-from the base data.  Because we are aggregating the data up to
+from the base data.  We are not as concerned about per-pixel
+classification error as users working at the MLCT's native resolution
+might be, which is the original motivation given for providing the
+secondary classification.  Because we are aggregating the data up to
 5-arcmin resolution there is no expectation that the sub-pixel
-fractions at full resolution are spaitally specific, but in the
+fractions at full resolution are spatially specific, but in the
 aggregate our characterization of each grid cell's composition will be
 nuanced by this additional information.  The primary class covers at
 least roughly 50-60\% of a given pixel $x$, and this percent is almost
@@ -349,7 +391,7 @@ closely after aggregating to the 5$'$ grid.
 
 \begin{figure}[hpt] 
 \begin{center}
-  
+
 
 \includegraphics{fig_thumb1_fracs}
 \end{center} 
@@ -434,11 +476,11 @@ indicated by the secondary classes in those areas.
 %\label{sec:agg-analysis-area}
 
 
-We apply the same functions for calculating the 15$''$-resolution map
+We apply the same functions for calculating the $15''$-resolution map
 of the primary cover class as a function of the confidence level $c$
 for the entire cUSA study area, converting those to per-class
 fractions at the same extent and scale, and aggregating those values
-to the 5$'$ grid.  The corresponding figures are not shown because the
+to the $5'$ grid.  The corresponding figures are not shown because the
 decrease in relative resolution makes interpretation difficult.  Based
 on the behavior that these functions exhibited over the detail area we
 can be confident that they will perform correctly over the greater
@@ -553,87 +595,32 @@ chapter.
 % test. \todo{illustrate/demonstrate the RMSE test on the 5-arcmin MLCT
 %   data sets}
 
-\section{Agricultural Lands in the Year 2000 (Agland2000)}
-\label{sec:agland2000}
 
-
-The data set described by \citet{Ramankutty2008}, referred to in this
-paper as ``Agland2000'', is the product of an effort to merge
-satellite-derived LULC classifications with census data of
-agricultural actviity compiled at national or sub-national levels
-according to availability on around the turn of the last century.  It
-uses both an older version of the MLCT (known as BU-MODIS) and the
-GLC2000 data set mentioned in \autoref{sec:background} and a mask
-based on climatic criteria and delineations of protected areas to
-allocate the census data to the 5$'$ grid for both cropland and
-pasture.  The ``open'' class in this data set has been renamed from
-``pasture'' in its creator's nomenclature, but it is clear from its
-ditribution shown in \autoref{fig:agland} that it represents a
-phenomena that is not apparent in the MLCT data, so we do not attempt
-to use it or reconcile it here, rather only carry it along to a small
-degree for sake of comparison.  We attribute this discrepancy to
-commingling of managed pasture lands and natural open land in the MLCT
-classification.  It is important to note that Agland2000 is used as an
-input into the classification algorithm of the version of MLCT that we
-are using here and acknowledge the possibility of circularity when
-comparing the two, but because of its basis in census data we will use
-the cropland component of Agland2000 as an ``observed truth'' for the
-purposes of evaluating our incremental adjustments to the maps we
-derive from MLCT in \autoref{cha:analysis}.
-  
-%def 
-
-\begin{figure}[hpt]
-\begin{center}
-  
-
-\includegraphics{fig_thumb_agland}
-\end{center} 
-\caption{Agland2000 distribution in detail area}
-\label{fig:thumb_agland} 
-\end{figure} 
-
-\begin{figure}[hpt]
-\begin{center}
-  
-
-\includegraphics{fig_agland_trim}
-\end{center} 
-\caption{Agland2000 distribution in cUSA study area}
-\label{fig:agland} 
-\end{figure} 
-
-
-\begin{comment}
-\section{Major Land Uses (MLU)}
-\label{sec:mlu}
-
-This is a tabular data set published by the Economic Research Service
-(ERS) at the USDA of land acreages by various uses and covers at a
-state level.  We hope to compare our results to this data on a
-state-by-state basis in order as a check and possibly incorporate some
-of its information as a refinement.
-
-\end{comment}
 
 \section{National Land-cover Database 2001 (NLCD)}
 \label{sec:nlcd}
 
-\citet{Homer2004}
-
 
 The NLCD gives a higer-resolution (30m) snapshot of LULC circa 2001.
-\todo{check whether/how urban, water, wetland are informed with priors
-  in NLCD} Reclassifying and aggregating this data to 5-arcmin
-resolution in a fashion similar to that used for the MLCT is expected
-to give better estimations of aggregate area for detailed features
-like rural transportation networks and small stream and wetland
-features.  This will compensate for MLCT's bias against these finely
-detailed structures due to it's resolution.  It is the availability of
-this information that makes it difficult to apply this analysis beyond
-the United States without access to a comparable data set with global
-extents.  The analysis is restricted to the conterminous US because of
-the relative paucity of agricultural activity in Hawaii and Alaska.
+Because NLCD's classification was informed by ancillary data sets such
+as population density, buffered roads, and the National Wetland
+Inventory \citep{Homer2004} reclassifying and aggregating this data to
+5-arcmin resolution in a fashion similar to that used for the MLCT is
+expected to give better estimations of aggregate area for detailed
+features like rural transportation networks and small stream and
+wetland features.  This is supported by the statment in
+\citet{Homer2007} that part of the NLCD post-processing algorithm was
+designed ``to allow non-linear features like roads and streams to
+remain intact.''  Although it is unclear from \citet{Homer2004} what
+ancillary data was applied in what consituent mapping zones of the
+NLCD we accept its representation of these fine details to be the best
+available data.  This will compensate for MLCT's bias against these
+finely detailed structures due to it's resolution.  It is the
+availability of this information that makes it difficult to apply this
+analysis beyond the United States without access to a comparable data
+set with global extents.  The analysis is restricted to the
+conterminous US because of the relative paucity of agricultural
+activity in Hawaii and Alaska.
 
 As with the MLCT the process of reclassification and aggregation is
 performed for both the detail region and the complete region.
@@ -653,7 +640,54 @@ even factor of 240 between the two resolutions.
 \subsection{Reclassification}
 \label{sec:nlcd-reclass}
 
-\missingfigure{NLCD reclassification table}
+
+\begin{center}
+  \begin{table}[htbp]
+    \begin{tabular}{|l|l|l|l|}
+      \hline
+      \multicolumn{2}{|c|}{NLCD} & \multicolumn{2}{|c|}{PEEL} \\
+      \hline
+      11 & water & \multirow{3}{*}{0} & \multirow{3}{*}{water} \\
+      98 & palustrine aquatic bed* & & \\
+      99 & estuarine aquatic bed* & & \\
+      \hline
+      41 & deciduous forest & \multirow{3}{*}{1} & \multirow{3}{*}{forest} \\
+      42 & evergreen forest & & \\
+      43 & mixed forest & & \\
+      \hline
+      52 & shrub / scrub & \multirow{2}{*}{2} & \multirow{2}{*}{shrub} \\
+      94 & estuarine scrub / shrub wetland & & \\
+      \hline
+      71 & grassland / herbaceous & \multirow{2}{*}{3} & \multirow{2}{*}{open} \\
+      81 & pasture / hay & & \\
+      \hline
+      90--93 & woody wetlands & \multirow{2}{*}{4} & \multirow{2}{*}{wetland} \\
+      % 91 & palustrine forested wetland* & & \\
+      % 92 & palustrine scrub/shrub wetland* & & \\
+      % 93 & estuarine forested wetland* & & \\
+      % 94 & estuarine scub/shrub wetland* & & \\
+      95--97 & emergent herbaceous wetlands & & \\
+      % 96 & palustrine emergent wetland (persistent)* & & \\
+      % 97 & palustrine scrub/shrub wetland* & & \\
+      \hline
+      82 & cultivated crops & 5 & crop \\
+      \hline
+      21 & developed, open space & \multirow{4}{*}{6} & \multirow{4}{*}{urban} \\
+      22 & developed, low intensity & & \\
+      23 & developed, medium intensity & & \\
+      24 & developed, high intensity & & \\
+      \hline
+       & (no equivalent) & 7 & mosaic \\
+      \hline
+      12 & perennial ice/snow & \multirow{2}{*}{8} & \multirow{2}{*}{barren} \\
+      31 & barren land & & \\  
+      32 & unconsolidated shore & & \\  
+      \hline
+    \end{tabular}
+    \caption{Reclassification of NLCD to PEEL}
+    \label{tab:mlct_reclass}
+  \end{table}
+\end{center}
 
 
 \begin{figure}[hpt] 
@@ -699,7 +733,7 @@ expensive due to the NLCD's high resolution.
 \label{fig:thumb_nlcd_agg}
 \end{figure} 
 
-
+\todo{ Split \autoref{fig:mlct_nlcd_agg} into two figures.}
 
 
 \begin{figure}[hpt] 
@@ -744,6 +778,61 @@ data set.
 \label{sec:cdl-aggr}
 \end{comment}
 
+\section{Agricultural Lands in the Year 2000 (Agland2000)}
+\label{sec:agland2000}
+
+
+The data set described by \citet{Ramankutty2008}, referred to in this
+paper as ``Agland2000'', is the product of an effort to merge
+satellite-derived LULC classifications with census data of arable land
+and permanent crops compiled at national or sub-national levels
+according to availability of such data at or near the turn of the last
+century.  It uses two classified LULC data sets derived from remote
+sensing data as inputs, an older version of the MLCT (known as
+BU-MODIS) and the GLC2000 data set mentioned in
+\autoref{sec:background}.  Its allocation of cropland and pastures is
+constrained by a mask based on climatic criteria in order tp avoid
+misallocation at higher latitudes, mainly a problem in boreal Canada
+which should have little to no bearing on our study area.  The
+``open'' class in this data set has been renamed from ``pasture'' in
+its creator's nomenclature, but it is clear from its distribution
+shown in \autoref{fig:agland} that it represents a phenomena that is
+not apparent in the MLCT data, so we do not attempt to use it or
+reconcile it here, rather only carry it along to a small degree for
+sake of comparison.  We attribute this discrepancy to commingling of
+managed pasture lands and natural open land in the MLCT
+classification.  It is important to note that Agland2000 is used as an
+input into the classification algorithm of the version of MLCT that we
+are using here and acknowledge the possibility of circularity when
+comparing the two, but because of its basis in census data we will use
+the cropland component of Agland2000 as an ``observed truth'' for the
+purposes of evaluating our incremental adjustments to the maps we
+derive from MLCT in \autoref{cha:analysis}.
+  
+%def 
+
+\begin{figure}[hpt]
+\begin{center}
+  
+
+\includegraphics{fig_thumb_agland}
+\end{center} 
+\caption{Agland2000 distribution in detail area}
+\label{fig:thumb_agland} 
+\end{figure} 
+
+\begin{figure}[hpt]
+\begin{center}
+  
+
+
+\includegraphics{fig_agland_trim}
+\end{center} 
+\caption{Agland2000 distribution in cUSA study area}
+\label{fig:agland} 
+\end{figure} 
+
+
 \section{Harvested Area and Yields of 175 Crops (175crops2000)}
 \label{sec:175crops2000}
 
@@ -778,6 +867,7 @@ classified by MLCT as forest or shrub in this step.
 \label{fig:crops} 
 \end{figure} 
 
+\todo{ Split \autoref{fig:crops} into two figures and adjust fill limits.}
 
 %%% Local Variables: 
 %%% mode: latex

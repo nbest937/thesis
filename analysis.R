@@ -168,7 +168,7 @@ if( overwriteFigures) areasPlot <-
                     breaks= names( peelClasses)) +
   scale_y_continuous( "Ma",
       limits= c(0,2000)) +
-  theme_bw() +
+  theme_bw( base_family= "serif") +
   scale_x_discrete( "",
       limits= rasterNames[ c( 1, 2, 4, 3, 6, 5)],
       breaks= rasterNames[ c( 1, 2, 4, 3, 6, 5)],
@@ -212,7 +212,7 @@ rownames( areasCt) <- levels( areasDf$class)
 ###################################################
 ### chunk number 2: tab_areas
 ###################################################
-#line 323 "/home/nbest/thesis/analysis.Rnw"
+#line 321 "/home/nbest/thesis/analysis.Rnw"
 
 
 local({
@@ -239,7 +239,7 @@ local({
 ###################################################
 ### chunk number 3: fig_areas
 ###################################################
-#line 350 "/home/nbest/thesis/analysis.Rnw"
+#line 348 "/home/nbest/thesis/analysis.Rnw"
 
 if( overwriteFigures) {  
   setwd( texWd)
@@ -252,7 +252,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 4: rmse
 ###################################################
-#line 415 "/home/nbest/thesis/analysis.Rnw"
+#line 413 "/home/nbest/thesis/analysis.Rnw"
 
 
 rmseDf <- ldply( list("nomos05", "nomos1"),
@@ -274,29 +274,6 @@ colnames(cropScatDf) <-
 cropScatDf$weight <- with( cropScatDf, acres/ max(acres))
 
 
-if( overwriteFigures) scatPlot1 <-
-  ggplot( data=
-         cropScatDf, ##[ sample( 1:nrow(cropScatDf),
-                     ##       round( nrow(cropScatDf) *0.05)),],
-         aes( agland, nomos1,
-             size= weight)) +
-  geom_point( alpha= 0.03) +
-  scale_area( limits= c(0.7, 1),
-             breaks= seq( 0.7, by= 0.1),
-             to= c(0.7, 1) *6) +
-  geom_abline( size= 2,
-              alpha= 0.4) +
-  theme_bw() +
-  scale_x_continuous( "Agland2000",
-                     limits= c( 0, 1),
-                     expand= c( 0.025, 0)) +
-  scale_y_continuous( "MLCT, A_min = 1.0",
-                     limits= c( 0, 1),
-                     expand= c( 0.025, 0)) +
-  coord_equal() +
-  opts( legend.position= "none")
-
-
 if( overwriteFigures) hexPlot1 <-
   ggplot( data= cropScatDf,
        ## with( cropScatDf,
@@ -309,27 +286,15 @@ if( overwriteFigures) hexPlot1 <-
   geom_abline( alpha=0.4) +
   scale_x_continuous( "Agland2000") +
   scale_y_continuous( expression(paste("MLCT, ", A[min] == 1.0))) +
-  theme_bw() +
+  theme_bw( base_family= "serif") +
   coord_equal()
 
 
 
 ###################################################
-### chunk number 5: fig_scatplot1
+### chunk number 5: fig_hexplot1
 ###################################################
-#line 481 "/home/nbest/thesis/analysis.Rnw"
-
-if( overwriteFigures) {
-  my.ggsave( texWd, "fig_scatPlot1.png",
-         plot= scatPlot1)
-}
-
-
-
-###################################################
-### chunk number 6: fig_hexplot1
-###################################################
-#line 498 "/home/nbest/thesis/analysis.Rnw"
+#line 456 "/home/nbest/thesis/analysis.Rnw"
 
 if( overwriteFigures) {
   setwd( texWd)
@@ -340,27 +305,9 @@ if( overwriteFigures) {
 
 
 ###################################################
-### chunk number 7: fig_scatplot05
+### chunk number 6: fig_hexplot05
 ###################################################
-#line 552 "/home/nbest/thesis/analysis.Rnw"
-
-if( overwriteFigures) {
-  my.ggsave( texWd, "fig_scatPlot05.png",
-         plot= scatPlot1 +
-         aes(agland, nomos05, size=weight) +
-         scale_y_continuous( "MLCT, A_min = 0.5",
-                            limits= c( 0, 1),
-                            expand= c( 0.025, 0)))
-}
-
-
-
-
-
-###################################################
-### chunk number 8: fig_hexplot05
-###################################################
-#line 577 "/home/nbest/thesis/analysis.Rnw"
+#line 511 "/home/nbest/thesis/analysis.Rnw"
 
 if( overwriteFigures) {
   setwd( texWd)
@@ -378,9 +325,9 @@ if( overwriteFigures) {
 
 
 ###################################################
-### chunk number 9: table_rmse
+### chunk number 7: table_rmse
 ###################################################
-#line 600 "/home/nbest/thesis/analysis.Rnw"
+#line 534 "/home/nbest/thesis/analysis.Rnw"
 
 print( xtable( rmseDf,
               caption= "RMSE, MLCT vs. Agland2000 crop",
@@ -392,9 +339,9 @@ print( xtable( rmseDf,
 
 
 ###################################################
-### chunk number 10: offsets_calc
+### chunk number 8: offsets_calc
 ###################################################
-#line 689 "/home/nbest/thesis/analysis.Rnw"
+#line 623 "/home/nbest/thesis/analysis.Rnw"
 
 nlcdKeep <- stack( llply( names( peelClasses), function( class) {
   if( class %in% c( "water", "wetland", "urban"))
@@ -462,9 +409,9 @@ thumbOffsetsMap <-
 
 
 ###################################################
-### chunk number 11: fig_offsetsmap1
+### chunk number 9: fig_offsetsmap1
 ###################################################
-#line 760 "/home/nbest/thesis/analysis.Rnw"
+#line 694 "/home/nbest/thesis/analysis.Rnw"
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_offsets1.png", plot= offsetsMap1, height= 7)
@@ -473,9 +420,9 @@ if( overwriteFigures) {
 
 
 ###################################################
-### chunk number 12: fig_offsetsmap2
+### chunk number 10: fig_offsetsmap2
 ###################################################
-#line 779 "/home/nbest/thesis/analysis.Rnw"
+#line 713 "/home/nbest/thesis/analysis.Rnw"
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_offsets2.png", plot= offsetsMap2, height= 7)
@@ -484,9 +431,9 @@ if( overwriteFigures) {
 
 
 ###################################################
-### chunk number 13: cor_offsets
+### chunk number 11: cor_offsets
 ###################################################
-#line 807 "/home/nbest/thesis/analysis.Rnw"
+#line 741 "/home/nbest/thesis/analysis.Rnw"
 
 corOffsets <- cor( data.frame(as( nlcdOffsets, "SpatialGridDataFrame"))[, 1:9],
                   use= "complete.obs")
@@ -499,7 +446,7 @@ corOffsetsPlot <-
   ggplot( melt( corOffsets),
          aes( x=X1, y=X2, fill= value)) +
   geom_tile() +
-  theme_bw() +
+  theme_bw( base_family= "serif") +
   opts( panel.grid.minor= theme_blank(),
        panel.grid.major= theme_blank(),
        panel.background= theme_blank(),
@@ -523,9 +470,9 @@ if( overwriteFigures) {
 
 
 ###################################################
-### chunk number 14: cusa_offset
+### chunk number 12: cusa_offset
 ###################################################
-#line 889 "/home/nbest/thesis/analysis.Rnw"
+#line 823 "/home/nbest/thesis/analysis.Rnw"
 
 setwd( rasterWd)
 
@@ -552,9 +499,9 @@ mlctAdj  <- decomposeMosaic( mlctAdj, overwrite= overwriteRasters, progress= "te
 
 
 ###################################################
-### chunk number 15: areas2
+### chunk number 13: areas2
 ###################################################
-#line 919 "/home/nbest/thesis/analysis.Rnw"
+#line 853 "/home/nbest/thesis/analysis.Rnw"
 
 # reuse area table code from above; better to implement a function?
 
@@ -627,9 +574,9 @@ areasCt2 <- areasCt2[ c( names( peelClasses), "(all)"), rasterNames2]
 
 
 ###################################################
-### chunk number 16: restack_check
+### chunk number 14: restack_check
 ###################################################
-#line 992 "/home/nbest/thesis/analysis.Rnw"
+#line 926 "/home/nbest/thesis/analysis.Rnw"
 
 ## check that everything balances
 ## output of decomposeMosaic is not brick()ed properly
@@ -678,9 +625,9 @@ restackOverlay <- function( rasterList, fun) {
 
 
 ###################################################
-### chunk number 17: table_restack_check eval=FALSE
+### chunk number 15: table_restack_check eval=FALSE
 ###################################################
-## #line 1045 "/home/nbest/thesis/analysis.Rnw"
+## #line 979 "/home/nbest/thesis/analysis.Rnw"
 ## 
 ## check <- restackOverlay( c( mlctAdj[ c("nomos", "delta")],
 ##                            nlcdOffsets,
@@ -700,9 +647,9 @@ restackOverlay <- function( rasterList, fun) {
 
 
 ###################################################
-### chunk number 18: table_rmse2
+### chunk number 16: table_rmse2
 ###################################################
-#line 1070 "/home/nbest/thesis/analysis.Rnw"
+#line 1004 "/home/nbest/thesis/analysis.Rnw"
 
                                         # add the RMSE for the new crop map
                                         # and an indication of the NLCD offsets' presence
@@ -735,9 +682,9 @@ print( xtable( rmseDf2,
 
 
 ###################################################
-### chunk number 19: tab_areas2
+### chunk number 17: tab_areas2
 ###################################################
-#line 1113 "/home/nbest/thesis/analysis.Rnw"
+#line 1047 "/home/nbest/thesis/analysis.Rnw"
 
 
 local({
@@ -773,7 +720,7 @@ if( overwriteFigures) areasPlotAdj <-
                     breaks= names( peelClasses)) +
   scale_y_continuous( "Ma",
       limits= c(0,2000)) +
-  theme_bw() +
+  theme_bw( base_family= "serif") +
   scale_x_discrete( "",
       limits= rasterNames2[ rasterNames2 != "nlcdOffsets"],
       breaks= rasterNames2[ rasterNames2 != "nlcdOffsets"],
@@ -807,40 +754,15 @@ colnames(cropScatAdjDf) <-
 cropScatAdjDf$weight <- with( cropScatAdjDf, acres/ max(acres))
 
 
-if( overwriteFigures) scatPlotAdj <-
-  ggplot( data=
-         cropScatAdjDf, ##[ sample( 1:nrow(cropScatAdjDf),
-                       ##         round( nrow(cropScatAdjDf) *0.05)),],
-         aes( agland, mlctAdj,
-             size= weight)) +
-  geom_point( alpha= 0.03) +
-  scale_area( limits= c(0.7, 1),
-             breaks= seq( 0.7, by= 0.1),
-             to= c(0.7, 1) *6) +
-  geom_abline( size= 2,
-              alpha= 0.4) +
-  ##  stat_smooth( method= "lm",
-  ##              se= FALSE,
-  ##              size= 3,
-  ##              alpha= 0.2) +
-  theme_bw() +
-  scale_x_continuous( "Agland2000",
-                     limits= c( 0,1),
-                     expand= c( 0.025,0)) +
-  scale_y_continuous( "MLCT Adjusted",
-                     limits= c( 0,1),
-                     expand= c( 0.025,0)) +
-  coord_equal() +
-  opts( legend.position= "none")
 
 
 
 
 
 ###################################################
-### chunk number 20: fig_offsets
+### chunk number 18: fig_offsets
 ###################################################
-#line 1217 "/home/nbest/thesis/analysis.Rnw"
+#line 1126 "/home/nbest/thesis/analysis.Rnw"
  
 if( overwriteFigures) {
   offsetsPlot <-
@@ -855,7 +777,7 @@ if( overwriteFigures) {
     scale_y_continuous( "Ma", limits=c( -50, 80)) +
     scale_x_discrete( "", breaks= c( names( peelClasses), "total")) +
     coord_flip() +
-    theme_bw() +
+    theme_bw( base_family= "serif") +
     opts( legend.position= "none")
   setwd( texWd)
   ggsave( "fig_offsets.pdf",
@@ -867,9 +789,9 @@ if( overwriteFigures) {
 
 
 ###################################################
-### chunk number 21: fig_areasAdj
+### chunk number 19: fig_areasAdj
 ###################################################
-#line 1282 "/home/nbest/thesis/analysis.Rnw"
+#line 1191 "/home/nbest/thesis/analysis.Rnw"
 
 if( overwriteFigures) {
   setwd( texWd)
@@ -879,21 +801,9 @@ if( overwriteFigures) {
 
 
 ###################################################
-### chunk number 22: fig_scatPlotAdj
+### chunk number 20: fig_hexPlotAdj
 ###################################################
-#line 1298 "/home/nbest/thesis/analysis.Rnw"
-
-if( overwriteFigures) {
-  my.ggsave( texWd, "fig_scatPlotAdj.png",
-         plot= scatPlotAdj)
-}
-
-
-
-###################################################
-### chunk number 23: fig_hexPlotAdj
-###################################################
-#line 1314 "/home/nbest/thesis/analysis.Rnw"
+#line 1208 "/home/nbest/thesis/analysis.Rnw"
 
 if( overwriteFigures) {
   setwd( texWd)
@@ -911,9 +821,9 @@ if( overwriteFigures) {
 
 
 ###################################################
-### chunk number 24: fusion
+### chunk number 21: fusion
 ###################################################
-#line 1339 "/home/nbest/thesis/analysis.Rnw"
+#line 1233 "/home/nbest/thesis/analysis.Rnw"
 
 ## thumbAgland <- crop( agland,
 ##                     extent(-83.5, -(82+25/60), 42+55/60, 44+5/60),
@@ -1057,27 +967,27 @@ agcMap2 <- coverMaps( aglandComplete, 0.4,
 
 
 ###################################################
-### chunk number 25: fig_agc
+### chunk number 22: fig_agc
 ###################################################
-#line 1510 "/home/nbest/thesis/analysis.Rnw"
+#line 1404 "/home/nbest/thesis/analysis.Rnw"
 
 my.ggsave( texWd, "fig_agc.png",
           plot= agcMap, width=4.5, height=8)
 
 
 ###################################################
-### chunk number 26: fig_agc2
+### chunk number 23: fig_agc2
 ###################################################
-#line 1524 "/home/nbest/thesis/analysis.Rnw"
+#line 1418 "/home/nbest/thesis/analysis.Rnw"
 
 my.ggsave( texWd, "fig_agc2.png",
           plot= agcMap2, width=4.5, height=8)
 
 
 ###################################################
-### chunk number 27: table_rmse3
+### chunk number 24: table_rmse3
 ###################################################
-#line 1540 "/home/nbest/thesis/analysis.Rnw"
+#line 1434 "/home/nbest/thesis/analysis.Rnw"
 
 setwd( rasterWd)  
 
@@ -1110,9 +1020,9 @@ print( rmseXt,
 
 
 ###################################################
-### chunk number 28: tab_areas3
+### chunk number 25: tab_areas3
 ###################################################
-#line 1572 "/home/nbest/thesis/analysis.Rnw"
+#line 1466 "/home/nbest/thesis/analysis.Rnw"
 
 areasCt3 <- acreageTable( c( rasterNames2[ c( 1, 2, 4, 7)], "aglandComplete"))
 
@@ -1145,28 +1055,6 @@ colnames(cropScatAgcDf) <-
 cropScatAgcDf$weight <- with( cropScatAgcDf, acres/ max(acres))
 
 
-if( overwriteFigures) scatPlotAgc <-
-  ggplot( data=
-         cropScatAgcDf, ##[ sample( 1:nrow(cropScatAgcDf),
-                       ##         round( nrow(cropScatAgcDf) *0.05)),],
-         aes( agland, agc,
-             size= weight)) +
-  geom_point( alpha= 0.03) +
-  scale_area( limits= c(0.7, 1),
-             breaks= seq( 0.7, by= 0.1),
-             to= c(0.7, 1) *6) +
-  geom_abline( size= 2,
-              alpha= 0.4) +
-  theme_bw() +
-  scale_x_continuous( "Agland2000",
-                     limits= c( 0, 1),
-                     expand= c( 0.025, 0)) +
-  scale_y_continuous( "Agland Complete",
-                     limits= c( 0, 1),
-                     expand= c( 0.025, 0)) +
-  coord_equal() +
-  opts( legend.position= "none")
-
 
 cropScatAgcDf <-
   within( cropScatAgcDf,
@@ -1197,23 +1085,9 @@ agcThemeMap <-
 
 
 ###################################################
-### chunk number 29: fig_scatPlotAgc
+### chunk number 26: fig_hexPlotAgc
 ###################################################
-#line 1663 "/home/nbest/thesis/analysis.Rnw"
-
-if( overwriteFigures) {
-  my.ggsave( texWd, "fig_scatPlotAgc.png",
-         plot= scatPlotAgc)
-}
-
-
-  
-
-
-###################################################
-### chunk number 30: fig_hexPlotAgc
-###################################################
-#line 1684 "/home/nbest/thesis/analysis.Rnw"
+#line 1534 "/home/nbest/thesis/analysis.Rnw"
 
 if( overwriteFigures) {
   setwd( texWd)
@@ -1234,9 +1108,9 @@ if( overwriteFigures) {
 
 
 ###################################################
-### chunk number 31: fig_agcThemeMap
+### chunk number 27: fig_agcThemeMap
 ###################################################
-#line 1713 "/home/nbest/thesis/analysis.Rnw"
+#line 1563 "/home/nbest/thesis/analysis.Rnw"
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_agcThemeMap.png", width=7.5,
@@ -1246,9 +1120,9 @@ if( overwriteFigures) {
 
 
 ###################################################
-### chunk number 32: crop_cats
+### chunk number 28: crop_cats
 ###################################################
-#line 1757 "/home/nbest/thesis/analysis.Rnw"
+#line 1607 "/home/nbest/thesis/analysis.Rnw"
 
 setwd( rasterWd)
 
@@ -1311,9 +1185,9 @@ layerNames( cropSubClasses) <- cropCatsPeel$crop
 
 
 ###################################################
-### chunk number 33: fig_cropSubClassesMap
+### chunk number 29: fig_cropSubClassesMap
 ###################################################
-#line 1824 "/home/nbest/thesis/analysis.Rnw"
+#line 1674 "/home/nbest/thesis/analysis.Rnw"
 
 if( overwriteFigures) {
   cropSubClassesMap <-
@@ -1328,9 +1202,9 @@ if( overwriteFigures) {
 
 
 ###################################################
-### chunk number 34: fig_cropSubClassesMap2
+### chunk number 30: fig_cropSubClassesMap2
 ###################################################
-#line 1845 "/home/nbest/thesis/analysis.Rnw"
+#line 1695 "/home/nbest/thesis/analysis.Rnw"
 
 if( overwriteFigures) {
   cropSubClassesMap2 <-
@@ -1345,9 +1219,9 @@ if( overwriteFigures) {
 
 
 ###################################################
-### chunk number 35: restack_crops
+### chunk number 31: restack_crops
 ###################################################
-#line 1888 "/home/nbest/thesis/analysis.Rnw"
+#line 1738 "/home/nbest/thesis/analysis.Rnw"
 
 
 check <- 
@@ -1416,9 +1290,9 @@ write.csv( format.df( peelDf,
 
 
 ###################################################
-### chunk number 36: cleanup
+### chunk number 32: cleanup
 ###################################################
-#line 1957 "/home/nbest/thesis/analysis.Rnw"
+#line 1807 "/home/nbest/thesis/analysis.Rnw"
 options( prompt= "> ", continue= "+ ", width= 80)
 
 

@@ -8,14 +8,13 @@
 \contentsline {todo}{Figure: {Table of crops and types reproduced from \citep {Monfreda2008}}}{35}{section.2.4}
 \contentsline {todo}{Figure: {Summary table of crop aggregations for our model}}{36}{section.2.4}
 \contentsline {todo}{{Address issue of smaller land mask for 175crops2000 and Agland2000}}{36}{section*.16}
-\contentsline {todo}{{Fix autoref macros that need capitalization}}{40}{section*.17}
 \contentsline {todo}{Figure: {error map for ``nomos'' vs. Agland2000 crop}}{41}{figure.3.1}
-\contentsline {todo}{{Consider also calculating statistical bias (average error)?}}{43}{section*.18}
-\contentsline {todo}{{Fix resolution of NLCD offset maps}}{45}{section*.19}
-\contentsline {todo}{{Should the RMSE tables be rearranged?}}{49}{section*.20}
-\contentsline {todo}{{Should references to the pasture/open data from Aglands2000 be removed?}}{49}{section*.21}
-\contentsline {todo}{{Discuss implications of final area tabulation}}{52}{section*.22}
-\contentsline {todo}{{Check that thematic map came out better (resolution, legend, orientation)}}{52}{section*.23}
-\contentsline {todo}{{Should we elaborate on this validation exercise in the conclusion or just leave it out?}}{60}{section*.24}
-\contentsline {todo}{{Clean up source code by removing commented code that is no longer useful}}{63}{section*.26}
-\contentsline {todo}{{Fix problems with appendix headings}}{63}{section*.27}
+\contentsline {todo}{{Consider also calculating statistical bias (average error)?}}{43}{section*.17}
+\contentsline {todo}{{Fix resolution of NLCD offset maps}}{45}{section*.18}
+\contentsline {todo}{{Should the RMSE tables be rearranged?}}{49}{section*.19}
+\contentsline {todo}{{Should references to the pasture/open data from Aglands2000 be removed?}}{49}{section*.20}
+\contentsline {todo}{{Discuss implications of final area tabulation}}{52}{section*.21}
+\contentsline {todo}{{Check that thematic map came out better (resolution, legend, orientation)}}{52}{section*.22}
+\contentsline {todo}{{Should we elaborate on this validation exercise in the conclusion or just leave it out?}}{60}{section*.23}
+\contentsline {todo}{{Clean up source code by removing commented code that is no longer useful}}{63}{section*.25}
+\contentsline {todo}{{Fix problems with appendix headings}}{63}{section*.26}

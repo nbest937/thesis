@@ -184,7 +184,7 @@ if( overwriteFigures) areasPlot <-
                     breaks= names( peelClasses)) +
   scale_y_continuous( "Ma",
       limits= c(0,2000)) +
-  theme_bw() +
+  theme_bw( base_family= "serif") +
   scale_x_discrete( "",
       limits= rasterNames[ c( 1, 2, 4, 3, 6, 5)],
       breaks= rasterNames[ c( 1, 2, 4, 3, 6, 5)],
@@ -284,8 +284,6 @@ catching up lots of ancillary land that may be associated with
 cultivated land but is not directly involved in crop production. The
 result is an adjusted version of the MLCT data as amended by these
 NLCD offsets.
-
-\todo{Fix autoref macros that need capitalization}
 
 Section~\ref{sec:fusion} presents the results of fusing our adjusted MLCT
 map with the Agland2000 data by accepting the Agland2000 value for
@@ -445,7 +443,7 @@ if( overwriteFigures) hexPlot1 <-
   geom_abline( alpha=0.4) +
   scale_x_continuous( "Agland2000") +
   scale_y_continuous( expression(paste("MLCT, ", A[min] == 1.0))) +
-  theme_bw() +
+  theme_bw( base_family= "serif") +
   coord_equal()
 
 @
@@ -752,7 +750,7 @@ corOffsetsPlot <-
   ggplot( melt( corOffsets),
          aes( x=X1, y=X2, fill= value)) +
   geom_tile() +
-  theme_bw() +
+  theme_bw( base_family= "serif") +
   opts( panel.grid.minor= theme_blank(),
        panel.grid.major= theme_blank(),
        panel.background= theme_blank(),
@@ -1081,7 +1079,7 @@ if( overwriteFigures) areasPlotAdj <-
                     breaks= names( peelClasses)) +
   scale_y_continuous( "Ma",
       limits= c(0,2000)) +
-  theme_bw() +
+  theme_bw( base_family= "serif") +
   scale_x_discrete( "",
       limits= rasterNames2[ rasterNames2 != "nlcdOffsets"],
       breaks= rasterNames2[ rasterNames2 != "nlcdOffsets"],
@@ -1139,7 +1137,7 @@ if( overwriteFigures) {
     scale_y_continuous( "Ma", limits=c( -50, 80)) +
     scale_x_discrete( "", breaks= c( names( peelClasses), "total")) +
     coord_flip() +
-    theme_bw() +
+    theme_bw( base_family= "serif") +
     opts( legend.position= "none")
   setwd( texWd)
   ggsave( "fig_offsets.pdf",

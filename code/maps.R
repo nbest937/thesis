@@ -1,10 +1,12 @@
-theme_set( theme_bw())
+theme_set( theme_bw( base_family= "serif"))
 
 theme_update( panel.grid.minor= theme_blank(),
              panel.grid.major= theme_blank(),
              panel.background= theme_blank(),
              axis.title.x= theme_blank(),
-             axis.text.x= theme_text( angle= 90, hjust=1),
+             axis.text.x= theme_text( family= "serif",
+               angle= 90, hjust= 1 ),
+             axis.text.x= theme_text( family= "serif"),
              axis.title.y= theme_blank())
 
 theme_map <- theme_get()
@@ -15,11 +17,9 @@ ggplotRaster <- function( r, samp) {
   df <- data.frame( as( sampleRegular( r, ncell( r)*samp, 
                                       asRaster=TRUE), 
                        "SpatialGridDataFrame"))
-  ## names(df)[ 1:length( layerNames( r))] <- layerNames( r)
   ext <- extent( r)
   ggplot( data= df) +
     geom_tile( aes( x= s1, y= s2, fill= values)) +
-    theme_bw() +
     scale_x_continuous( limits= c( ext@xmin, ext@xmax),
                        expand= c( 0,0)) +
     scale_y_continuous( limits= c( ext@ymin, ext@ymax),
@@ -29,11 +29,12 @@ ggplotRaster <- function( r, samp) {
 }
 
 
-peelMap <- function( r, samp) {
+peelMap <- function( r, samp, classes= names( peelClasses)) {
   p <- ggplotRaster( r, samp)
   p$data$values <- factor( p$data$values, 
                           levels= peelClasses, 
                           labels= names( peelClasses))
+  p$data <- p$data[ p$data$values %in% classes,]
   p +
     geom_tile( aes( x= s1, y= s2, 
                     fill= values)) + 
@@ -44,15 +45,17 @@ peelMap <- function( r, samp) {
 
              
              
-coverMaps <- function( r, samp=1, ...) {
+coverMaps <- function( r, samp=1,
+                      classes= layerNames(r),
+                      ...) {
   df <- data.frame( as( sampleRegular( r, ncell( r)*samp, 
                                       asRaster=TRUE), 
                        "SpatialGridDataFrame"))
   names( df)[ grep( "^values", names( df))] <- layerNames( r)
+  df <- df[, c( "s1", "s2", classes)]
   df <- melt( df, id.vars= c("s1", "s2"))
   ggplot( data= df) +
     geom_tile( aes( x= s1, y= s2, fill= value)) +
-    theme_bw() +
     scale_x_continuous( expand= c( 0,0)) +
     scale_y_continuous( expand= c( 0,0)) +
     scale_fill_gradientn( colours= rev( brewer.pal( 6, "YlGn")), 
@@ -65,7 +68,7 @@ coverMaps <- function( r, samp=1, ...) {
 
 my.ggsave <- function( wd= getwd(),
                       filename= default_name(plot),
-                      height= 3.5, width= 3.5, ...) {
+                      height= 5, width= 5, ...) {
   ggsave(filename= paste( wd, filename, sep= "/"),
          height= height,
          width= width, ...)
@@ -93,15 +96,9 @@ coverDiffMaps <-
     geom_tile( aes( x= s1, y= s2, fill= cuts)) +
     scale_fill_manual( "offset", values= pal, breaks= rev( names( pal))) +
     facet_grid( variable ~ .) +
-    theme_bw() +
     scale_x_continuous( expand= c( 0,0)) +
     scale_y_continuous( expand= c( 0,0)) +
-    opts( panel.grid.minor= theme_blank(),
-          panel.grid.major= theme_blank(),
-          panel.background= theme_blank(),
-              axis.title.x= theme_blank(),
-               axis.text.x= theme_text( angle= 90, hjust=1),
-              axis.title.y= theme_blank())
+    theme_map
 }
 
 

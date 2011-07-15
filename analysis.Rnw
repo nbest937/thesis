@@ -9,6 +9,7 @@
 \SweaveOpts{ eval=TRUE}
 
 
+
 \graphicspath{ {analysis/} }
 
 \chapter{Analysis}
@@ -20,7 +21,7 @@
 
 options( prompt= " ", continue= " ", width= 60)
 options(error= function(){
-  recover()
+  ## recover()
   options( prompt= "> ", continue= "+ ", width= 80)
 })
   
@@ -47,7 +48,8 @@ peelBands <- peelClasses +1
 
                                         # mask and agland exported from GRASS
                                         # no need to mask or crop
-cusaMask <- raster( "mask_cusa.tif")
+cusaMask <- raster( sprintf( "%s/mask_cusa.tif",
+                            dataPath))
 cusaExtent <- extent( cusaMask)
 thumbExtent <- extent( -( 83 +30 /60), -( 82 +25 /60),
                           42 +55 /60,     44  +5 /60 )
@@ -261,8 +263,8 @@ model analysis grid.  $A_{min}=1.0$ represents consideration of only
 the primary class.  $A_{min}=0.5$ indicates that in the hypothetical
 situation of zero classification confidence the primary class would be
 assigned half of the area of that particular MLCT pixel, therefore
-this value represents maximum incporporation of the secondary class in
-our analytical framework, as modulated by the MLCT classofication
+this value represents maximum incorporation of the secondary class in
+our analytical framework, as modulated by the MLCT classification
 confidence data.  These intermediate results are compared on the basis
 of root mean squared error (RMSE) metrics calculated relative to the
 distribution of cropland given in the Agland2000 data at the end of
@@ -278,15 +280,17 @@ as cropland.  Accepting NLCD's quantification of these classes as
 truth is intended to counteract a perceived overestimation of cropland
 area in MLCT caused in part by a discrepancy in formulation of these
 data sets, Agland2000 representing actual harvested areas and MLCT
-catching up lots of ancillary land that may beassociated with
+catching up lots of ancillary land that may be associated with
 cultivated land but is not directly involved in crop production. The
 result is an adjusted version of the MLCT data as amended by these
 NLCD offsets.
 
-\autoref{sec:fusion} presents the results of fusing our adjusted MLCT
+\todo{Fix autoref macros that need capitalization}
+
+Section~\ref{sec:fusion} presents the results of fusing our adjusted MLCT
 map with the Agland2000 data by accepting the Agland2000 value for
 cropland as truth where possible and scaling other classes
-proportioanally to describe the remainder of the landscape for
+proportionally to describe the remainder of the landscape for
 purposes of the PEEL model.  This operation is constrained by our
 decision to retain the NLCD offsets as firm figures for those classes
 in order to account for varying degrees of infrastructure development
@@ -297,11 +301,11 @@ constraint the cropland fraction is reduced accordingly.
 Finally \autoref{sec:peel} shows how information from the
 \texttt{175Crops2000} data set is used to disaggregate the cropland
 given by the result of the previous step in order to provide a rough
-characterization of the distriubtion of production of major crop
+characterization of the distribution of production of major crop
 commodities, corn (maize), soybean, wheat, rice, sugarcane, other
 cereals, and other field crops.  This is important for the PEEL model
 because the intent is to model transitions in production in response
-to forecasted commodity prices in addition to other drivers.
+to forecast commodity prices in addition to other drivers.
 
 Through the offset and fusion steps we use decreasing RMSE figures to
 show that our complete characterization of the landscape is improving
@@ -340,7 +344,7 @@ local({
 @ %def 
 
 \begin{figure}[hpt] 
-\begin{center} 
+  \centering
 
 <<fig_areas>>= 
 
@@ -353,7 +357,6 @@ if( overwriteFigures) {
 @ 
 
 \includegraphics{fig_areas}
-\end{center} 
 \caption{Total Acreages by Map and Cover}
 \label{fig:areas} 
 \end{figure} 
@@ -374,7 +377,7 @@ not show up in the MLCT data. There is a total area of roughly
 \Sexpr{printAreas(areasCt["urban","nlcd"]-areasCt["urban","agg05"])}
 of development remaining after subtracting the MLCT urban class from
 all developed classes in the NLCD after they have both been aggregated
-to the 5-arcmin grid. Applying this area as an offset to the cropland
+to the $5'$ grid. Applying this area as an offset to the cropland
 area in Aglands2000 brings us closer to the expected acreage under
 cultivation in 2001, although this assumes that all of that
 development intersects with MLCT cropland area.
@@ -471,7 +474,7 @@ if( overwriteFigures) hexPlot1 <-
 @
 
 \begin{figure}[hpt]
-  \begin{center} 
+  \centering
 
 
 <<fig_scatplot1>>= 
@@ -484,13 +487,12 @@ if( overwriteFigures) {
 @ 
 
 \includegraphics{fig_scatPlot1}
-  \end{center} 
   \caption{Scatter plot of MLCT crop ($A_{min}=1.0$, no mosaic) versus Agland2000 cropland}
   \label{fig:scatplot1} 
 \end{figure} 
 
 \begin{figure}[hpt]
-  \begin{center} 
+  \centering
 
 <<fig_hexplot1>>= 
 
@@ -503,7 +505,6 @@ if( overwriteFigures) {
 @ 
 
 \includegraphics{fig_hexPlot1}
-  \end{center} 
   \caption{Hexbin plot of MLCT crop ($A_{min}=1.0$, no mosaic) versus Agland2000 cropland}
   \label{fig:hexplot1} 
 \end{figure} 
@@ -523,7 +524,7 @@ observations.  Our first example of such a plot is
 \autoref{fig:hexplot1} which plots the crop fractions of MLCT with
 $A_{min}=1$ versus those of the Agland2000 crop map.  As one would
 expect there is an overall correlation among these variables,
-especially given that Agland2000 provides prior probabillities to the
+especially given that Agland2000 provides prior probabilities to the
 MLCT classification.  It is clear that the MLCT primary class
 exhibits a positive bias overall, although a subset that is negatively
 biased is also apparent for low values of the Agland2000 crop fraction
@@ -544,7 +545,7 @@ and not allowing for the possibility of mixed covers.
 
 
 \begin{figure}[hpt]
-  \begin{center} 
+  \centering
 
 
 <<fig_scatplot05>>= 
@@ -563,14 +564,13 @@ if( overwriteFigures) {
 @ 
 
 \includegraphics{fig_scatPlot05}
-  \end{center} 
   \caption{Scatter plot of MLCT crop ($A_{min}=0.5$, no mosaic) versus Agland2000 cropland}
   \label{fig:scatplot05} 
 \end{figure} 
 
 
 \begin{figure}[hpt]
-  \begin{center} 
+  \centering
 
 
 <<fig_hexplot05>>= 
@@ -591,7 +591,6 @@ if( overwriteFigures) {
 @ 
 
 \includegraphics{fig_hexPlot05}
-  \end{center} 
   \caption{Hexbin plot of MLCT crop ($A_{min}=0.5$, no mosaic) versus Agland2000 cropland}
   \label{fig:hexplot05} 
 \end{figure} 
@@ -621,7 +620,7 @@ including the secondary class in calculating $5'$ coverage fractions.
 Where crop was included in a secondary class it also caused cells of
 near-zero value for MLCT to lift away from the x-axis.  The
 uncorrelated observations for Agland2000 equal to 1.0 are still
-present, howver.  This result is adequate for our purposes to
+present, however.  This result is adequate for our purposes to
 determine that our logic in considering the secondary class in the
 manner we have for $A_{min}=0.5$ is correct.  From this point forward
 we will consider only the statistics derived from setting
@@ -639,16 +638,16 @@ negatively biased in the total areas assigned to water, wetland, and
 urban features relative to the NLCD.  It is clear from visual
 inspection that features of these classes tend to have smaller
 characteristic dimensions which causes them to be overlooked in the
-the MLCT data due to its resolution.  The most obvious example are the
+MLCT data due to its resolution.  The most obvious example are the
 rural transportation networks in areas surveyed under the Public Land
 Survey System (PLSS) where roads have been laid out on a generally
 regular grid of square miles.  In the PEEL classification this
 infrastructure is included in the urban class as another form of
 developed land, perhaps making ``urban'' somewhat of a misnomer, but
-it hails to its orgins in the IGBP classification scheme and provides
+it hails to its origins in the IGBP classification scheme and provides
 a short label, a great convenience in programming.  It is important to
 represent wetlands and water features in our input to the PEEL model
-because these areas have high likliehoods of being set aside for
+because these areas have high likelihoods of being set aside for
 conservation purposes, which would be represented as a constraint on
 land conversion in the model.  In the event that NLCD overestimates
 these areas it would be an acceptable error to carry over to the PEEL
@@ -673,7 +672,7 @@ classes may be considered on a common basis.
 For the calculation of the offsets we drop back to the result of
 aggregating the MLCT data to $5'$ with $A_{min}=0.5$ prior to mosaic
 decomposition.  Presumably there are rural roads comprised of 30m NLCD
-pixels cutting through the lower-resolution MLCT pixels includgin
+pixels cutting through the lower-resolution MLCT pixels including
 those classified as mosaic.  In fact, by its very nature as a hybrid
 class made up of natural cover and agricultural land use we expect
 roads to be an important component of the landscape.
@@ -736,10 +735,13 @@ thumbNlcdOffsets <- crop( nlcdOffsets, thumbExtent)
 ##                        breaks= seq( 0.1, -0.1, by= -0.02))
 
 offsetsMap1 <- coverDiffMaps( nlcdOffsets, samp= 0.4,
-                             classes= layerNames( nlcdOffsets)[ 1:5])
+                             classes= layerNames( nlcdOffsets)[ 1:5]) +
+               coord_equal()
 
 offsetsMap2 <- coverDiffMaps( nlcdOffsets, samp= 0.4,
-                             classes= layerNames( nlcdOffsets)[ 6:10])
+                             classes= layerNames( nlcdOffsets)[ 6:10]) +
+               coord_equal()
+
 
 
 thumbOffsetsMap <-
@@ -748,43 +750,10 @@ thumbOffsetsMap <-
   facet_wrap( ~variable)
 
 
-## offsetsMap$data <-
-##   within( offsetsMap$data,
-##          cuts <- cut( value, breaks=
-##                      c( -1, -0.5, -0.1, -0.05, -0.01,
-##                        0.01, 0.05, 0.1, 0.5, 1)))
-
-
-## ggplot( offsetsMap$data, aes( x= s1, y=s2, fill=cuts)) +
-##   geom_tile() +
-##   scale_fill_manual( values= brewer.pal( 9, "BrBG")) +
-##   facet_grid( variable ~ .) +
-##   coord_equal()
-
-## thumbOffsetsMap <- coverMaps( crop( nlcdOffsets, thumbExtent)) +
-##   coord_equal() +
-##   ##facet_grid( variable ~ .) +
-##   scale_fill_gradientn( "diff", colours= rev( brewer.pal( 11, "BrBG")), 
-##                        limits= c( 1.0, -1.0),
-##                        breaks= seq( 0.5, -0.5, by= -0.1))
-
-## thumbOffsetsMap$data <-
-##   within( thumbOffsetsMap$data,
-##          cuts <- cut( value, breaks=
-##                      c( -1, -0.5, -0.1, -0.05, -0.01,
-##                        0.01, 0.05, 0.1, 0.5, 1)))
-
-## ##breaks= c( -1, seq( -0.5, 0.5, by=0.1)[-6], 1)
-
-## ggplot( thumbOffsetsMap$data, aes( x= s1, y=s2, fill=cuts)) +geom_tile() +scale_fill_manual( values= brewer.pal( 9, "BrBG")) +facet_wrap(~ variable)
-
-## thumbOffsetsMap+ geom_tile( aes( x= s1, y=s2, fill=cuts)) +scale_fill_manual( values= brewer.pal( 9, "BrBG"))
-
-
 @ 
 
 \begin{figure}[hpt]
-  \begin{center} 
+  \centering
 
 @ 
 <<fig_offsetsmap1>>=
@@ -796,7 +765,6 @@ if( overwriteFigures) {
 @ %def 
 
 \includegraphics{fig_offsets1}
-  \end{center} 
   \caption{NLCD offsets}
   \label{fig:offsets1} 
 \end{figure} 
@@ -804,7 +772,7 @@ if( overwriteFigures) {
 \todo{Fix resolution of NLCD offset maps}
 
 \begin{figure}[hpt]
-  \begin{center} 
+  \centering
 
 @ 
 <<fig_offsetsmap2>>=
@@ -816,13 +784,12 @@ if( overwriteFigures) {
 @ %def 
 
 \includegraphics{fig_offsets2}
-  \end{center} 
   \caption{NLCD offsets (cont.)}
   \label{fig:offsets2} 
 \end{figure} 
 
 
-The maps of these offsets are shown using a logartithmic scale in
+The maps of these offsets are shown using a logarithmic scale in
 order to bring attention both to areas of significant adjustment,
 greater than 10\%, as well as to show the extent to which small
 adjustments on the order of 1--5\% occur.  From these maps we can see
@@ -874,9 +841,8 @@ if( overwriteFigures) {
 
 
 \begin{figure}[hpt]
-  \begin{center} 
+  \centering
     \includegraphics{fig_corOffsets}
-  \end{center} 
   \caption{Correlation matrix of NLCD offsets}
   \label{fig:corOffsets} 
 \end{figure} 
@@ -899,7 +865,7 @@ For example the wetland offsets show strong negative correlations with
 forest, shrub, and mosaic.  This stands to reason as a likely problem
 with classification due to fundamental differences in the remote
 sensing data such as resolution, the interpretation thereof, or
-disaggreement / overlap in class definitions.  Many areas of forest
+disagreement/overlap in class definitions.  Many areas of forest
 and shrub land can exhibit properties of a wetland when standing water
 and high soil moisture are persistent.  The ``NLCD truth'' classes'
 offsets are positively correlated with one another because they are
@@ -913,7 +879,7 @@ and smaller settlements.
 
 The resulting offsets are added to the aggregated fractions calculated
 from the MLCT with $A_{min}=0.5$.  The mosaic decomposition step is
-readliy applied to the adjusted data set becuase the adjsuted
+readily applied to the adjusted data set because the adjusted
 fractions are fundamentally in same form as the intermediate form of
 the MLCT data calculated in \autoref{sec:decomposition}, only the
 values have changed.
@@ -1138,7 +1104,7 @@ print( xtable( rmseDf2,
 
 \todo[caption=Should references to the pasture/open data from Aglands2000 be removed?]{That data is not used in the analysis, although it is interesting to see that it's RMSE declines as well.}
 
-Seeing that this modifcation to the data set has improved our overall
+Seeing that this modification to the data set has improved our overall
 accuracy of the distribution of croplands the next step is to examine
 the total areas for all classes compared with the input data sets.  
 
@@ -1326,7 +1292,7 @@ if( overwriteFigures) {
 \end{figure}
 
 \begin{figure}[hpt] 
-  \begin{center} 
+  \centering
 
 <<fig_scatPlotAdj>>= 
 
@@ -1337,13 +1303,12 @@ if( overwriteFigures) {
 
 @ 
     \includegraphics{fig_scatPlotAdj}
-  \end{center} 
   \caption{Scatter plot of MLCT adjusted crop versus Agland2000 cropland}
   \label{fig:scatPlotAdj} 
 \end{figure} 
 
 \begin{figure}[hpt] 
-  \begin{center} 
+  \centering
 
 <<fig_hexPlotAdj>>= 
 
@@ -1362,7 +1327,6 @@ if( overwriteFigures) {
 
 @ 
     \includegraphics{fig_hexPlotAdj}
-  \end{center} 
   \caption{Hexbin plot of MLCT adjusted crop versus Agland2000 cropland}
   \label{fig:hexPlotAdj} 
 \end{figure} 
@@ -1501,10 +1465,16 @@ aglandCompleteSum <- sum( aglandComplete)
 aglandComplete <- aglandComplete /aglandCompleteSum
 layerNames( aglandComplete) <- names(peelClasses)[-8]
 
-agcMap <- coverMaps( aglandComplete, 0.4) +
+agcMap <- coverMaps( aglandComplete, 0.4,
+                    classes= layerNames( aglandComplete)[1:4]) +
   coord_equal() +
   facet_grid( variable ~ .)
 
+agcMap2 <- coverMaps( aglandComplete, 0.4,
+                    classes= layerNames( aglandComplete)[5:8]) +
+  coord_equal() +
+  facet_grid( variable ~ .)
+                                                                                       
 
 @ 
 
@@ -1521,7 +1491,7 @@ that there is a conflict such that Agland2000 indicated more cropland
 than allowed by the NLCD offsets the crop fraction will be set to one
 minus the total of the offsets and all other classes will be set to
 zero.  Otherwise the non-offset, non-crop classes will be scaled to
-fit proportionally into the remianing area left after incorporating
+fit proportionally into the remaining area left after incorporating
 those classes which we have given primacy.  The assumption in this step
 is that the census data behind the Agland2000 crop map is a ``ground
 truth'' and Ramankutty's method for allocating that area within the
@@ -1534,20 +1504,33 @@ previously calculated since there is nothing to compare it against.
 
 
 \begin{figure}[hpt] 
-\begin{center} 
+  \centering
 
 <<fig_agc>>= 
 
-my.ggsave( texWd, "fig_agc.png", width=4.5, height=8)
+my.ggsave( texWd, "fig_agc.png",
+          plot= agcMap, width=4.5, height=8)
 @ 
 
 \includegraphics{fig_agc}
-\end{center} 
 \caption{Final PEEL cover maps after adjusting non-crop covers to Agland2000 where possible} 
 \label{fig:agc} 
 \end{figure} 
 
-\todo{ Split final PEEL maps into two figures}
+\begin{figure}[hpt] 
+  \centering
+
+<<fig_agc2>>= 
+
+my.ggsave( texWd, "fig_agc2.png",
+          plot= agcMap2, width=4.5, height=8)
+@ 
+
+\includegraphics{fig_agc2}
+\caption{Final PEEL cover maps after adjusting non-crop covers to Agland2000 where possible (cont.)} 
+\label{fig:agc2} 
+\end{figure} 
+
 
 @
 
@@ -1663,7 +1646,8 @@ agcThemeMap <-
                       "PEEL > 0 and PEEL = Ag2k",
                       "Agc > 0 and PEEL < Ag2k",
                       "Ag2k = 1")) +
-  coord_equal()
+  coord_equal() +
+  theme_map
 
 
 @
@@ -1672,7 +1656,7 @@ agcThemeMap <-
  
 
 \begin{figure}[hpt] 
-  \begin{center} 
+  \centering
 
 
 <<fig_scatPlotAgc>>= 
@@ -1687,7 +1671,6 @@ if( overwriteFigures) {
 @ 
 
     \includegraphics{fig_scatPlotAgc}
-  \end{center} 
   \caption{Scatter plot of PEEL crop versus Agland2000 crop}
   \label{fig:scatPlotAgc} 
 \end{figure} 
@@ -1695,7 +1678,7 @@ if( overwriteFigures) {
 \todo{Evaluate hexbin charts vs. old scatter plots; if acceptable remove scatter plots}
 
 \begin{figure}[hpt] 
-  \begin{center} 
+  \centering
 
 <<fig_hexPlotAgc>>= 
 
@@ -1717,7 +1700,6 @@ if( overwriteFigures) {
 
 @ 
     \includegraphics{fig_hexPlotAgc}
-  \end{center} 
   \caption{Hexbin plot of PEEL crop versus Agland2000 crop}
   \label{fig:hexPlotAgc} 
 \end{figure} 
@@ -1725,7 +1707,7 @@ if( overwriteFigures) {
 
 
 \begin{sidewaysfigure}[hpt] 
-  \begin{center} 
+  \centering
 
 <<fig_agcThemeMap>>= 
 
@@ -1737,14 +1719,13 @@ if( overwriteFigures) {
 @ 
 
     \includegraphics{fig_agcThemeMap}
-  \end{center} 
   \caption{Thematic map of conflicts between NLCD offsets and Agland2000}
   \label{fig:agcThemeMap} 
 \end{sidewaysfigure} 
 
 \todo{Check that thematic map came out better (resolution, legend, orientation)}
 
-\autoref{fig:agcThemeMap} shows a thematic map that classfies the
+\autoref{fig:agcThemeMap} shows a thematic map that classifies the
 cells in our study area according to their agreement on the cropland
 fraction between Ramankutty's Agland2000 data set and the newly
 created PEEL data set.  The first class indicated by ``PEEL = 0'' in
@@ -1759,13 +1740,13 @@ classes (water, wetland, urban) allowed us to bring the PEEL crop
 fraction in line with Agland2000 without violating the assumption that
 those fractions should be carried over from the NLCD aggregation.  The
 fourth class reveals where those constraints could not be
-simultaneously satisified.  Those cells correspond to the bins in
+simultaneously satisfied.  Those cells correspond to the bins in
 \autoref{fig:hexPlotAgc} that fall below the equality line because the
 values from the NLCD offsets are given precedence and the crop
 fraction is limited accordingly, which of course might mean that other
 non-offset, non-crop classes could be summarily reduced to zero.  The
 final class highlights pixels that Agland2000 assigns a crop fraction
-of 1.0 which seems unreleastic given that some infrastructure and
+of 1.0 which seems unrealistic given that some infrastructure and
 uncultivated cover must be present within such large areas.
 
 \section{Disaggregation of PEEL Crop Fractions According to 175Crops2000}
@@ -1775,7 +1756,7 @@ uncultivated cover must be present within such large areas.
 <<crop_cats>>=
 
 setwd( rasterWd)
-##cropCats <- rep( NA, times=10)
+
 cropCats <-
   c("cereals", "field_crop", "forage", "maize",
     "rice", "shrub_crop", "soybean", "sugarcane",
@@ -1784,10 +1765,10 @@ names( cropCats) <- cropCats
 
 
 cropCatsPeel <-
-  list( crop= c( "cereals", "field_crop",
+  list( crop= c( "cereals", "field_crop", "forage",
                 "maize", "rice", "soybean",
                 "sugarcane", "wheat"),
-       open= "forage",
+       open= NULL,
        shrub= "shrub_crop",
        forest= "tree_crop")
                      
@@ -1837,13 +1818,14 @@ layerNames( cropSubClasses) <- cropCatsPeel$crop
 
 
 \begin{figure}[hpt] 
-  \begin{center} 
+  \centering
 
 <<fig_cropSubClassesMap>>= 
 
 if( overwriteFigures) {
   cropSubClassesMap <-
-    coverMaps( cropSubClasses, 0.4) +
+    coverMaps( cropSubClasses, 0.4,
+              classes= layerNames(cropSubClasses)[ 1:4]) +
     coord_equal() +
     facet_grid( variable ~ .)
   my.ggsave( texWd, "fig_cropSubClassesMap.png",
@@ -1852,17 +1834,39 @@ if( overwriteFigures) {
 
 @ 
     \includegraphics{fig_cropSubClassesMap}
-  \end{center} 
   \caption{Normalized fractions for crop sub-classes}
   \label{fig:cropSubClassesMap} 
+\end{figure} 
+
+\begin{figure}[hpt] 
+  \centering
+
+<<fig_cropSubClassesMap2>>= 
+
+if( overwriteFigures) {
+  cropSubClassesMap2 <-
+    coverMaps( cropSubClasses, 0.4,
+              classes= layerNames(cropSubClasses)[ 5:7]) +
+    coord_equal() +
+    facet_grid( variable ~ .)
+  my.ggsave( texWd, "fig_cropSubClassesMap2.png",
+            plot= cropSubClassesMap2)
+}
+
+@ 
+    \includegraphics{fig_cropSubClassesMap2}
+  \caption{Normalized fractions for crop sub-classes (cont.)}
+  \label{fig:cropSubClassesMap2} 
 \end{figure} 
 
 
 We could assume that forage crops come from open class but we don't
 know enough about the confusion between Aglands2000 pasture and the
-open class in the first place.  The focus here is field crops so that
-is the only class that we are attempting to disaggregate for now.
-Tree and shrub crops could be taken from the corresponding cover
+open class in the first place, much less to make an informed
+speculation about how forage crops would be classified by MLCT.  The
+focus here is field crops so that is the only class that we are
+attempting to disaggregate and forage crops are included there for
+now.  Tree and shrub crops could be taken from the corresponding cover
 types, but assuming that they are caught up in that classification is
 a blind leap and their areas are small.  On the other hand, their
 economic impact may be disproportionate to their areas by virtue of
@@ -1877,6 +1881,7 @@ extremes of its range.  In areas where soy and wheat are
 double-cropped their areas will be underestimated in this data set
 relative to that given in the 175Crops2000 data set, subsequent to the
 NLCD offset adjustment.  This issues also bears further study.
+
 
 @ 
 <<restack_crops>>=
@@ -1938,8 +1943,9 @@ write.csv( format.df( peelDf,
           file= "peel.csv",
           quote= FALSE)
 
-file.copy( "peel.csv", "~/see/data/cimdb/peel_thesis.csv",
-          overwrite=TRUE)
+## copy to data archive
+## file.copy( "peel.csv", "~/see/data/cimdb/peel_thesis.csv",
+##           overwrite=TRUE)
 
 
 ## peelData <- brick( aglandComplete, cropSubClasses)

@@ -1,23 +1,22 @@
-\contentsline {todo}{{It remains to be seen how well the disaggregation of commodities will work. We may have to leave it out.}}{iii}{section*.2}
-\contentsline {todo}{{Warning--page numbers missing in Fisher2005a}}{2}{section*.10}
-\contentsline {todo}{{Does everyone agree that we can do without this passage?}}{5}{section*.11}
-\contentsline {todo}{Figure: {MLCT reclassification table}}{11}{subsection.2.1.1}
-\contentsline {todo}{{Is this figure any better placed than others?}}{11}{section*.12}
-\contentsline {todo}{{cite email from Friedl}}{16}{section*.13}
-\contentsline {todo}{{consider including histograms showing confidence distribution}}{16}{section*.14}
-\contentsline {todo}{{cite Friedl email}}{22}{section*.15}
-\contentsline {todo}{{check whether/how urban, water, wetland are informed with priors in NLCD}}{25}{section*.16}
-\contentsline {todo}{{Incorporate Joshua's suggestion to show further NLCD detail to better illustrate the discrepancy in developed areas}}{27}{section*.17}
-\contentsline {todo}{Figure: {NLCD reclassification table}}{27}{subsection.2.3.1}
-\contentsline {todo}{Figure: {Table of crops and types reproduced from \citep {Monfreda2008}}}{27}{section.2.4}
-\contentsline {todo}{Figure: {Summary table of crop aggregations for our model}}{29}{section.2.4}
-\contentsline {todo}{{Address issue of smaller land mask for 175crops2000 and Agland2000}}{29}{section*.18}
-\contentsline {todo}{Figure: {error map for ``nomos'' vs. Agland2000 crop}}{33}{figure.3.1}
-\contentsline {todo}{Figure: { NLCD mask facet map}}{36}{Item.9}
-\contentsline {todo}{Figure: { MLCT resampled and masked facet(?) map(s?)}}{36}{Item.9}
-\contentsline {todo}{Figure: {Facet map of thumb offsets}}{37}{Item.9}
-\contentsline {todo}{Figure: {Difference map, thumb adjusted vs. original after mosaic decomposition}}{37}{Item.9}
-\contentsline {todo}{{Reference / hyperlink NLCD offset GRASS script in appendix}}{37}{section*.19}
-\contentsline {todo}{Figure: {Facet map of cUSA NLCD offsets}}{37}{section*.19}
-\contentsline {todo}{{hyperlink to section where MLCT was aggregated}}{38}{section*.20}
-\contentsline {todo}{{Should the RMSE tables be rearranged?}}{38}{section*.21}
+\contentsline {todo}{{fix interval/set-builder notation in symbol list}}{x}{section*.8}
+\contentsline {todo}{{Check format of \autoref {tab:lulc}}}{3}{section*.10}
+\contentsline {todo}{{Do these statements need to be substantiated?}}{6}{section*.11}
+\contentsline {todo}{{Make cUSA graphics wider or even turn sideways for full-page}}{14}{section*.12}
+\contentsline {todo}{{consider including histograms showing confidence distribution}}{22}{section*.13}
+\contentsline {todo}{{Incorporate Joshua's suggestion to show further NLCD detail to better illustrate the discrepancy in developed areas}}{29}{section*.14}
+\contentsline {todo}{{NLCD reclassification seems problematic now}}{29}{section*.15}
+\contentsline {todo}{Figure: {Table of crops and types reproduced from \citep {Monfreda2008}}}{35}{section.2.4}
+\contentsline {todo}{Figure: {Summary table of crop aggregations for our model}}{36}{section.2.4}
+\contentsline {todo}{{Address issue of smaller land mask for 175crops2000 and Agland2000}}{36}{section*.16}
+\contentsline {todo}{{Fix autoref macros that need capitalization}}{40}{section*.17}
+\contentsline {todo}{Figure: {error map for ``nomos'' vs. Agland2000 crop}}{41}{figure.3.1}
+\contentsline {todo}{{Consider also calculating statistical bias (average error)?}}{44}{section*.18}
+\contentsline {todo}{{Fix resolution of NLCD offset maps}}{46}{section*.19}
+\contentsline {todo}{{Should the RMSE tables be rearranged?}}{50}{section*.20}
+\contentsline {todo}{{Should references to the pasture/open data from Aglands2000 be removed?}}{50}{section*.21}
+\contentsline {todo}{{Discuss implications of final area tabulation}}{53}{section*.22}
+\contentsline {todo}{{Evaluate hexbin charts vs. old scatter plots; if acceptable remove scatter plots}}{53}{section*.23}
+\contentsline {todo}{{Check that thematic map came out better (resolution, legend, orientation)}}{56}{section*.24}
+\contentsline {todo}{{Should we elaborate on this validation exercise in the conclusion or just leave it out?}}{62}{section*.25}
+\contentsline {todo}{{Clean up source code by removing commented code that is no longer useful}}{65}{section*.27}
+\contentsline {todo}{{Fix problems with appendix headings}}{65}{section*.28}

@@ -4,7 +4,7 @@
 \usepackage{natbib}
 \usepackage[prependcaption]{todonotes} %[obeyDraft]
 \usepackage{Sweave}
-% chages to Sweave.sty defaults
+% changes to Sweave.sty defaults
 % from http://faculty.agecon.vt.edu/moeltner/AAEC5126/Sweave/docs/Arnholt_tutorial.pdf
 \DefineVerbatimEnvironment{Sinput}{Verbatim}{fontsize=\small,fontshape=n}
 \DefineVerbatimEnvironment{Soutput}{Verbatim}{fontsize=\small,fontshape=n}
@@ -56,45 +56,44 @@
 \begin{abstract} This paper presents an effort to produce a new land
   cover data set for the conterminous United States of America (cUSA)
   that augments available agricultural land use data with other uses
-  and natual covers to create a complete landscape characterization.
+  and natural covers to create a complete landscape characterization.
   Using the Agland2000 data set as a benchmark we formulate a
   hybridization of the MODIS Land Cover Type (MLCT) for 2001 and the
   2001 National Land Cover Database (NLCD) that is particularly
   tailored to serve as an initialization data set for long-term
-  economic land use change models.  In order strike a balance between
-  spatial precision and local diversity of use and cover the new data
-  set has lower resolution than the MLCT (5$'$ vs. 500m) but
-  represents consituent cover classes as sub-pixel fractions rather
-  than discrete categories.  After aggregating to the 5$'$ grid we
-  present a method for decomposing the natural vegetaion/cropland
-  mosaic class found in MLCT into constituent classes as a function of
-  the local landscape and quantify its contribution to aggregate
-  acreages by class, particularly cropland.  We compensate for the
-  absence of certain fine-grained details from MLCT, such as rural
-  transportation networks, small settlements, linear water features,
-  and wetlands, mainly due to sensor resolution, by incorporating
-  corresponding components of the NLCD, after similar reclassification
-  and aggregation, as a set of offsets to the MLCT-derived fractions.
-  The 175Crops2000 data set, valuable for its basis in per-crop
-  agricultural production statistics, is used as a guide to further
-  decompose the cropland areas into a set of crop-specific
-  sub-categories designed to facilitate the economic modeling goals of
-  the simulations that will be initialized by this data product.  The
-  final classification scheme, now conceptually equivalent to a stack
-  of spectral bands with the additional quality that the components of
-  each pixel sum to unity, is a mixture of a simplified version of the
-  IGBP schema used in MLCT and a disaggregation of the monolithic
-  cropland class that differentiates among the world's major commodity
-  crops. \todo{It remains to be seen how well the disaggregation of
-    commodities will work. We may have to leave it out.}  At each step
-  of refinement we show that overall spatial distribution of cropland
-  across the study area improves relative to the Aglands2000 data set.
-  We close with a discussion of how this method might be applied
-  globally and to successive years in the MLCT time series.
+  economic land use change models.  In order to strike a balance
+  between spatial precision and local diversity of use and cover the
+  new data set has lower resolution than the MLCT ($5'$ vs. $15''$)
+  but represents land use/land cover (LULC) components as sub-pixel
+  fractions rather than discrete categories.  After aggregating to the
+  $5'$ grid we present a method for decomposing the natural
+  vegetation/cropland mosaic class found in MLCT into constituent
+  classes as a function of the local landscape.  We then quantify its
+  contribution to aggregate acreages by class, particularly cropland.
+  We compensate for the absence of certain fine-grained details from
+  MLCT, such as rural transportation networks, small settlements,
+  linear water features, and wetlands, mainly due to sensor
+  resolution, by incorporating corresponding components of the NLCD,
+  after similar reclassification and aggregation, as a set of offsets
+  to the MLCT-derived fractions.  The 175Crops2000 data set, valuable
+  for its basis in per-crop agricultural production statistics, is
+  used as a guide to further decompose the cropland areas into a set
+  of crop-specific sub-categories designed to facilitate the economic
+  modeling goals of the simulations that will be initialized by this
+  data product.  The final classification scheme is conceptually
+  equivalent to a stack of spectral bands with the additional property
+  that the components of each pixel sum to unity.  Its classification
+  scheme is a mixture of a simplified version of the IGBP schema used
+  in MLCT and a disaggregation of the monolithic cropland class that
+  differentiates among the world's major commodity crops.  At each
+  step of refinement we show that overall spatial distribution of
+  cropland across the study area improves relative to the Aglands2000
+  data set.  We close with a discussion of how this method might be
+  applied globally and to successive years in the MLCT time series.
 \end{abstract}
 
 
-\chapter*{Acknowledgements}
+\chapter*{Acknowledgments}
 
 \noindent This thesis is dedicated to my son, Leo.  Son, I began
 working on this degree before you were born and my commitment to
@@ -139,17 +138,23 @@ stages of this project.
   Data) \citep{Monfreda2008}
 \item[Agland2000] Agricultural Lands in the Year 2000 (M3-Cropland and
   M3-Pasture Data) \citep{Ramankutty2008}
-\item[arcmin] minute of arc, 1/60th of a degree
-\item[arcsec] second of arc, 1/60th of a minute, 1/3600th of a degree
 \item[AVHRR] Advanced Very High Resolution Radiometer
+\item[CIM-EARTH] Community Integrated Model of Economic and Resource
+  Trajectories for Humankind
 \item[cUSA] conterminous (contiguous) Unites States of America, the ``lower 48''
+\item[GADM] Global Administrative Areas, \url{http://www.gadm.org/}
+\item[GIAM] Global Irrigated Areas Map
+\item[GIS] Geographic Information Systems
+\item[GMRCA] Global Map of Rainfed Crop Areas
 \item[GLC2000] Global Land Cover 2000 \citep{EC2003}
-\item[GRASS] Geographic Resources Analysis Support System, \url{http://grass.osgeo.org}
+\item[GRASS] Geographic Resources Analysis Support System, \url{http://grass.osgeo.org/}
 \item[IGBP] International Geosphere-Biosphere Programme
 \item[LULC] land use / land cover
 \item[MODIS] Moderate Resolution Imaging Spectroradiometer
 \item[MLCT] MODIS Land Cover Type \citep{MLCT}
 \item[NLCD] National Land-Cover Database, 2001 \citep{Homer2004}
+\item[PEEL] Partial Equilibrium Economic Land use model
+\item[PLSS] Public Land Survey System
 \item[RMSE] root of the mean squared error
 \item[SPAM] Spatial Production Allocation Model
 \item[SPOT] Syst\`eme pour l'Observation de la Terre
@@ -171,6 +176,8 @@ stages of this project.
 \item[$\theta$] Observed sub-pixel fraction
 \item[$'$] minute of arc, 1/60th of a degree
 \item[$''$] second of arc, 1/60th of a minute, 1/3600th of a degree
+\item[{[0,1]}] interval from 0 to 1, inclusive of 0 and 1; $0 \leq x \leq 1$ 
+\item[[0,1)] interval from 0 to 1, inclusive of 0 but but not 1, $0 \leq x < 1$ 
 %\item[$ \left[ 0,1 \right] $] interval from 0 to 1, inclusive of 0 and 1; $0 \leq x \leq 1$ 
 %\item[$ \left[ 0,1 \right) $] interval from 0 to 1, inclusive of 0 but but not 1, $0 \leq x < 1$ 
 \end{symbollist}
@@ -218,35 +225,84 @@ fallen out of vogue because of the complexity of modern spatial
 analysis until the recent emergence of applicable software tools
 coupled with adequate computing resources.
 
-Future directions of investigation:
+This analysis would not have been possible without the \texttt{raster}
+package for \texttt{R} developed by Hijmans, van~Etten and other
+contributors.  We consider this interface to geospatial raster data
+sets in the \texttt{R} statistical analysis environment an important
+contribution to spatial analysis and a laudable accomplishment because
+it unleashes the power of a sophisticated, popular, open-source, free
+software programming language for statistical operations on large
+geospatial raster data sets.  We expect that this demonstration will
+foster additional interest in and use of this software, as well as
+contribution to its continuing development.  Directions for possible
+enhancement that would increase the utility of this package based on
+our experience include streamlining a truly functional programming
+interface by improving on the existing \texttt{overlay()} function,
+harnessing available \texttt{R} extensions for parallelism and porting
+core functionality to a \texttt{C} or \texttt{C++} library to improve
+performance, and improving the visualization interface, perhaps
+through application of the \texttt{ggplot2} package as we have done
+here.
 
-Model \% cultivation of MLCT cropland and mosaic pixels as function of classification
-confidence and secondary class, for example, in order to make original
-MLCT data more useful for direct analysis of agricultural activity using
-its native resolution and classification.
+In the CIM-EARTH/PEEL research agenda the next logical extension of
+the envisioned land use transition model would be to apply it to a
+global study area.  Once a method for creating a global initialization
+data set for the year 2001 is formulated we would like to apply that
+method to the subsequent years of the MLCT time series.  In order to
+do so we would need ancillary data that spatially extends the aspects of the
+NLCD that we have employed and temporally extends the information
+given in the Ramankutty \& Monfreda data sets.  At this time a method
+for calculating the correction offsets for over-estimation of cropland
+and under-estimation of inland water features, wetlands, and
+development/transportation infrastructure over a wider area with
+greater time depth has not been identified.  Only with this
+information in hand were we able bring MLCT cropland and Agland2000
+cropland into close enough agreement to minimize the mathematical
+manipulation necessary to reasonably quantify the non-crop cover and
+use classes with the desired fidelity to the best-available rasterized
+agricultural census data.
 
-Model \% urban as a function of population density, agricultural
-productivity, and other economic productivity to develop a proxy for
-the low-density values derived from NLCD in order to extend this
-method globally.
+In the absence of high-resolution data on rural development, being the
+low-density portion of PEEL's ``urban'' class that falls below MLCT's
+detection threshold we propose that it might be possible to model the
+over-estimation factor of the MLCT cropland class.  This factor would
+be defined as the ratio of total area encompassed by the MLCT cropland
+classification to acreage actually under cultivation and could
+potentially be modeled as a function of classification confidence and
+secondary class using the data described and produced here as a
+training set.  The null hypothesis in the formulation of such a model
+is that there is enough diversity among agricultural landscapes in our
+cUSA study area to adequately characterize agricultural landscapes
+around the world in this regard.  Similarly it might be possible to
+directly model the ``urban'' percentage below the MLCT detection
+threshold as a function of population density and agricultural
+productivity, identifying said threshold in the process.  There is a
+clear dependency between these offsets in agriculturally productive
+regions so modeling them in conjunction somehow may be
+constructive.  We expect that global offsets for the water and
+wetland classes will be harder to obtain without corresponding proxy
+statistics with which to formulate a model but perhaps we can expect
+greater availability of spatially explicit catalogs of ecological
+services and sensitive/protected areas in the near future that would
+close these gaps in the available information.
+
+\todo{Should we elaborate on this validation exercise in the conclusion or just leave it out?}
 
 Comparison of this data to other available LULC characterizations,
 particularly the Major Land Use (MLU) data and the Cropland Data Layer
 (CDL) from the USDA, would provide useful validation metrics.
 
 
-
 \backmatter
-
-\todo{Fix problem with LDAAC bibliography entry}
-\todo{Fix problem with Monfreda, 2008 bibliography entry}
-\todo{Clean up source code by removing commented code that is no
-  longer useful}
-\todo{Fix problems with appendix headings}
 
 \bibliography{thesis}
 
 \appendix
+
+\todo{Clean up source code by removing commented code that is no
+  longer useful}
+\todo{Fix problems with appendix headings}
+
 
 \chapter{Source Code: Data Sets}
 

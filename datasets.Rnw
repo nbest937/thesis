@@ -8,6 +8,7 @@
 \SweaveOpts{ eval=FALSE}
 \SweaveOpts{ eval=TRUE}
 
+
 \graphicspath{ {datasets/} }
 
 @ 
@@ -24,7 +25,7 @@ overwriteFigures <- TRUE
 
 @ 
 
-\chapter{Data Sets}
+\chapter{Data Sets and Methodology}
 \label{cha:datasets}
 
 This chapter presents summary descriptions of the various data sets
@@ -35,39 +36,41 @@ multiple data sets are used in conjunction are deferred to Chapter
 
 The general approach with the MLCT and NLCD data sets is to reclassify
 their categories, calculate per-pixel, per-class areas at the native
-resolutions, and aggregate the new classification to the 5$'$ grid.
+resolutions, and aggregate the new classification to the $5'$ grid.
 The purpose of the reclassification is to reduce the number of classes
 and have a uniform set of classes across data sets.  The challenge in
-this is that classification defintions are sometimes subtly different
+this is that classification definitions are sometimes subtly different
 which makes direct comparison across data sets somewhat subjective, so
 we describe the mapping between original and simplified
-classifications.  We apply and aggregation operation that calculates
+classifications.  We apply an aggregation operation that calculates
 the relative proportion of each class in the new classification system
-present in each 5$'$ grid cell according to the base data.  In this
+present in each $5'$ grid cell according to the base data.  In this
 process we convert classified maps whose pixels have discrete values
 to a stack of maps, one map per class, whose pixels have real number
 values on the interval $[0,1]$ representing fractional areas and are
 constrained to sum to unity for each pixel through the stack.  In the
 general case of the MLCT data product the process converts two
 discrete, thematic variables and one continuous variable, those being
-a primary covery type, a secondary cover type, and classification
+a primary cover type, a secondary cover type, and classification
 confidence level respectively, into a set of continuous variables
-representing fractional areas for the cover types in the siplified
+representing fractional areas for the cover types in the simplified
 classification system.  This general case is also compared to simpler
-cases of the NLCD and considering only the primary classification of
-MLCT.  In these cases the process is simplified by considering only a
-primary thematic layer and performing the aggregation without a
-secondary cover type or confidence level by which to relate them but
-we are able to reuse the same functions for the raster calculations.
+cases in aggregating NLCD and considering only the primary
+classification of MLCT where the secondary class and classification
+confidence variables are ignored.  In these cases the process is
+simplified by considering only a primary thematic layer and performing
+the aggregation without a secondary cover type or confidence level by
+which to relate them but we are able to reuse the same functions for
+the raster calculations.
 
-To illustrate the process of converting the these data sets from their
+To illustrate the process of converting these data sets from their
 original representation we are including maps of an area of
 southeastern Michigan to show greater detail through each step of the
 process.  We chose this region for its diversity of land covers and
-uses, its relative diveristy of agricultural commodities across its
+uses, its relative diversity of agricultural commodities across its
 significant cropland area, the significant presence of the mosaic
 class to illustrate our method for its decomposition and its
-familiarity to our principal author, being his brthplace.
+familiarity the author, being his birthplace.
 
 
 \section{MODIS Land Cover Type (MLCT)}
@@ -80,7 +83,7 @@ extracting a subset for the conterminous United States (cUSA).  These
 preparation steps were carried out in a \texttt{GRASS} database prior
 to the adoption of the reproducible research framework for this paper,
 so those steps are not demonstrated here.  The cUSA study area is
-defined as the set of 5$'$ grid cells that intersect with the cUSA
+defined as the set of $5'$ grid cells that intersect with the cUSA
 polygon in version 1 of the Global Administrative Areas (GADM) vector
 data set, which includes the water bodies on the American side of the
 international border across the Great Lakes, but does not extend to
@@ -90,8 +93,8 @@ land mass.
 In this section we will demonstrate the process of converting the MLCT
 data from its native form, consisting of primary cover type,
 classification confidence for the primary cover, and secondary
-(alternate) cover type at 15$''$ resolution, to a stack of cover
-fractions at 5$'$ resolution using the simplified cover/use
+(alternate) cover type at $15''$ resolution, to a stack of cover
+fractions at $5'$ resolution using the simplified cover/use
 classification specified by the PEEL model.
 
 <<thumb>>=
@@ -140,10 +143,6 @@ igbpLegend <- igbpLegend[ igbpLegend != "#000000"]
 \subsection{Reclassification}
 \label{sec:mlct-reclass}
 
-The following table shows the mapping of the IGBP classes used in the
-original MLCT data to the simplified classification designed for the
-PEEL model.
-
 \begin{center}
   \begin{table}[htbp]
     \begin{tabular}{|l|l|l|l|}
@@ -177,10 +176,25 @@ PEEL model.
       16 & barren or sparsely vegetated & & \\  
       \hline
     \end{tabular}
-    \caption{Reclassification of MLCT/IGBP to PEEL}
+    \caption{Reclassification of MLCT/IGBP to PEEL (adapted from \citet{Friedl2002})}
     \label{tab:mlct_reclass}
   \end{table}
 \end{center}
+
+\autoref{tab:mlct_reclass} shows the mapping of the IGBP classes used
+in the original MLCT data to the simplified classification designed
+for the PEEL model.  Collapsing the five forest categories into a
+single class was an easy call.  Making a distinction between woody
+savannas and savannas and assigning them to the shrub and open classes
+respectively is supported by the IGBP class definitions
+\citep{Friedl2002} due to the overlap in the forest canopy cover for
+those IGBP classes.  This makes sense in the context of the PEEL model
+because the ecological roles, potential uses, and conversion costs of
+the two savanna types are subjectively dissimilar.  Areas of permanent
+snow and ice were combined with barren or sparsely vegetated areas,
+which would include deserts, to form the PEEL barren class based on
+their shared characteristics of low population density and relatively
+low intensity of economic activity.
 
 @ 
 <<mlct-reclass>>=
@@ -220,18 +234,16 @@ if( overwriteFigures) {
 \label{fig:thumb_pri_reclass} 
 \end{figure} 
 
-\todo{Is this figure any better placed than others?}
 
 \autoref{fig:thumb_pri_reclass} shows the result of reclassifying the MLCT data
 for our detailed study area.  From this map we see that this area is
 dominated by the crop class in the north and the mosaic class to the
 south with scattered forests and pockets of development throughout.
-The urban complex of Port Huron, Michicagn and Sarnia, Ontario is
-visible in the southeast corner.  along with the confidence level given for
-the primay classification.
+The urban complex of Port Huron, Michigan and Sarnia, Ontario is
+visible in the southeast corner.
 
 \begin{figure}[hpt] 
-\begin{center}
+\centering
   
 <<fig_thumb_sec_reclass>>= 
 
@@ -244,7 +256,7 @@ if( overwriteFigures) {
 @ 
 
 \includegraphics{fig_thumb_sec_reclass}
-\end{center} 
+ 
 \caption{MLCT secondary cover reclassified detail} 
 \label{fig:thumb_sec_reclass} 
 \end{figure} 
@@ -253,17 +265,17 @@ if( overwriteFigures) {
 In \autoref{fig:thumb_sec_reclass} we notice that areas in the
 northern and central sections of the map that were classified as crop
 in the primary layer have null values in the secondary class.  It is
-apparent that where a secondary class is given that the mosaic class
+apparent that where a secondary class is given the mosaic class
 is often indicated where the primary class indicates cropland and vice
 versa.  It is possible for primary and secondary classes to be
 assigned to the same category because of the reclassification step.
-When one of our pixels indiactes the forest class for both its primary
+When one of our pixels indicates the forest class for both its primary
 and secondary classifications it simply reflects a distinction between
 sub-types of forest in the original data, for example evergreen and
 deciduous.
 
 \begin{figure}[hpt] 
-\begin{center}
+\centering
   
 <<fig_thumb_pct>>= 
 
@@ -275,8 +287,8 @@ if( overwriteFigures) {
 @ 
 
 \includegraphics{fig_thumb_pct}
-\end{center} 
-\caption{MLCT primary cover classification confidence} 
+ 
+\caption{MLCT primary cover classification confidence detail} 
 \label{fig:thumb_pct} 
 \end{figure} 
 
@@ -301,7 +313,7 @@ primary class in our example detail area and
 
 
 \begin{figure}[hpt] 
-\begin{center}
+\centering
   
 <<fig_thumb_pri_facet>>= 
 
@@ -315,14 +327,14 @@ if( overwriteFigures) {
 @ 
 
 \includegraphics{fig_thumb_pri_facet}
-\end{center} 
+ 
 \caption{MLCT primary covers shown separately, detail} 
 \label{fig:thumb_pri_facet} 
 \end{figure} 
 
 
 \begin{figure}[hpt] 
-\begin{center}
+\centering
   
 <<fig_thumb_sec_facet>>= 
 
@@ -336,7 +348,7 @@ if( overwriteFigures) {
 @ 
 
 \includegraphics{fig_thumb_sec_facet}
-\end{center} 
+ 
 \caption{MLCT secondary covers shown separately, detail} 
 \label{fig:thumb_sec_facet} 
 \end{figure} 
@@ -356,7 +368,7 @@ classes as \autoref{fig:mlct_pri_facet} and
 \autoref{fig:mlct_sec_facet} have done.  From these maps familiar
 generalities of the cUSA's geography are more apparent, such as the
 prevalence of forests in the east and northwest, cropland in the
-midwest, shrub lands in the southwest and open lands across the west.
+Midwest, shrub lands in the southwest and open lands across the west.
 It is interesting to note that the mosaic class is primarily
 concentrated in the eastern portion of the study area which we can
 attribute to greater population density, topography, and historical
@@ -375,10 +387,10 @@ mlct <- mlctList( "2001_lct1.tif",
 mlct  <- mlctReclass( mlct, mlctReclassMatrix, overwrite= overwriteRasters, datatype="INT1U", progress="text")
 
 if( overwriteFigures) {
-  mlctPlots <- list( pri= peelMap( mlct$pri, 8e-4),
-                    sec= peelMap( mlct$sec, 8e-4))
-  mlctPlots$pct <- ggplotRaster( mlct$pct, 8e-4) + 
-    scale_fill_gradientn( "% confidence",
+  mlctPlots <- list( pri= peelMap( mlct$pri, 16e-4),
+                    sec= peelMap( mlct$sec, 16e-4))
+  mlctPlots$pct <- ggplotRaster( mlct$pct, 16e-4) + 
+    scale_fill_gradientn( "% conf",
                          colours= rev( brewer.pal( 7, "YlGn")), 
                          limits= c( 100, 0),
                          breaks= seq( 100, 0, by= -20))
@@ -387,120 +399,162 @@ if( overwriteFigures) {
 
 @ 
 
-\begin{figure}[hpt] 
-\begin{center}
+\begin{sidewaysfigure}[hpt] 
+  \centering
 
 @
 <<fig_mlct_pri_reclass>>= 
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_mlct_pri_reclass.png",
-            plot= mlctPlots$pri)
-  system( sprintf( "convert -trim %s/fig_mlct_pri_reclass.png %s/fig_mlct_pri_reclass_trim.png", texWd, texWd))
+            plot= mlctPlots$pri, width=7.5)
+  system( sprintf( "convert -trim %s/fig_mlct_pri_reclass.png %s/fig_mlct_pri_reclass_trim.png",
+                  texWd, texWd))
 }
 @ 
 
-\includegraphics{fig_mlct_pri_reclass_trim}
-\end{center} 
+  \includegraphics{fig_mlct_pri_reclass_trim}
 \caption{MLCT primary cover reclassified} 
 \label{fig:mlct_pri_reclass} 
-\end{figure} 
+\end{sidewaysfigure} 
 
 \todo{Make cUSA graphics wider or even turn sideways for full-page}
 
-\begin{figure}[hpt] 
-\begin{center}
+\begin{sidewaysfigure}[hpt] 
+  \centering
   
 <<fig_mlct_sec_reclass>>= 
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_mlct_sec_reclass.png",
-            plot= mlctPlots$sec)
-  system( sprintf( "convert -trim %s/fig_mlct_sec_reclass.png %s/fig_mlct_sec_reclass_trim.png", texWd, texWd))
+            plot= mlctPlots$sec, width=7.5)
+  system( sprintf( "convert -trim %s/fig_mlct_sec_reclass.png %s/fig_mlct_sec_reclass_trim.png",
+                  texWd, texWd))
 }
 
 @ 
 
 \includegraphics{fig_mlct_sec_reclass_trim}
-\end{center} 
 \caption{MLCT secondary cover reclassified} 
 \label{fig:mlct_sec_reclass} 
-\end{figure} 
+\end{sidewaysfigure} 
 
 
-\begin{figure}[hpt] 
-\begin{center}
+\begin{sidewaysfigure}[hpt] 
+  \centering
   
 <<fig_mlct_pct>>= 
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_mlct_pct.png",
-           plot= mlctPlots$pct)
-  system( sprintf( "convert -trim %s/fig_mlct_pc.png %s/fig_mlct_pct_trim.png", texWd, texWd))
+           plot= mlctPlots$pct, width=7.5)
+  system( sprintf( "convert -trim %s/fig_mlct_pct.png %s/fig_mlct_pct_trim.png",
+                  texWd, texWd))
 }
 
 @ 
 
 \includegraphics{fig_mlct_pct_trim}
-\end{center} 
 \caption{MLCT primary cover classification confidence} 
 \label{fig:mlct_pct} 
-\end{figure} 
+\end{sidewaysfigure} 
 
 
 \begin{figure}[hpt] 
-\begin{center}
+  \centering
   
 <<fig_mlct_pri_facet>>= 
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_mlct_pri_facet.png",
-         plot= mlctPlots$pri +
-           facet_grid( values ~ .),
+         plot= peelMap( mlct$pri, 16e-4,
+                       classes= names( peelClasses)[1:5]) +
+           facet_grid( values ~ .) +
+           opts( legend.position= "none"),
          width=4.5, height=8)
 }
 
 @ 
 
 \includegraphics{fig_mlct_pri_facet}
-\end{center} 
 \caption{MLCT primary covers shown separately} 
 \label{fig:mlct_pri_facet} 
 \end{figure} 
 
-\todo{ Split \autoref{fig:mlct_pri_facet} into two figures.}
+\begin{figure}[hpt] 
+  \centering
+  
+<<fig_mlct_pri_facet2>>= 
+
+if( overwriteFigures) {
+  my.ggsave( texWd, "fig_mlct_pri_facet2.png",
+         plot= peelMap( mlct$pri, 16e-4,
+                       classes= names( peelClasses)[6:9]) +
+           facet_grid( values ~ .) +
+           opts( legend.position= "none"),
+         width=4.5, height=8)
+}
+
+@ 
+
+\includegraphics{fig_mlct_pri_facet2}
+\caption{MLCT primary covers shown separately (cont.)} 
+\label{fig:mlct_pri_facet2} 
+\end{figure} 
+
 
 \begin{figure}[hpt] 
-\begin{center}
+  \centering
   
 <<fig_mlct_sec_facet>>= 
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_mlct_sec_facet.png",
-            plot= mlctPlots$sec +
-              facet_grid( values ~ .),
+            plot= peelMap( mlct$sec, 16e-4,
+                       classes= names( peelClasses)[1:5]) +
+              facet_grid( values ~ .) +
+              opts( legend.position= "none"),
             width=4.5, height=8)
 }
 
 @ 
 
 \includegraphics{fig_mlct_sec_facet}
-\end{center} 
 \caption{MLCT secondary covers shown separately} 
 \label{fig:mlct_sec_facet} 
 \end{figure} 
 
-\todo{ Split \autoref{fig:mlct_sec_facet} into two figures.}
+\begin{figure}[hpt] 
+  \centering
+  
+<<fig_mlct_sec_facet2>>= 
+
+if( overwriteFigures) {
+  my.ggsave( texWd, "fig_mlct_sec_facet2.png",
+            plot= peelMap( mlct$sec, 8e-3,
+                       classes= names( peelClasses)[6:9]) +
+              facet_grid( values ~ .) +
+              opts( legend.position= "none"),
+            width=4.5, height=8)
+}
+
+@ 
+
+\includegraphics{fig_mlct_sec_facet2}
+\caption{MLCT secondary covers shown separately (cont.)} 
+\label{fig:mlct_sec_facet2} 
+\end{figure} 
+
 
 \subsection{Aggregation}
 \label{sec:mlct-aggr}
 
-MLCT has a nominal resolution of 500m which roughly equates to 15$''$
-at the eqautor and so is conveniently an even division of the 5$'$
+MLCT has a nominal resolution of 500m which roughly equates to $15''$
+at the equator and so is conveniently an even division of the $5'$
 grid to which we wish to aggregate it, the two related by a factor of
 20.  Therefore each cell in the output of this aggregation will be a
-function of the 400 orginal MLCT pixels within its footprint.  The
-dataset consists of a primary classification, along with a measure of
+function of the 400 original MLCT pixels within its footprint.  The
+data set consists of a primary classification, along with a measure of
 confidence up to 100\%, and a secondary classification.  The secondary
 cover type is given as the most likely alternative to the primary type
 \citep{Friedl2010}, but for purposes of our analysis we are taking a
@@ -509,15 +563,15 @@ from the base data.  We are not as concerned about per-pixel
 classification error as users working at the MLCT's native resolution
 might be, which is the original motivation given for providing the
 secondary classification.  Because we are aggregating the data up to
-5-arcmin resolution there is no expectation that the sub-pixel
+$5'$ resolution there is no expectation that the sub-pixel
 fractions at full resolution are spatially specific, but in the
 aggregate our characterization of each grid cell's composition will be
-nuanced by this additional information.  The primary class covers at
-least roughly 50-60\% of a given pixel $x$, and this percent is almost
-certainly a monotonically increasing function of the confidence
-measure $c$.  \todo{cite email from Friedl}.  For the purposes of this
-analysis we assume that this dependence is linear. Thus, for the
-primary and secondary cover types in a pixel:
+nuanced by this additional information.  By definition the primary
+class covers no more than 60\% of a given pixel $x$
+\citep{Friedl2002}.  For the purposes of this analysis we assume that
+the relationship between classification confidence and the sub-pixel
+fraction of the primary class is a linear, monotonically increasing
+function. Thus, for the primary and secondary cover types in a pixel:
 
 $$
 A_p(x) = A_{min} + (1 - A_{min}) c(x)
@@ -526,16 +580,12 @@ $$
 A_s(x) = 1 - A_p(x)
 $$
 
-where $0.50 \le A_{min} \le 0.60$ is primarily chosen based on an
-interpretation of $c$.  Given that there are only a handful of
-examples of $c < 0.20$ \todo{consider including histograms showing
-  confidence distribution}, setting $A_{min} = 0.50$ is appropriate.
-Certainly for a classification to be considered the primary it must
-represent a bare majority of the area covered by that pixel at
-minimum, and the distributions of confidences indicate that the vast
-majority of pixels contain greater than 60\% of their area in the
-primary under the rubric described above.  The equations are simplified
-as follows by assuming this value for $A_{min}$.
+\noindent where $A_{min}$ represents the minimum area fraction to be
+assigned to the primary class given $c(x)=0$.  It stands to reason
+that a given class would have to comprise more than 50\% of the pixel
+area in order to be considered primary, therefore $A_{min}=0.5$
+affords maximum consideration to the secondary class in this
+scheme. Simplifying the equations by substituting this value gives:
 
 $$
 A_p(x) = \dfrac{1 + c}{2}
@@ -544,7 +594,13 @@ $$
 A_s(x) = 1 - A_p(x) = \dfrac{1-c}{2}
 $$
 
-% will this help?
+Instances of $c < 0.20$ are rare, so generally the primary class will
+be assigned more than 60\% of the MLCT pixel area.  \todo{consider
+  including histograms showing confidence distribution} In the
+analysis that follows we will compare the product of these assumptions
+with the case of $A_{min}=1.0$ which gives zero consideration to the
+secondary class.
+
 
 @
 <<thumbPlots>>=
@@ -578,7 +634,7 @@ if( overwriteFigures) {
 @ 
 
 
-Applying these formulae results in a map for each cover type where the
+Applying these formulas results in a map for each cover type where the
 pixel values are the sub-pixel areas on the interval $[0,1]$.  The map
 of the fraction of the primary cover type is visually equivalent to
 that of the classification confidence level because the former is
@@ -589,7 +645,7 @@ simply a linear scaling and offset of the latter.  \autoref{fig:thumb_fracs} sho
 
 
 \begin{figure}[hpt] 
-\begin{center}
+\centering
   
 <<fig_thumb_fracs>>= 
 
@@ -601,20 +657,20 @@ if( overwriteFigures) {
 @ 
 
 \includegraphics{fig_thumb_fracs}
-\end{center} 
+ 
 \caption{Sub-pixel fractions at original resolution for $A_{min}=0.5$}
 \label{fig:thumb_fracs}
 \end{figure} 
 
-By way of comparison we also consider the trivial case of settimg
+By way of comparison we also consider the trivial case of setting
 $A_{min} = 1$ which indicates that the secondary cover is ignored
 altogether and the primary cover is taken to represent 100\% of the
-pixel area.  \autoref{fig:thumb1_fracs} shows these difference.  The
+pixel area.  \autoref{fig:thumb1_fracs} shows these differences.  The
 effect of adjusting $A_{min}$ is subtle; we will examine it more
-closely after aggregating to the 5$'$ grid.
+closely after aggregating to the $5'$ grid.
 
 \begin{figure}[hpt] 
-\begin{center}
+\centering
 
 <<fig_thumb1_fracs>>= 
 
@@ -626,13 +682,13 @@ if( overwriteFigures) {
 @ 
 
 \includegraphics{fig_thumb1_fracs}
-\end{center} 
+ 
 \caption{Sub-pixel fractions at original resolution for $A_{min}=1$}
 \label{fig:thumb1_fracs}
 \end{figure} 
 
 Computationally the process of converting the reclassified maps to
-sub-pixel fractions at the desired 5-arcmin resolution is a three-step
+sub-pixel fractions at the desired $5'$ resolution is a three-step
 process.  First we calculate the fraction of the primary cover type as
 a function of the classification confidence as described above.  Next,
 a sub-pixel fraction for each cover type is calculated at full
@@ -640,14 +696,14 @@ resolution, recognizing that the primary and secondary classes may be
 identical after the reclassification, such as cases where the original
 data indicated two different type of forests.  Aggregating to a
 coarser resolution is a simple matter of calculating the mean of these
-values over the intersecting pixels at the original resoution.
-Because the desired 5$'$ resolution is a multiple of the original
+values over the intersecting pixels at the original resolution.
+Because the desired $5'$ resolution is a multiple of the original
 15$''$ resolution the pixels are perfectly nested, which is
 convenient for properly computing this mean.
 
 
 \begin{figure}[hpt] 
-\begin{center}
+\centering
   
 <<fig_thumb_agg>>= 
 
@@ -659,13 +715,13 @@ if( overwriteFigures) {
 @ 
 
 \includegraphics{fig_thumb_agg}
-\end{center} 
+ 
 \caption{Aggregated sub-pixel fractions for $A_{min}=0.5$}
 \label{fig:thumb_agg}
 \end{figure} 
 
 \begin{figure}[hpt] 
-\begin{center}
+\centering
   
 <<fig_thumb1_agg>>= 
 
@@ -677,7 +733,7 @@ if( overwriteFigures) {
 @ 
 
 \includegraphics{fig_thumb1_agg}
-\end{center} 
+ 
 \caption{Aggregated sub-pixel fractions for $A_{min}=1$}
 \label{fig:thumb1_agg}
 \end{figure} 
@@ -690,7 +746,7 @@ $A_{min} = 0.5$ resulted in a greater fraction.  The main message from
 this chart is that considering the secondary cover class results in
 greater mixture between the crop and mosaic classes because cropland
 is reduced in the north of the detail area where it was dominant in
-the primary land cover type, and simlarly for mosaic in the south.
+the primary land cover type, and similarly for mosaic in the south.
 The relative suitability of these choices for $A_{min}$ is discussed
 in \autoref{cha:analysis}.
 
@@ -719,7 +775,7 @@ if( overwriteFigures) {
 
 \autoref{fig:thumb_agg_diff} emphasizes the difference between the
 choice of $A_{min}=0.5$ and $A_{min}=1.0$ for the calculation of the
-sub-pixel fractions and their aggregation to 5$'$ with a difference
+sub-pixel fractions and their aggregation to $5'$ with a difference
 map.  Positive values in the map indicate areas where $A_{min}=0.5$
 produced a greater value.  We see more clearly from this set of maps
 that the effect of considering the secondary class results in a shift
@@ -731,7 +787,7 @@ we saw from the earlier maps (\autoref{fig:thumb_pri_facet} and
 indicated by the secondary classes in those areas.
 
 \begin{figure}[hpt]
-\begin{center}
+\centering
   
 <<fig_thumb_agg_diff>>= 
 
@@ -744,7 +800,7 @@ if( overwriteFigures) {
 %def
 
 \includegraphics{fig_thumb_agg_diff}
-\end{center} 
+ 
 \caption{ Difference of aggregated sub-pixel fractions}
 \label{fig:thumb_agg_diff}
 \end{figure} 
@@ -797,23 +853,23 @@ The MLCT classification includes a type that is problematic for the
 economic models for which this data set is intended, the ``cropland /
 natural vegetation mosaic'' class.  This class is defined as a hybrid
 of cropland and some mixture of natural covers (forest, shrub, or
-open) with no single component exceeding 60\% \citep{Friedl2002} and
-croplands generally comprising 40--60\% of pixel area \todo{cite Friedl
-  email}. Being a hybrid of developed land use and natural land cover
-we wish to differentiate the cropland from the natural vegetation in
-order to calculate a more meaningful total for cropland area and
-thereby eliminate the mosaic class from the final tabulation.  In the
-present implementation of the reclassification and aggregation process
-we are making three very simple assumptions about the composition of
-area delineated as mosaic lands:
+open) with no single component exceeding 60\%
+\citep{Friedl2002}. Being a hybrid of developed land use and natural
+land cover we wish to differentiate the cropland from the natural
+vegetation in order to calculate a more meaningful total for cropland
+area and thereby eliminate the mosaic class from the final tabulation.
+In the present implementation of the reclassification and aggregation
+process we are making three very simple assumptions about the
+composition of area delineated as mosaic lands:
 
 \begin{enumerate}
-\item Mosaic land is 50\% cropland.
+\item 50\% of mosaic area is assigned to the crop class.
 \item The other 50\% is a blend of forest, open, and shrub in
-  proportion to the expression of those classes in the same 5-minute
+  proportion to the expression of those classes in the same $5'$
   cell.
-\item In the absence of such information we simply assume that the
-  natural component of the mosaic is an equal blend of all three.
+\item In the absence of any natural classes in the $5'$ cell we simply
+  assume that the natural component of the mosaic is an equal blend of
+  all three.
 \end{enumerate}
 
 The intention here is to make simplifying assumptions that will allow
@@ -821,21 +877,21 @@ us to proceed with the evaluation of this analytical framework.
 Although it may be interesting to vary the proportion used to
 calculate the proportion of mosaic land to be allocated to crop land
 we have no principled basis for this as of yet, considering that the
-defintion implies that this proportion is variable across the MLCT
+definition implies that this proportion is variable across the MLCT
 rather than being some unknown single-valued quantity.  The choice of
 the 50\% level reflects the assertion that the mosaic is a cultural
 class grouped with cropland and urban in the IGBP classification
 scheme without overstating the degree of development.  MLCT provides
 adequate variability in this dimension by commonly pairing cropland
 and mosaic in the primary/secondary class data.  The second assumption
-imposes that 15$''$ mosaic cells' non-crop portion will have the same
-relative composition of forest, open, and shrub as the as the
-non-mosaic portion of the 5$'$ grid cell in which it falls. Therefore
-mosaic pixels in a 5$'$ cell where only forest is found of the three
-non-crop mosaic components will be allocated 50\% crop and 50\%
-forest.  \autoref{fig:thumb_nomos} and \autoref{fig:thumb1_nomos} show
-the effect of decomposing the mosaic class in this fashion for
-$A_{min}$ values of 0.5 and 1.0 respectively.
+imposes that $15''$ mosaic cells' non-crop portion will have the same
+relative composition of forest, open, and shrub as the non-mosaic
+portion of the $5'$ grid cell in which it falls. Therefore mosaic
+pixels in a $5'$ cell where only forest is found of the three non-crop
+mosaic components will be allocated 50\% crop and 50\% forest.
+\autoref{fig:thumb_nomos} and \autoref{fig:thumb1_nomos} show the
+effect of decomposing the mosaic class in this fashion for $A_{min}$
+values of 0.5 and 1.0 respectively.
 
 
 <<thumbNomos>>=
@@ -878,7 +934,7 @@ if( overwriteFigures) {
 @ %def 
 
 \begin{figure}[hpt]
-\begin{center}
+\centering
   
 <<fig_thumb_nomos>>= 
 
@@ -891,13 +947,13 @@ if( overwriteFigures) {
 
 
 \includegraphics{fig_thumb_nomos}
-\end{center} 
+ 
 \caption{Aggregated cover fractions after mosaic decomposition, $A_{min}=0.5$}
 \label{fig:thumb_nomos}
 \end{figure} 
 
 \begin{figure}[hpt]
-\begin{center}
+\centering
   
 <<fig_thumb1_nomos>>= 
 
@@ -910,7 +966,7 @@ if( overwriteFigures) {
 
 
 \includegraphics{fig_thumb1_nomos}
-\end{center} 
+ 
 \caption{Aggregated cover fractions after mosaic decomposition, $A_{min}=1.0$}
 \label{fig:thumb1_nomos}
 \end{figure} 
@@ -918,7 +974,7 @@ if( overwriteFigures) {
 
 
 \begin{figure}[hpt]
-\begin{center}
+\centering
   
 <<fig_thumb_nomos_diff>>= 
 
@@ -930,7 +986,7 @@ if( overwriteFigures ) {
 @ 
 
 \includegraphics{fig_thumb_nomos_diff}
-\end{center} 
+ 
 \caption{Differences of sub-pixel fractions after mosaic
   decomposition, positive when $f(A_{min} = 0.5)$ is greater}
 \label{fig:thumb_nomos_diff}
@@ -959,7 +1015,7 @@ capturing in the secondary class and classification confidence level
 provided by MLCT.  We will test this hypothesis in
 \autoref{cha:analysis} but in order to do so we need an ``observed
 truth'' to provide an independent standard by which to make a
-comparison on the basis of overall reduction in error at the 5$'$ grid
+comparison on the basis of overall reduction in error at the $5'$ grid
 cell level.  The following section describes such a data set which
 will be held up against these MLCT-derived data sets in the next
 chapter.
@@ -979,18 +1035,16 @@ chapter.
 \label{sec:nlcd}
 
 
-The NLCD gives a higer-resolution (30m) snapshot of LULC circa 2001.
+The NLCD gives a higher-resolution (30m) snapshot of LULC across the
+cUSA study area, plus Alaska, Hawaii and Puerto Rico, circa 2001.
 Because NLCD's classification was informed by ancillary data sets such
 as population density, buffered roads, and the National Wetland
 Inventory \citep{Homer2004} reclassifying and aggregating this data to
-5-arcmin resolution in a fashion similar to that used for the MLCT is
+$5'$ resolution in a fashion similar to that used for the MLCT is
 expected to give better estimations of aggregate area for detailed
 features like rural transportation networks and small stream and
-wetland features.  This is supported by the statment in
-\citet{Homer2007} that part of the NLCD post-processing algorithm was
-designed ``to allow non-linear features like roads and streams to
-remain intact.''  Although it is unclear from \citet{Homer2004} what
-ancillary data was applied in what consituent mapping zones of the
+wetland features.  Although it is unclear from \citet{Homer2004} what
+ancillary data was applied in what constituent mapping zones of the
 NLCD we accept its representation of these fine details to be the best
 available data.  This will compensate for MLCT's bias against these
 finely detailed structures due to it's resolution.  It is the
@@ -998,10 +1052,9 @@ availability of this information that makes it difficult to apply this
 analysis beyond the United States without access to a comparable data
 set with global extents.  The analysis is restricted to the
 conterminous US because of the relative paucity of agricultural
-activity in Hawaii and Alaska.
-
-As with the MLCT the process of reclassification and aggregation is
-performed for both the detail region and the complete region.
+activity in Hawaii and Alaska.  As with the MLCT the process of
+reclassification and aggregation is performed for both the detail
+region and the complete region.
 
 One limitation of the \texttt{raster} library for \texttt{R} that we
 are using is that the aggregation function requires that the output
@@ -1036,27 +1089,26 @@ thumbNlcd <- list( pri=raster( "thumbNlcd.tif"))
       \multicolumn{2}{|c|}{NLCD} & \multicolumn{2}{|c|}{PEEL} \\
       \hline
       11 & water & \multirow{3}{*}{0} & \multirow{3}{*}{water} \\
-      98 & palustrine aquatic bed* & & \\
-      99 & estuarine aquatic bed* & & \\
+      98 & palustrine aquatic bed$^*$ & & \\
+      99 & estuarine aquatic bed$^*$ & & \\
       \hline
       41 & deciduous forest & \multirow{3}{*}{1} & \multirow{3}{*}{forest} \\
       42 & evergreen forest & & \\
       43 & mixed forest & & \\
       \hline
-      52 & shrub / scrub & \multirow{2}{*}{2} & \multirow{2}{*}{shrub} \\
-      94 & estuarine scrub/shrub wetland & & \\
+      52 & shrub/scrub & \multirow{2}{*}{2} & \multirow{2}{*}{shrub} \\
+      94 & estuarine scrub/shrub wetland$^*$ & & \\
       \hline
       71 & grassland / herbaceous & \multirow{2}{*}{3} & \multirow{2}{*}{open} \\
       81 & pasture / hay & & \\
       \hline
-      90--93 & woody wetlands & \multirow{2}{*}{4} & \multirow{2}{*}{wetland} \\
-      % 91 & palustrine forested wetland* & & \\
-      % 92 & palustrine scrub/shrub wetland* & & \\
-      % 93 & estuarine forested wetland* & & \\
-      % 94 & estuarine scub/shrub wetland* & & \\
-      95--97 & emergent herbaceous wetlands & & \\
-      % 96 & palustrine emergent wetland (persistent)* & & \\
-      % 97 & palustrine scrub/shrub wetland* & & \\
+      90 & woody wetlands & \multirow{2}{*}{4} & \multirow{2}{*}{wetland} \\
+      91 & palustrine forested wetland$^*$ & & \\
+      92 & palustrine scrub/shrub wetland$^*$ & & \\
+      93 & estuarine forested wetland$^*$ & & \\
+      95 & emergent herbaceous wetlands & & \\
+      96 & palustrine emergent wetland (persistent)$^*$ & & \\
+      97 & palustrine scrub/shrub wetland$^*$ & & \\
       \hline
       82 & cultivated crops & 5 & crop \\
       \hline
@@ -1072,10 +1124,24 @@ thumbNlcd <- list( pri=raster( "thumbNlcd.tif"))
       32 & unconsolidated shore & & \\  
       \hline
     \end{tabular}
-    \caption{Reclassification of NLCD to PEEL}
-    \label{tab:mlct_reclass}
+    \caption{Reclassification of NLCD to PEEL (adapted from \citet{Homer2004})}
+    \label{tab:nlcd_reclass}
   \end{table}
+  \footnotetext{$^*$ Indicates coastal classes}
 \end{center}
+
+In contrast to the reclassification table for MLCT shown in
+\autoref{tab:mlct_reclass}, the reclassification for NLCD given in
+\autoref{tab:nlcd_reclass} is somewhat more complicated.  Although
+NLCD has fewer forest classes they are equally unambiguous.  On the
+other hand NLCD has some special coastal classes that we chose to
+distribute among PEEL classes that we decided were most similar
+qualitatively.  Those classes are indicated with an asterisk in
+\autoref{tab:nlcd_reclass}.  NLCD features four classes of developed
+land that we are equating with the PEEL urban class to represent
+developed areas of all densities.
+
+\todo{NLCD reclassification seems problematic now}
 
 @ 
 <<thumb_nlcd_reclass>>=
@@ -1088,32 +1154,32 @@ thumbNlcd <- mlctReclass( thumbNlcd, nlcdReclassMatrix,
                          progress="text")
 
 if( overwriteFigures) {
-  thumbNlcdPlot <- peelMap(thumbNlcd$pri, 0.05)
+  thumbNlcdPlot <- peelMap(thumbNlcd$pri, 0.1)
 }
 
 @ %def 
 
 \begin{figure}[hpt] 
-\begin{center}
+\centering
 
 @
 <<fig_thumb_nlcd_reclass>>= 
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_thumb_nlcd_reclass.png",
-            plot= thumbNlcdPlot)
+            plot= thumbNlcdPlot, height= 5, width= 5)
 }
 
 @ 
 
 \includegraphics{fig_thumb_nlcd_reclass}
-\end{center} 
+ 
 \caption{NLCD reclassified} 
 \label{fig:thumb_nlcd_reclass} 
 \end{figure} 
 
 \begin{figure}[hpt] 
-\begin{center}
+\centering
   
 <<fig_thumb_nlcd_facet>>= 
 
@@ -1127,7 +1193,7 @@ if( overwriteFigures) {
 @ 
 
 \includegraphics{fig_thumb_nlcd_facet}
-\end{center} 
+ 
 \caption{NLCD covers shown separately, detail} 
 \label{fig:thumb_nlcd_facet} 
 \end{figure} 
@@ -1164,7 +1230,7 @@ if( overwriteFigures) {
 @ 
 
 \begin{figure}[hpt] 
-\begin{center}
+\centering
   
 <<fig_thumb_nlcd_agg>>= 
 
@@ -1177,12 +1243,11 @@ if( overwriteFigures) {
 
 
 \includegraphics{fig_thumb_nlcd_agg}
-\end{center} 
+ 
 \caption{NLCD aggregated cover fractions, detail area}
 \label{fig:thumb_nlcd_agg}
 \end{figure} 
 
-\todo{ Split \autoref{fig:mlct_nlcd_agg} into two figures.}
 
 @ 
 <<nlcd>>=
@@ -1205,93 +1270,41 @@ layerNames(nlcd) <- names( peelClasses[ -8])
 @ %def 
 
 \begin{figure}[hpt] 
-\begin{center}
+  \centering
   
 <<fig_nlcd>>= 
 
 if( overwriteFigures) {
-  nlcdPlot <- coverMaps( nlcd, 0.1) +
+  nlcdPlot <- coverMaps( nlcd, samp= 0.2,
+                        classes= layerNames( nlcd)[ 1:4]) +
     facet_grid( variable ~ .)
   my.ggsave( texWd, "fig_nlcd.png", width=5.5, height=8)
 }
 
 @ 
-
-
-\includegraphics{fig_nlcd}
-\end{center} 
+  \includegraphics{fig_nlcd}
 \caption{NLCD aggregated cover fractions}
 \label{fig:nlcd}
 \end{figure} 
 
-\begin{comment}
-\section{Cropland Data Layer (CDL)}
-\label{sec:cdl}
+\begin{figure}[hpt] 
+  \centering
+  
+<<fig_nlcd2>>= 
 
-\missingfigure{Table or chart showing CDL covereage for various years}
-
-The CDL is only available for a small number of states in 2001.  If
-time allows it might be good to compare what is available with our
-results as another independent evaluation against a higher-resolution
-data set.
-
-\subsection{Reclassification}
-\label{sec:cdl-reclass}
-
-
-
-%  gdalbuildvrt -tr 0.0002777778 0.0002777778 -te -124.8333 24.5 -66.91667 49.33333 cdl_2001.vrt $(find . -name "*2001*")
-
-
-\todo{Calculate CDL mask for 5-arcmin cells completely filled}
-\todo(Calculate CDL aggregated in GRASS}
+if( overwriteFigures) {
+  nlcdPlot2 <- coverMaps( nlcd, 0.2,
+                        classes= layerNames( nlcd)[ 5:8]) +
+    facet_grid( variable ~ .)
+  my.ggsave( texWd, "fig_nlcd2.png", width=5.5, height=8)
+}
 
 @ 
-<<cdl,eval=FALSE>>=
+  \includegraphics{fig_nlcd2}
+\caption{NLCD aggregated cover fractions (cont.)}
+\label{fig:nlcd2}
+\end{figure} 
 
-
-cdl <- list( pri= raster( "/gpfs/pads/projects/see/data/raw/cdl/vrt/cdl_2001.vrt"))
-
-cdlReclassMatrix <- 
-  matrix( c(
-            83,  83,  0,               # water
-            85,  85,  0,
-            63,  63,  1,               # forest
-                                       # no shrub
-            62,  62,  3,               # open
-            88,  88,  3,
-            87,  87,  4,               # wetland
-             1,  61,  5,               # crop
-            90,  90,  5,
-            82,  82,  6,               # urban
-            84,  84,  6,
-            86,  86,  6),
-                                       # no mosaic
-                                       # no barren
-         ncol= 3, byrow= TRUE)
-
-cdl  <- mlctReclass( cdl, cdlReclassMatrix, overwrite= overwriteRasters, progress= "text")
-
-cdl$Amin <- 1
-cdl <- coverFractions( cdl, mosaic= FALSE, overwrite= TRUE, progress="text")
-cdl <- aggregateFractions( cdl, overwrite=TRUE, progress="text")
-
-
-cdl_il <- list( pri= raster( "cdl_il_2001.tif"))
-cdl_il <- mlctReclass( cdl_il, cdlReclassMatrix, overwrite= overwriteRasters, progress= "text")
-cdl_il$Amin <- 1
-cdl_il <- coverFractions( cdl_il, mosaic= FALSE, overwrite= TRUE, progress="text")
-cdl_il <- aggregateFractions( cdl_il, overwrite=TRUE, progress="text")
-
-@ %def $$$
-
-
-
-\missingfigure{CDL reclassification table}
-
-\subsection{Aggregation}
-\label{sec:cdl-aggr}
-\end{comment}
 
 \section{Agricultural Lands in the Year 2000 (Agland2000)}
 \label{sec:agland2000}
@@ -1306,7 +1319,7 @@ century.  It uses two classified LULC data sets derived from remote
 sensing data as inputs, an older version of the MLCT (known as
 BU-MODIS) and the GLC2000 data set mentioned in
 \autoref{sec:background}.  Its allocation of cropland and pastures is
-constrained by a mask based on climatic criteria in order tp avoid
+constrained by a mask based on climatic criteria in order to avoid
 misallocation at higher latitudes, mainly a problem in boreal Canada
 which should have little to no bearing on our study area.  The
 ``open'' class in this data set has been renamed from ``pasture'' in
@@ -1377,7 +1390,7 @@ if( overwriteFigures) {
 %def 
 
 \begin{figure}[hpt]
-\begin{center}
+\centering
   
 <<fig_thumb_agland>>= 
 
@@ -1389,13 +1402,13 @@ if( overwriteFigures) {
 @ 
 
 \includegraphics{fig_thumb_agland}
-\end{center} 
+ 
 \caption{Agland2000 distribution in detail area}
 \label{fig:thumb_agland} 
 \end{figure} 
 
 \begin{figure}[hpt]
-\begin{center}
+\centering
   
 
 <<fig_agland>>= 
@@ -1410,7 +1423,7 @@ if( overwriteFigures) {
 @ 
 
 \includegraphics{fig_agland_trim}
-\end{center} 
+ 
 \caption{Agland2000 distribution in cUSA study area}
 \label{fig:agland} 
 \end{figure} 
@@ -1439,16 +1452,19 @@ catch-all ``other'' category.  Field crops will be distinguished from
 orchard / plantation crops that would likely fall under areas
 classified by MLCT as forest or shrub in this step.
 
+
 @ 
-<<175crops, eval=FALSE>>=
+<<175crops>>=
+
+setwd( dataWd)  
 
 cropsWd <- path.expand( "~/see/data/raw/175crops2000/nc")
-list.files( cropsWd, "vrt$")
+## list.files( cropsWd, "vrt$")
 
 cropTable <- read.csv( "/home/nbest/see/data/raw/175crops2000/monfreda2008 table1.csv", header= TRUE)
 
 ## For now we consider only herbaceous crops
-## assume that forage crops will be classified "open"
+
 
 herbNotForage <- cropTable$type=="herbaceous" & cropTable$group != "Forage"
 
@@ -1486,9 +1502,8 @@ catStacks <- llply( catLists, function( maps) {
     }))
   }})
 
-cusaMask <- raster( list.files( getwd(),
-                               "mask_cusa.tif",
-                               recursive= TRUE))
+
+cusaMask <- raster( "mask_cusa.tif")
 cusaExtent <- extent( cusaMask)
 
 catCropped <- llply( names( catStacks), function( c) {
@@ -1505,7 +1520,7 @@ catMasked <- llply( names( catCropped), function( c) {
   r <- if( nlayers( catCropped[[ c]]) ==1) {
     catCropped[[ c]]
   } else overlay( catCropped[[ c]], fun= sum)
-  mask( r, cusaMask,
+  raster::mask( r, cusaMask,
        filename= paste( c, "tif", sep="."),
        overwrite= TRUE)
 })
@@ -1515,29 +1530,48 @@ names( catMasked) <- names( catStacks)
 @ 
 
 \begin{figure}[hpt] 
-\begin{center} 
+  \centering
 
-<<fig_crops, eval=FALSE>>= 
+<<fig_crops>>= 
 
 if( overwriteFigures) {
   cropsMap <-
-    coverMaps( stack( catMasked), 0.2) +
+    coverMaps( stack( catMasked[ 1:5]), 0.4) +
     facet_grid( variable ~ .)
   my.ggsave( texWd, "fig_crops.png",
             width=5.5, height=8)
 }
-setwd( dataWd)
 
 
 @ 
 
 \includegraphics{fig_crops}
-\end{center} 
 \caption{175Crops2000 category maps} 
 \label{fig:crops} 
 \end{figure} 
 
-\todo{ Split \autoref{fig:crops} into two figures and adjust fill limits.}
+
+\begin{figure}[hpt] 
+  \centering
+
+<<fig_crops2>>= 
+
+if( overwriteFigures) {
+  cropsMap2 <-
+    coverMaps( stack( catMasked[ 6:10]), 0.4) +
+    facet_grid( variable ~ .)
+  my.ggsave( texWd, "fig_crops2.png",
+            width=5.5, height=8)
+}
+
+
+@ 
+
+\includegraphics{fig_crops2}
+\caption{175Crops2000 category maps (cont.)} 
+\label{fig:crops2} 
+\end{figure} 
+
 
 %%% Local Variables: 
 %%% mode: latex

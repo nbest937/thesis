@@ -7,7 +7,7 @@
 
 The continuing evolution and commoditization of high-performance
 computing infrastructure is constantly opening new horizons in spatial
-modeling of human\slash environment interactions.  Increases in
+modeling of human-environment interactions.  Increases in
 processing throughput, affordability of tera- and petabyte-scale
 storage resources, and ubiquity of parallelization tools and
 techniques create opportunities for formulating models of spatial
@@ -33,63 +33,63 @@ settlement, development, utilization, and transformation of natural
 resources.  The general form of such a characterization is a land
 use\slash land cover (LULC) map which depicts landscapes according to
 categories of anthropogenic and natural phenomena \citep{Fisher2005a}.
-\todo{Warning--page numbers missing in Fisher2005a} These maps are
-necessarily functions of history, climate, geology, hydrology and are
-formulated according to some design or convention with regard to their
-constituent types and their definitions, which make possible myriad
-representations of a given landscape regardless of scale.  When
-conducting analysis in this space it is typically necessary to tailor
-the analysis to accommodate available data or create new data from raw
-physical measurements and observations, but a third option of fusing
-aspects of multiple available data sets is also available, as we will
-demonstrate here.
+These maps are necessarily functions of history, climate, geology,
+hydrology and are formulated according to some design or convention
+with regard to their constituent types and their definitions, which
+make possible myriad representations of a given landscape regardless
+of scale.  When conducting analysis in this space it is typically
+necessary to tailor the analysis to accommodate available data or
+create new data from raw physical measurements and observations, but a
+third option of fusing aspects of multiple available data sets is also
+feasible, as we will demonstrate here.
 
 Arguably the most significant intersection of land use and land cover
 is agriculture.  Agricultural activity has transformed all but the
 most inhospitable, impervious, and inaccessible corners of the globe
-and serves as a crucial underpinning of civilization, but is still an
-expression of variability in weather, soils, and biology, natural
-phenomena beyond humans' control, across the face of the earth.  In
-the face of uncertainty regarding food security, availability of raw
-materials for industry and trade, impacts and dynamics of
-deforestation, desertification, and climate change, and sensitivity to
-these alarming trends due to a burgeoning global population, reliable
-forecasts of agricultural production and productivity over the long
-term are objects of much desire in the corridors of government,
-finance, and industry.
+and serves as a crucial underpinning of civilization, but yet still
+reflects variability in weather, soils, and biology, natural phenomena
+beyond humans' control, across the face of the earth.  In the face of
+uncertainty regarding food security, availability of raw materials for
+industry and trade, impacts and dynamics of deforestation,
+desertification, and climate change, and sensitivity to these alarming
+trends due to a burgeoning global population, reliable forecasts of
+agricultural production and productivity over the long term are
+objects of much desire in the corridors of government, finance, and
+industry.
 
 Recent years have seen a significant increase in the availability of
 global land cover data sets including the University of Maryland
 Global Land Cover Classification, Global Land Cover 2000 (GLC2000),
 and MODIS Land Cover Type (MLCT).  At the regional level the National
-Land-cover Database (NLCD) provides high-resolution LULC data for the United States and Puerto Rico.  These data sets are
-summarized in Table \ref{tab:lulc} with pertinent references and
-attributes of their collection.  The proliferation of these data sets
-reflects the diversification and technological advances among
-space-borne sensors in recent years, resulting in improved resolution,
-both spatial and temporal, as well as innovation in post-processing
-and classification algorithms that transform raw sensor data into the
-thematic data that is readliy applicable to theoretical modeling.
+Land-cover Database (NLCD) provides high-resolution LULC data for the
+United States and Puerto Rico.  These data sets are summarized in
+Table \ref{tab:lulc} with pertinent references and attributes of their
+collection.  The proliferation of these data sets reflects the
+diversification and technological advances among space-borne sensors
+in recent years, resulting in improved resolution, both spatial and
+temporal, as well as innovation in post-processing and classification
+algorithms that transform raw sensor data into the thematic data that
+is readily applicable to theoretical modeling.
 
-\begin{table}[ht]
-  \begin{center}
+\begin{center}
+  \begin{table}[ht]
     \begin{small}
 %\begin{sidewaystable}
       \begin{tabular}{p{1in}p{1in}p{0.5in}lp{0.5in}}
         \hline
         Data set & Reference & Sensor & Resolution & Time Span \\
         \hline
-        UMD GLobal Land Cover 1998 & \citet{Hansen2000} & AVHRR & 1km & 1981 -- 1994 (composite) \\
+        UMD Global Land Cover 1998 & \citet{Hansen2000} & AVHRR & 1km & 1981 -- 1994 (composite) \\
         Global Land Cover 2000 & \citet{EC2003,Bartholome2005} & SPOT & 1km & Nov~1999~--~Dec 2000 (composite) \\
-        National Landcover Database (NLCD) & \citet{Homer2004,Homer2007} & Landsat & 30 m & 2001 \\
+        National Land Cover Database (NLCD) & \citet{Homer2004,Homer2007} & Landsat & 30 m & 2001 \\
         MODIS Land Cover Type v005 & \citet{MLCT,Friedl2010} & MODIS (Aqua~\&~Terra) & 500m & 2001~--~2008 (annual~time~series) \\
         \hline
       \end{tabular}
     \end{small}
     \caption{Summary of global LULC data sets}
     \label{tab:lulc}
+  \end{table}
   \end{center}
-\end{table}
 %\end{sidewaystable}
 
 \todo{Check format of \autoref{tab:lulc}}
@@ -131,7 +131,7 @@ to changes in technology, both of production itself and the products
 and materials that are derived from them, changes in aggregate demand
 for food and its attendant political ramifications, and changes to the
 environments where agricultural production occurs.  Rents and prices
-of land will follow from the profitability, adaptiblity, and risks
+of land will follow from the profitability, adaptability, and risks
 associated with the commodities that are possible to produce on it, as
 well as costs of energy and inputs needed to bring those goods to
 market.  A spatially explicit model of not only agricultural
@@ -145,11 +145,11 @@ calculates the likely distribution of production needed to meet that
 demand.  The foundation of this modeling effort would have to be a
 LULC data set that is ``complete'' in the sense that it assigns all
 land plus coastal and inland water areas to one category or another,
-and that differentiates among crops to provide a modeling environment
+and that it differentiates among crops to provide a modeling environment
 where shifts in production factor allocation can be driven by market
 and physical variables.  None of the data sets considered so far
 exhibit these qualities; the LULC data sets treat cropland as a
-homogenous category and the agricultural maps do not depict other uses
+homogeneous category and the agricultural maps do not depict other uses
 and covers.  Hence the motivation to develop a hybrid data set that
 satisfies these criteria.
 
@@ -166,27 +166,18 @@ that the values in each row sum to unity.  In terms of geospatial
 mapping this is equivalent to assigning a layer or band in a stacked
 image set to each category, as is done for spectral bands in
 radiometric data, and applying the same sum-to-one constraint to each
-pixel.  \sout{An advantage to this approach is that errors of false
-  spatial precision in higher-resolution data sets from which our
-  inputs are derived, meaning that pixels in the mother data set are
-  aggregated into an expression of probability across the larger model
-  grid cell versus the definite location implied by the thematic data.
-  It also means that we will have an avenue for increasing model
-  complexity and the raw size of the data set by a linear factor by
-  increasing the depth of the data array rather than the quadratic
-  increase that accompanies increases in resolution.} \todo{Does
-  everyone agree that we can do without this passage?}  The primary
-purpose of this design choice is to strike a balance between
-locational specificity and a convenient accounting mechanism for land
-use conversion forecasts that would only confer false precision and
-impose additional computational burden if expressed spatially.  In
-other words, the land area of a pixel is considered to be a single
-location whose internal arrangement is unspecified.  The model can
-incorporate constraints governing the iterative transition of those
-fractions that are stated algebraically in order to exclude protected
-natural areas from conversion or require a degree of autocorrelation
-among neighbors to prevent unrealistic divergences in development
-patterns among grid cell neighborhoods, for example.
+pixel.  The primary purpose of this design choice is to strike a
+balance between locational specificity and a convenient accounting
+mechanism for land use conversion forecasts that would only confer
+false precision and impose additional computational burden if
+expressed spatially.  In other words, the land area of a pixel is
+considered to be a single location whose internal arrangement is
+unspecified.  The model can incorporate constraints governing the
+iterative transition of those fractions that are stated algebraically
+in order to exclude protected natural areas from conversion or require
+a degree of auto-correlation among neighbors to prevent unrealistic
+divergences in development patterns among grid cell neighborhoods, for
+example.
 
 A disadvantage of this data model is apparent when attempting to
 visualize the data.  A thematic map can be viewed in a single pass
@@ -195,7 +186,7 @@ and the relative proportions and distributions of classes can be
 readily perceived by the viewer.  For the sub-pixel data model a
 cognitive adjustment is necessary in order to consider multiple
 classes simultaneously.  Although it is possible to employ the
-false-color approach typically used for viewing multispectral data,
+false-color approach typically used for viewing multi-spectral data,
 which is to map a subset of three bands to the red, green, and blue
 channels, this limits a given map to portraying three classes
 simultaneously, or else picking two of primary interest and lumping
@@ -223,16 +214,17 @@ categories, including crop sub-categories, to which each cell can be
 allocated.  With an ultimate goal of running simulations at global
 extents we wanted to err on the side of prudence before measuring the
 computational requirements of processing time and storage of a working
-prototype.  Early tests gauging the computational requirements for
+prototype.  Early tests gaging the computational requirements for
 carrying out these simulations have indicated that operating on a 5$'$
 grid cell globally is not prohibitively costly in time, memory, or
 storage and that the design, implement, evaluate iterative development
-cycle can proceed at a satisfactory pace.  This choice of resolution
-is not as arbitrary as it may seem given that it equates to roughly
-10km at the equator and happens to be the same resolution as some of
-the base data employed in this exercise.
+cycle can proceed at a satisfactory pace.  \todo{Do these statements
+  need to be substantiated?} This choice of resolution is not as
+arbitrary as it may seem given that it equates to roughly 10km at the
+equator and happens to be the same resolution as some of the base data
+employed in this exercise.
 
-The algorithm described here will be peformed on the subset of the
+The algorithm described here will be performed on the subset of the
 global 5-arc-minute grid that contain land area of the 48 contiguous
 states of the United States but is intended to be applied globally.
 As we will discuss in Chapter \ref{cha:datasets} when the base data
@@ -274,11 +266,11 @@ cropland, are improved through this method.  More on this in Section~\ref{sec:ml
 We maintain that the manner in which we execute this analysis is as
 significant, if not more so, to the practice of geospatial analysis as
 the product of the analysis itself.  The second objective of this
-paper is to demonstrate the concept of reproducible resarch in
+paper is to demonstrate the concept of reproducible research in
 geospatial analysis that has been made possible by a suite of
 open-source software tools.  Previous to employing the suite of tools
 described below, our typical research experience with widely available
-GIS software, both free and commerical, is to conduct the analysis in
+GIS software, both free and commercial, is to conduct the analysis in
 a graphical user interface (GUI) environment and capture outputs for
 publication by manually exporting maps and charts as images and
 transcribing quantitative results from on-screen displays into the
@@ -307,21 +299,21 @@ geospatial data sets difficult.  Friedrich Leisch's
 \citeyearpar{Leisch2002} \texttt{Sweave} package for \texttt{R} is a
 tool for embedding \texttt{R} code within a
 \href{http://www.latex-project.org/}{\LaTeX} \citep{Lamport1994}
-document for inline code evaluation and dynamic injection of figures,
+document for in-line code evaluation and dynamic injection of figures,
 tables, and text into a document prior to final typesetting.  The
 utilization of these tools results in a software environment where the
-princples of reproducible research described and demonstrated by
+principles of reproducible research described and demonstrated by
 \citet{Gentleman2007} can be applied.  An academic paper produced
 under this paradigm is analogous to a piece of open-source software
 where the majority of ``users'' will simply want the ``compiled''
 version in the form of a PDF document, but the author also provides
-access to the the source code behind the production of that document
+access to the source code behind the production of that document
 for inspection, re-execution, and adaptation for follow-on research.
 This approach lowers the costs of reproduction and verification of
 scientific analyses, central tenets of the scientific method that have
 effectively fallen out of practice due to these costs.  With the
 advent of software tools such as these this approach to documenting
-research has gained a foothold in numerous desciplines from statistics
+research has gained a foothold in numerous disciplines from statistics
 to medical imaging.
 
 The tables, charts, and maps included in this document are generated

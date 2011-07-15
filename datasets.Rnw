@@ -31,8 +31,8 @@ overwriteFigures <- TRUE
 This chapter presents summary descriptions of the various data sets
 that are relevant to this analysis and further discussion on how they
 were manipulated in preparation for analysis.  Operations where
-multiple data sets are used in conjunction are deferred to Chapter
-\ref{cha:analysis}.
+multiple data sets are used in conjunction are deferred to
+\autref{cha:analysis}.
 
 The general approach with the MLCT and NLCD data sets is to reclassify
 their categories, calculate per-pixel, per-class areas at the native
@@ -143,8 +143,8 @@ igbpLegend <- igbpLegend[ igbpLegend != "#000000"]
 \subsection{Reclassification}
 \label{sec:mlct-reclass}
 
-\begin{center}
-  \begin{table}[htbp]
+\begin{table}[htbp]
+  \begin{center}
     \begin{tabular}{|l|l|l|l|}
       \hline
       \multicolumn{2}{|c|}{MLCT/IGBP} & \multicolumn{2}{|c|}{PEEL} \\
@@ -178,8 +178,8 @@ igbpLegend <- igbpLegend[ igbpLegend != "#000000"]
     \end{tabular}
     \caption{Reclassification of MLCT/IGBP to PEEL (adapted from \citet{Friedl2002})}
     \label{tab:mlct_reclass}
-  \end{table}
-\end{center}
+  \end{center}
+\end{table}
 
 \autoref{tab:mlct_reclass} shows the mapping of the IGBP classes used
 in the original MLCT data to the simplified classification designed
@@ -1082,8 +1082,8 @@ thumbNlcd <- list( pri=raster( "thumbNlcd.tif"))
 \label{sec:nlcd-reclass}
 
 
-\begin{center}
-  \begin{table}[htbp]
+\begin{table}[htbp]
+  \begin{center}
     \begin{tabular}{|l|l|l|l|}
       \hline
       \multicolumn{2}{|c|}{NLCD} & \multicolumn{2}{|c|}{PEEL} \\
@@ -1123,12 +1123,13 @@ thumbNlcd <- list( pri=raster( "thumbNlcd.tif"))
       31 & barren land & & \\  
       32 & unconsolidated shore & & \\  
       \hline
+      \multicolumn{4}{l}{\footnotesize $^*$ Indicates coastal classes} \\
     \end{tabular}
     \caption{Reclassification of NLCD to PEEL (adapted from \citet{Homer2004})}
     \label{tab:nlcd_reclass}
-  \end{table}
-  \footnotetext{$^*$ Indicates coastal classes}
-\end{center}
+  \end{center}
+\end{table}
+
 
 In contrast to the reclassification table for MLCT shown in
 \autoref{tab:mlct_reclass}, the reclassification for NLCD given in

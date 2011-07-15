@@ -433,29 +433,6 @@ colnames(cropScatDf) <-
 cropScatDf$weight <- with( cropScatDf, acres/ max(acres))
 
 
-if( overwriteFigures) scatPlot1 <-
-  ggplot( data=
-         cropScatDf, ##[ sample( 1:nrow(cropScatDf),
-                     ##       round( nrow(cropScatDf) *0.05)),],
-         aes( agland, nomos1,
-             size= weight)) +
-  geom_point( alpha= 0.03) +
-  scale_area( limits= c(0.7, 1),
-             breaks= seq( 0.7, by= 0.1),
-             to= c(0.7, 1) *6) +
-  geom_abline( size= 2,
-              alpha= 0.4) +
-  theme_bw() +
-  scale_x_continuous( "Agland2000",
-                     limits= c( 0, 1),
-                     expand= c( 0.025, 0)) +
-  scale_y_continuous( "MLCT, A_min = 1.0",
-                     limits= c( 0, 1),
-                     expand= c( 0.025, 0)) +
-  coord_equal() +
-  opts( legend.position= "none")
-
-
 if( overwriteFigures) hexPlot1 <-
   ggplot( data= cropScatDf,
        ## with( cropScatDf,
@@ -473,23 +450,6 @@ if( overwriteFigures) hexPlot1 <-
 
 @
 
-\begin{figure}[hpt]
-  \centering
-
-
-<<fig_scatplot1>>= 
-
-if( overwriteFigures) {
-  my.ggsave( texWd, "fig_scatPlot1.png",
-         plot= scatPlot1)
-}
-
-@ 
-
-\includegraphics{fig_scatPlot1}
-  \caption{Scatter plot of MLCT crop ($A_{min}=1.0$, no mosaic) versus Agland2000 cropland}
-  \label{fig:scatplot1} 
-\end{figure} 
 
 \begin{figure}[hpt]
   \centering
@@ -543,30 +503,6 @@ and attendant error by assigning entire pixels to the cropland class
 and not allowing for the possibility of mixed covers.
  
 
-
-\begin{figure}[hpt]
-  \centering
-
-
-<<fig_scatplot05>>= 
-
-if( overwriteFigures) {
-  my.ggsave( texWd, "fig_scatPlot05.png",
-         plot= scatPlot1 +
-         aes(agland, nomos05, size=weight) +
-         scale_y_continuous( "MLCT, A_min = 0.5",
-                            limits= c( 0, 1),
-                            expand= c( 0.025, 0)))
-}
-
-
-
-@ 
-
-\includegraphics{fig_scatPlot05}
-  \caption{Scatter plot of MLCT crop ($A_{min}=0.5$, no mosaic) versus Agland2000 cropland}
-  \label{fig:scatplot05} 
-\end{figure} 
 
 
 \begin{figure}[hpt]
@@ -638,7 +574,7 @@ negatively biased in the total areas assigned to water, wetland, and
 urban features relative to the NLCD.  It is clear from visual
 inspection that features of these classes tend to have smaller
 characteristic dimensions which causes them to be overlooked in the
-MLCT data due to its resolution.  The most obvious example are the
+MLCT data due to its resolution.  The most obvious example is the
 rural transportation networks in areas surveyed under the Public Land
 Survey System (PLSS) where roads have been laid out on a generally
 regular grid of square miles.  In the PEEL classification this
@@ -1179,31 +1115,6 @@ colnames(cropScatAdjDf) <-
 cropScatAdjDf$weight <- with( cropScatAdjDf, acres/ max(acres))
 
 
-if( overwriteFigures) scatPlotAdj <-
-  ggplot( data=
-         cropScatAdjDf, ##[ sample( 1:nrow(cropScatAdjDf),
-                       ##         round( nrow(cropScatAdjDf) *0.05)),],
-         aes( agland, mlctAdj,
-             size= weight)) +
-  geom_point( alpha= 0.03) +
-  scale_area( limits= c(0.7, 1),
-             breaks= seq( 0.7, by= 0.1),
-             to= c(0.7, 1) *6) +
-  geom_abline( size= 2,
-              alpha= 0.4) +
-  ##  stat_smooth( method= "lm",
-  ##              se= FALSE,
-  ##              size= 3,
-  ##              alpha= 0.2) +
-  theme_bw() +
-  scale_x_continuous( "Agland2000",
-                     limits= c( 0,1),
-                     expand= c( 0.025,0)) +
-  scale_y_continuous( "MLCT Adjusted",
-                     limits= c( 0,1),
-                     expand= c( 0.025,0)) +
-  coord_equal() +
-  opts( legend.position= "none")
 
 
 
@@ -1291,21 +1202,6 @@ if( overwriteFigures) {
   \label{fig:areasAdj}
 \end{figure}
 
-\begin{figure}[hpt] 
-  \centering
-
-<<fig_scatPlotAdj>>= 
-
-if( overwriteFigures) {
-  my.ggsave( texWd, "fig_scatPlotAdj.png",
-         plot= scatPlotAdj)
-}
-
-@ 
-    \includegraphics{fig_scatPlotAdj}
-  \caption{Scatter plot of MLCT adjusted crop versus Agland2000 cropland}
-  \label{fig:scatPlotAdj} 
-\end{figure} 
 
 \begin{figure}[hpt] 
   \centering
@@ -1601,28 +1497,6 @@ colnames(cropScatAgcDf) <-
 cropScatAgcDf$weight <- with( cropScatAgcDf, acres/ max(acres))
 
 
-if( overwriteFigures) scatPlotAgc <-
-  ggplot( data=
-         cropScatAgcDf, ##[ sample( 1:nrow(cropScatAgcDf),
-                       ##         round( nrow(cropScatAgcDf) *0.05)),],
-         aes( agland, agc,
-             size= weight)) +
-  geom_point( alpha= 0.03) +
-  scale_area( limits= c(0.7, 1),
-             breaks= seq( 0.7, by= 0.1),
-             to= c(0.7, 1) *6) +
-  geom_abline( size= 2,
-              alpha= 0.4) +
-  theme_bw() +
-  scale_x_continuous( "Agland2000",
-                     limits= c( 0, 1),
-                     expand= c( 0.025, 0)) +
-  scale_y_continuous( "Agland Complete",
-                     limits= c( 0, 1),
-                     expand= c( 0.025, 0)) +
-  coord_equal() +
-  opts( legend.position= "none")
-
 
 cropScatAgcDf <-
   within( cropScatAgcDf,
@@ -1654,28 +1528,6 @@ agcThemeMap <-
 
 \todo{Discuss implications of final area tabulation}
  
-
-\begin{figure}[hpt] 
-  \centering
-
-
-<<fig_scatPlotAgc>>= 
-
-if( overwriteFigures) {
-  my.ggsave( texWd, "fig_scatPlotAgc.png",
-         plot= scatPlotAgc)
-}
-
-
-  
-@ 
-
-    \includegraphics{fig_scatPlotAgc}
-  \caption{Scatter plot of PEEL crop versus Agland2000 crop}
-  \label{fig:scatPlotAgc} 
-\end{figure} 
-
-\todo{Evaluate hexbin charts vs. old scatter plots; if acceptable remove scatter plots}
 
 \begin{figure}[hpt] 
   \centering

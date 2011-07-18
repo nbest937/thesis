@@ -11,7 +11,7 @@ theme_update( panel.grid.minor= theme_blank(),
 
 theme_map <- theme_get()
 
-theme_set( theme_bw())
+theme_set( theme_bw( base_family= "serif"))
 
 ggplotRaster <- function( r, samp) {
   df <- data.frame( as( sampleRegular( r, ncell( r)*samp, 

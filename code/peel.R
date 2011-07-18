@@ -1,12 +1,8 @@
 library( raster)
-##library( rgdal)
-##library( lattice)
 library( ggplot2)
-##library( reshape2)
 library( xtable)
-##library( Defaults)
-
 library( RColorBrewer)
+library( Hmisc)
 
 library( foreach)
 library(doMC)
@@ -92,23 +88,6 @@ mlctReclass <- function( mlct, reclassMatrix, overwrite=FALSE, ...) {
   mlct
 }
 
-## overlayFunction <- function( pri, sec, pct) {
-##   ifelse( is.na(pri), NA,
-##          ifelse( is.na( sec), 1,
-##                 ifelse( is.na( pct), Amin,
-##                        Amin +( 1 -Amin) *pct /100)))
-## }
-
-## priFracOvFunc <- function( x){
-##   pri <- x[ 1]
-##   sec <- x[ 2]
-##   pct <- x[ 3]
-##   ifelse( is.na(pri), NA,
-##          ifelse( is.na( sec), 1,
-##                 ifelse( is.na( pct), Amin,
-##                        Amin +( 1 -Amin) *pct /100)))
-## }
-
 
 primaryFraction <- function( mlct, Amin=1.0, overwrite=FALSE, ...) {
                                         # appends an A_p raster to the MLCT list 
@@ -118,15 +97,6 @@ primaryFraction <- function( mlct, Amin=1.0, overwrite=FALSE, ...) {
           paste( Amin, "tif", sep= "."),
           sep= "_")
   mlct$Amin <- Amin
-  ## priFracOvFunc <- function( r) {
-  ##   pri <- r[ 1]
-  ##   sec <- r[ 2]
-  ##   pct <- r[ 3]
-  ##   ifelse( is.na(pri), NA,
-  ##          ifelse( is.na( sec), 1,
-  ##                 ifelse( is.na( pct), Amin,
-  ##                        Amin +( 1 -Amin) *pct /100)))
-  ## }
   priFracCalcFunc <- function( st) {
     pri <- st[ 1]
     sec <- st[ 2]
@@ -138,11 +108,6 @@ primaryFraction <- function( mlct, Amin=1.0, overwrite=FALSE, ...) {
   }
 
   if( Amin <1 && overwrite)
-    ## mlct$Ap <- overlay( mlct$pri, mlct$sec, mlct$pct, 
-    ##                    fun= priFracOvFunc, #overlayFunction,
-    ##                    filename= primaryFractionFile,
-    ##                    overwrite= TRUE,
-    ##                    ...)
     mlct$Ap <- calc( stack(mlct$pri, mlct$sec, mlct$pct), 
                        fun= priFracCalcFunc,
                        filename= primaryFractionFile,
@@ -153,28 +118,6 @@ primaryFraction <- function( mlct, Amin=1.0, overwrite=FALSE, ...) {
   else mlct$Ap <- NULL
   mlct
 }
-
-## primaryOnlyFracsFun <-
-##   function( mosaic) {
-##     function( pri) {
-##       v <- rep( ifelse( is.na( pri), NA, 0), times= length( peelClasses))
-##       if( !is.na( pri)) v[ pri +1] <- 1
-##       if( mosaic) v else v[ names( peelClasses) != "mosaic"]
-##     }
-##   }
-
-    ## if( mosaic) b
-    ## else b[ ,peelClasses[ names( peelClasses) != "mosaic"] +1]
-
-    ##   res <- matrix( 0, nrow= length( pri), ncol= cols)
-    ##   res[ is.na( pri),] <- rep( NA, times= cols)
-      
-      
-    ## aaply( pri, 1,
-    ##       function( x) {
-    ##         ifelse( is.na( x), NA,
-    ##                ifelse( x == pri, 1, 0))
-    ##       })}
 
 coverFractions <- function( mlct, mosaic= TRUE, overwrite= FALSE, ...)  {
   Amin <- mlct$Amin
@@ -387,4 +330,45 @@ acreageTable <- function( rasterNames) {
   rownames( areasCt) <- areasCt[, "X2"]
   areasCt <- areasCt[, -1]
   areasCt <- areasCt[ c( names( peelClasses), "(all)"), rasterNames]
+}
+
+printAreas <- function( acres) {
+  return( paste( round( acres /10^6, digits=1), "Ma (",
+                round( acres /10^6 *0.404685642, digits=1), "Mha)",
+                sep=" "))
+}
+
+getPeelBand <- function( peelBrick, cover) {
+  unstack( peelBrick)[[ peelBands[[ cover]]]]
+}
+
+rmseRast <- function(obsRast, predRast) {
+  sqErr <- overlay( obsRast, predRast,
+                   fun=function( obs, pred) return(( obs -pred) ^2))
+  return( sqrt( cellStats( sqErr, 'mean')))
+}
+
+biasRast <- function(obsRast, predRast) {
+  err <- overlay( obsRast, predRast,
+                   fun=function( obs, pred) return( obs -pred))
+  return( cellStats( err, 'mean'))
+}
+
+
+  
+rmseSummary <- function( obsNameFun, predNameFun) {
+  sapply( covers,
+         function( c) {
+           obsRast  <- raster( as.spgdf( handle( obsNameFun(c))))
+           predRast <- raster( as.spgdf( handle( predNameFun(c))))
+           if( extent( obsRast) != extent( predRast)) {
+             intExt <- intersectExtent( obsRast, predRast)
+             obsRast <- crop( obsRast, intExt)
+             predRast <- crop( predRast, intExt)
+           }
+           return( c( rmse_frac= rmseRast( obsRast, predRast),
+                      bias_frac= biasRast( obsRast, predRast),
+                     rmse_acres= rmseRast( areaAcres(obsRast), areaAcres( predRast)),
+                     bias_acres= biasRast( areaAcres(obsRast), areaAcres( predRast))))
+         })
 }

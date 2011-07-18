@@ -32,7 +32,7 @@ This chapter presents summary descriptions of the various data sets
 that are relevant to this analysis and further discussion on how they
 were manipulated in preparation for analysis.  Operations where
 multiple data sets are used in conjunction are deferred to
-\autref{cha:analysis}.
+\autoref{cha:analysis}.
 
 The general approach with the MLCT and NLCD data sets is to reclassify
 their categories, calculate per-pixel, per-class areas at the native
@@ -216,7 +216,7 @@ if( overwriteFigures) {
 
 
 
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
   \centering
   
 <<fig_thumb_pri_reclass>>= 
@@ -242,7 +242,7 @@ south with scattered forests and pockets of development throughout.
 The urban complex of Port Huron, Michigan and Sarnia, Ontario is
 visible in the southeast corner.
 
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
 \centering
   
 <<fig_thumb_sec_reclass>>= 
@@ -274,7 +274,7 @@ and secondary classifications it simply reflects a distinction between
 sub-types of forest in the original data, for example evergreen and
 deciduous.
 
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
 \centering
   
 <<fig_thumb_pct>>= 
@@ -312,7 +312,7 @@ primary class in our example detail area and
 \autoref{fig:thumb_sec_facet} for the secondary class.
 
 
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
 \centering
   
 <<fig_thumb_pri_facet>>= 
@@ -333,7 +333,7 @@ if( overwriteFigures) {
 \end{figure} 
 
 
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
 \centering
   
 <<fig_thumb_sec_facet>>= 
@@ -399,7 +399,7 @@ if( overwriteFigures) {
 
 @ 
 
-\begin{sidewaysfigure}[hpt] 
+\begin{sidewaysfigure}[ht] 
   \centering
 
 @
@@ -418,9 +418,8 @@ if( overwriteFigures) {
 \label{fig:mlct_pri_reclass} 
 \end{sidewaysfigure} 
 
-\todo{Make cUSA graphics wider or even turn sideways for full-page}
 
-\begin{sidewaysfigure}[hpt] 
+\begin{sidewaysfigure}[ht] 
   \centering
   
 <<fig_mlct_sec_reclass>>= 
@@ -440,7 +439,7 @@ if( overwriteFigures) {
 \end{sidewaysfigure} 
 
 
-\begin{sidewaysfigure}[hpt] 
+\begin{sidewaysfigure}[ht] 
   \centering
   
 <<fig_mlct_pct>>= 
@@ -460,7 +459,7 @@ if( overwriteFigures) {
 \end{sidewaysfigure} 
 
 
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
   \centering
   
 <<fig_mlct_pri_facet>>= 
@@ -481,7 +480,7 @@ if( overwriteFigures) {
 \label{fig:mlct_pri_facet} 
 \end{figure} 
 
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
   \centering
   
 <<fig_mlct_pri_facet2>>= 
@@ -503,7 +502,7 @@ if( overwriteFigures) {
 \end{figure} 
 
 
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
   \centering
   
 <<fig_mlct_sec_facet>>= 
@@ -524,7 +523,7 @@ if( overwriteFigures) {
 \label{fig:mlct_sec_facet} 
 \end{figure} 
 
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
   \centering
   
 <<fig_mlct_sec_facet2>>= 
@@ -644,7 +643,7 @@ simply a linear scaling and offset of the latter.  \autoref{fig:thumb_fracs} sho
 %\label{sec:agg-detail-area}
 
 
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
 \centering
   
 <<fig_thumb_fracs>>= 
@@ -669,7 +668,7 @@ pixel area.  \autoref{fig:thumb1_fracs} shows these differences.  The
 effect of adjusting $A_{min}$ is subtle; we will examine it more
 closely after aggregating to the $5'$ grid.
 
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
 \centering
 
 <<fig_thumb1_fracs>>= 
@@ -702,7 +701,7 @@ Because the desired $5'$ resolution is a multiple of the original
 convenient for properly computing this mean.
 
 
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
 \centering
   
 <<fig_thumb_agg>>= 
@@ -720,7 +719,7 @@ if( overwriteFigures) {
 \label{fig:thumb_agg}
 \end{figure} 
 
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
 \centering
   
 <<fig_thumb1_agg>>= 
@@ -786,7 +785,7 @@ we saw from the earlier maps (\autoref{fig:thumb_pri_facet} and
 \autoref{fig:thumb_sec_reclass}) of the MLCT data which classes were
 indicated by the secondary classes in those areas.
 
-\begin{figure}[hpt]
+\begin{figure}[ht]
 \centering
   
 <<fig_thumb_agg_diff>>= 
@@ -846,6 +845,8 @@ mlct1 <- aggregateFractions( mlct1,
 
 @ %def 
 
+\clearpage
+
 \subsection{Mosaic decomposition}
 \label{sec:decomposition}
 
@@ -900,11 +901,6 @@ setwd( dataWd)
 thumb  <- decomposeMosaic( thumb, overwrite= overwriteRasters, progress= "text")
 thumb1 <- decomposeMosaic( thumb1, overwrite= overwriteRasters, progress= "text")
 
-## thumb$nomos <- brick( paste( getwd(), filename( thumb$nomos), sep="/"))
-## thumb1$nomos <- brick( paste( getwd(), filename( thumb1$nomos), sep="/"))
-## thumb$delta <- brick( paste( getwd(), filename( thumb$delta), sep="/"))
-## thumb1$delta <- brick( paste( getwd(), filename( thumb1$delta), sep="/"))
-
 if( overwriteFigures) {
   thumbPlots$nomos <- coverMaps( thumb$nomos, 1)
   thumbPlots1$nomos <- coverMaps( thumb1$nomos, 1)  
@@ -924,16 +920,11 @@ if( overwriteFigures) {
     scale_fill_gradientn( "diff", colours= rev( brewer.pal( 11, "BrBG")), 
                          limits= c( 0.1, -0.1),
                          breaks= seq( 0.1, -0.1, by= -0.02))
-                         ## limits= c( 0.32, -0.32),
-                         ## breaks= { b <- c( 0.01, 0.02, 0.04,
-                         ##                   0.08, 0.16, 0.32)
-                         ##           c( rev( b), 0, -b)
-                         ##         })
 }
 
 @ %def 
 
-\begin{figure}[hpt]
+\begin{figure}[ht]
 \centering
   
 <<fig_thumb_nomos>>= 
@@ -952,7 +943,7 @@ if( overwriteFigures) {
 \label{fig:thumb_nomos}
 \end{figure} 
 
-\begin{figure}[hpt]
+\begin{figure}[ht]
 \centering
   
 <<fig_thumb1_nomos>>= 
@@ -973,7 +964,7 @@ if( overwriteFigures) {
 
 
 
-\begin{figure}[hpt]
+\begin{figure}[ht]
 \centering
   
 <<fig_thumb_nomos_diff>>= 
@@ -1030,6 +1021,7 @@ chapter.
 %   data sets}
 
 
+\clearpage
 
 \section{National Land-cover Database 2001 (NLCD)}
 \label{sec:nlcd}
@@ -1065,7 +1057,7 @@ requirement.  This deficiency was addressed by resampling the input to
 analysis using a nearest-neighbor sampling algorithm, which gives an
 even factor of 240 between the two resolutions.
 
-\todo{Incorporate Joshua's suggestion to show further NLCD detail to better illustrate the discrepancy in developed areas}
+%\todo{Incorporate Joshua's suggestion to show further NLCD detail to better illustrate the discrepancy in developed areas}
 
 <<thumb_nlcd>>=
 
@@ -1074,9 +1066,10 @@ setwd( "nlcd")
 nlcdWd <- getwd()
 
 thumbNlcd <- list( pri=raster( "thumbNlcd.tif"))
-## thumbNlcd <- sapply( thumbNlcd, setMinMax)
 
 @ 
+
+\clearpage
 
 \subsection{Reclassification}
 \label{sec:nlcd-reclass}
@@ -1160,7 +1153,7 @@ if( overwriteFigures) {
 
 @ %def 
 
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
 \centering
 
 @
@@ -1173,13 +1166,13 @@ if( overwriteFigures) {
 
 @ 
 
-\includegraphics{fig_thumb_nlcd_reclass}
+\includegraphics[width=\textwidth]{fig_thumb_nlcd_reclass}
  
 \caption{NLCD reclassified} 
 \label{fig:thumb_nlcd_reclass} 
 \end{figure} 
 
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
 \centering
   
 <<fig_thumb_nlcd_facet>>= 
@@ -1199,6 +1192,8 @@ if( overwriteFigures) {
 \label{fig:thumb_nlcd_facet} 
 \end{figure} 
 
+\clearpage
+
 \subsection{Aggregation}
 \label{sec:nlcd-aggr}
 
@@ -1213,7 +1208,7 @@ expensive due to the NLCD's high resolution.
 <<thumb_nlcd_aggr>>=
 
 setwd( nlcdWd)
-## overwriteRasters <- TRUE
+
 thumbNlcd$Amin <- 1
 thumbNlcd <-
   coverFractions( thumbNlcd, mosaic=FALSE,
@@ -1230,7 +1225,7 @@ if( overwriteFigures) {
 
 @ 
 
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
 \centering
   
 <<fig_thumb_nlcd_agg>>= 
@@ -1255,8 +1250,6 @@ if( overwriteFigures) {
 
 setwd( dataWd)
 
-## nlcd <- stack( paste( "nlcd", names( peelClasses[ -8]), "5min.tif", sep="_"))
-
 nlcd <- stack( sapply( names( peelClasses[ -8]),
                       function( cover) {
                         list.files( paste( dataWd, "nlcd", sep="/"),
@@ -1270,7 +1263,7 @@ layerNames(nlcd) <- names( peelClasses[ -8])
 
 @ %def 
 
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
   \centering
   
 <<fig_nlcd>>= 
@@ -1288,7 +1281,7 @@ if( overwriteFigures) {
 \label{fig:nlcd}
 \end{figure} 
 
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
   \centering
   
 <<fig_nlcd2>>= 
@@ -1306,6 +1299,7 @@ if( overwriteFigures) {
 \label{fig:nlcd2}
 \end{figure} 
 
+\clearpage
 
 \section{Agricultural Lands in the Year 2000 (Agland2000)}
 \label{sec:agland2000}
@@ -1363,7 +1357,6 @@ thumbAgland <-
 layerNames( thumbAgland) <- c("crop", "open")
                                         # crop() returns a brick
 
-## overwriteFigures <- TRUE
 
 if( overwriteFigures) {
   thumbAglandPlot <-
@@ -1376,21 +1369,11 @@ if( overwriteFigures) {
 
 }
 
-##     sapply( layerNames( thumbAgland),
-##            function( cover) {
-##              ggplotRaster( agland[[ cover]]) + 
-##                scale_fill_gradientn( paste("%", cover),
-##                                     colours=rev( brewer.pal( 7, "YlGn")), 
-##                                     limits= c( 100, 0),
-##                                     breaks= seq( 100, 0, by= -20))
-##            })
-## }
-
 
 @ 
 %def 
 
-\begin{figure}[hpt]
+\begin{figure}[ht]
 \centering
   
 <<fig_thumb_agland>>= 
@@ -1408,7 +1391,7 @@ if( overwriteFigures) {
 \label{fig:thumb_agland} 
 \end{figure} 
 
-\begin{figure}[hpt]
+\begin{figure}[ht]
 \centering
   
 
@@ -1429,6 +1412,7 @@ if( overwriteFigures) {
 \label{fig:agland} 
 \end{figure} 
 
+\clearpage
 
 \section{Harvested Area and Yields of 175 Crops (175crops2000)}
 \label{sec:175crops2000}
@@ -1530,7 +1514,7 @@ names( catMasked) <- names( catStacks)
 
 @ 
 
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
   \centering
 
 <<fig_crops>>= 
@@ -1552,7 +1536,7 @@ if( overwriteFigures) {
 \end{figure} 
 
 
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
   \centering
 
 <<fig_crops2>>= 

@@ -30,6 +30,12 @@
 \usepackage[all]{hypcap}
 \usepackage{multirow}
 
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.75}
+% Be careful not to make \floatpagefraction larger than \topfraction, then you risk to produce a figure that can neither go on the top of a text page, nor on a page by itself.
+% http://dcwww.camd.dtu.dk/~schiotz/comp/LatexTips/LatexTips.html#figplacement
+
 \begin{document} 
 \bibliographystyle{chicago}
 
@@ -80,7 +86,7 @@
   used as a guide to further decompose the cropland areas into a set
   of crop-specific sub-categories designed to facilitate the economic
   modeling goals of the simulations that will be initialized by this
-  data product.  The final classification scheme is conceptually
+  data product.  The resulting data model is conceptually
   equivalent to a stack of spectral bands with the additional property
   that the components of each pixel sum to unity.  Its classification
   scheme is a mixture of a simplified version of the IGBP schema used
@@ -102,7 +108,7 @@ life we finish what we have started.
 
 \vspace{12pt}
 \noindent I could not have completed this paper over the past year
-and, by extension, my degree over more years than I care to mention
+and, by extension, my degree over more years than I care to mention,
 without the support of my loving wife, Laura.
 
 \vspace{12pt}
@@ -115,7 +121,7 @@ geospatial software tool chain to spatial analysis of agriculture.
 employer, the Computation Institute at the University of Chicago, and
 its director, Dr. Ian Foster under the Community Integrated Model of
 Economic and Resource Trajectories for Humankind project (CIM-EARTH,
-\url{http://www.cim-earth.org/}).
+\url{http://www.cim-earth.org/}) project.
 
 \vspace{12pt}
 \noindent My thesis committee was comprised of Dr. Monika Mihir
@@ -182,7 +188,6 @@ stages of this project.
 %\item[$ \left[ 0,1 \right) $] interval from 0 to 1, inclusive of 0 but but not 1, $0 \leq x < 1$ 
 \end{symbollist}
 
-\todo{fix interval/set-builder notation in symbol list}
 
 \mainmatter
 
@@ -297,27 +302,20 @@ particularly the Major Land Use (MLU) data and the Cropland Data Layer
 
 \bibliography{thesis}
 
-\appendix
+%\appendix
 
-\todo{Clean up source code by removing commented code that is no
-  longer useful}
-\todo{Fix problems with appendix headings}
+\chapter{Appendix: Source Code}
 
-
-\chapter{Source Code: Data Sets}
-
-\section*{R helper functions}
+\section*{PEEL processing library}
 \lstinputlisting{code/peel.R}
 
-\section*{R code embedded in the chapter}
+\section*{Map rendering library}
+\lstinputlisting{code/maps.R}
+
+\section*{Code from Chapter 2}
 \lstinputlisting{datasets.R}
 
-\chapter{Source Code: Analysis}
-
-\section*{R helper functions}
-\lstinputlisting{code/analysis.R}
-
-\section*{R code embedded in the chapter}
+\section*{Code from Chapter 3}
 \lstinputlisting{analysis.R}
 
 \end{document}

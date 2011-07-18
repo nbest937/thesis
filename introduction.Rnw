@@ -1,11 +1,11 @@
 % -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
 
-
-
-
-
-
-
+\SweaveOpts{ results=verbatim}
+\SweaveOpts{ include=FALSE}
+\SweaveOpts{ echo=FALSE}
+\SweaveOpts{ engine=R}
+\SweaveOpts{ keep.source=TRUE}
+\SweaveOpts{ eval=TRUE}
 
 \chapter{Introduction}
 \label{cha:introduction}
@@ -337,26 +337,10 @@ data, such as total acreages, in a dynamic fashion within the body of
 the text.  The \texttt{R} environment under which this analysis was
 performed is as follows:
 
-\begin{Schunk}
-\begin{Soutput}
-R version 2.13.0 (2011-04-13)
-Platform: x86_64-pc-linux-gnu (64-bit)
-
-attached base packages:
- [1] splines   grid      tools     stats     graphics  grDevices utils    
- [8] datasets  methods   base     
-
-other attached packages:
- [1] hexbin_1.26.0      lattice_0.19-26    doMC_1.2.1         multicore_0.1-3   
- [5] foreach_1.3.0      codetools_0.2-8    iterators_1.0.3    RColorBrewer_1.0-2
- [9] Hmisc_3.8-3        survival_2.36-9    xtable_1.5-6       ggplot2_0.8.9     
-[13] proto_0.3-9.2      reshape_0.8.4      plyr_1.5.2         rgdal_0.6-33      
-[17] raster_1.8-12      sp_0.9-80         
-
-loaded via a namespace (and not attached):
-[1] cluster_1.13.3 digest_0.4.2  
-\end{Soutput}
-\end{Schunk}
+@ 
+<<info>>=
+print( sessionInfo(), locale=FALSE)
+@ %def 
 
 
 The source code of this paper will be submitted on optical media to
@@ -364,6 +348,6 @@ Northeastern Illinois University's Graduate college along with the
 final draft.  It will also be available via GitHub at
 \url{https://github.com/nbest937/thesis}.  The initial, intermediate,
 and final data products will be made available for download either
-through \url{http://www.ci.uchicago.edu/~nbest/thesis} and\slash or
-\url{http://www.cimearth.org/} or by request to
+through \url{http://www.ci.uchicago.edu/~nbest} and\slash or
+\url{http://www.cimearth.org/} by request to
 \url{mailto:nbest@ci.uchicago.edu} or \url{mailto:nbest@alum.mit.edu}.

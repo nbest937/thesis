@@ -42,7 +42,7 @@ Conveniently Hijmans' \texttt{raster} package for the \texttt{R}
 analysis software provides a function \texttt{area()} that accepts any
 raster data set in geographical coordinates (longitude, latitude) as
 an input, producing a new raster data set whose values are the areas
-of the former in $km^2$.  It is a simple matter to convert these to
+of the former in km$^{\textrm{2}}$.  It is a simple matter to convert these to
 acres by subsequently scaling that result by a constant.  See the
 source code in the appendix for further details.
 
@@ -110,7 +110,7 @@ are scaled the distortions are minimized.
 
 
 % latex table generated in R 2.13.0 by xtable 1.5-6 package
-% Fri Jul 15 12:01:38 2011
+% Sat Jul 16 17:08:16 2011
 \begin{table}[ht]
 \begin{center}
 {\small
@@ -135,13 +135,13 @@ crop & 446.5 & 310.8 & 378.9 & 369.6 & 495.4 & 488.1 \\
 \label{tab:areas}
 \end{center}
 \end{table}
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
   \centering
 
 
-\includegraphics{fig_areas}
-\caption{Total Acreages by Map and Cover}
-\label{fig:areas} 
+  \includegraphics{fig_areas}
+  \caption{Total Acreages by Map and Cover}
+  \label{fig:areas} 
 \end{figure} 
 
 
@@ -177,12 +177,30 @@ accordingly.  Although MLCT overstates cropland acreage for both
 $A_{min}=0.5$ and $A_{min}=1.0$ the discrimination among the two is made
 by the distribution of errors rather than the aggregate error.
 
-\missingfigure{error map for ``nomos'' vs. Agland2000 crop}
 
-These maps show the cell-by-cell differences between the MLCT-derived
-data set that we have calculated after mosaic decomposition and the
-Agland2000 cropland map.  TO summarize and compare these errors we
-calculate the root of the mean squared error (RMSE) given by:
+\begin{figure}[ht] 
+  \centering
+
+
+  \includegraphics{fig_nomosDiff1}
+  \caption{Difference between MLCT (no mosaic, $A_{min}=1.0$) and Agland2000 crop}
+  \label{fig:nomosDiff1} 
+\end{figure} 
+
+\begin{figure}[ht] 
+  \centering
+
+
+  \includegraphics{fig_nomosDiff05}
+  \caption{Difference between MLCT (no mosaic, $A_{min}=0.5$) and Agland2000 crop}
+  \label{fig:nomosDiff05} 
+\end{figure} 
+
+\autoref{fig:nomosDiff1} and \autoref{fig:nomosDiff05} show the
+cell-by-cell differences between the MLCT-derived data set that we
+have calculated after mosaic decomposition and the Agland2000 cropland
+map.  To summarize and compare these errors we calculate the root of
+the mean squared error (RMSE) given by:
 
 $$
 \operatorname{RMSE}=\sqrt{\frac{\sum_{i=1}^{n}(\hat\theta_i-\theta_i )^2}{n}}
@@ -195,7 +213,7 @@ Agland2000 data set.
 
 
 
-\begin{figure}[hpt]
+\begin{figure}[ht]
   \centering
 
 
@@ -230,17 +248,14 @@ to speculate on the nature of this structure, but suffice it to say
 that there is something peculiar about the Agland2000 allocation
 procedure that drives the crop fraction to its maximum in areas where
 the remote sensing data clearly resists such a characterization.  This
-may be caused my systematic errors in the agricultural census data
+may be caused by systematic errors in the agricultural census data
 that drive the Agland2000 algorithm forcing unrealistically high
-concentrations in order to satisfy the algorithm's constraints.  We
-expect that setting $A_{min}=1$ will produce a maximum overall bias
-and attendant error by assigning entire pixels to the cropland class
-and not allowing for the possibility of mixed covers.
+concentrations in order to satisfy the algorithm's constraints. 
  
 
 
 
-\begin{figure}[hpt]
+\begin{figure}[ht]
   \centering
 
 
@@ -251,7 +266,7 @@ and not allowing for the possibility of mixed covers.
 \end{figure} 
 
 % latex table generated in R 2.13.0 by xtable 1.5-6 package
-% Fri Jul 15 12:01:53 2011
+% Sat Jul 16 17:08:38 2011
 \begin{table}[ht]
 \begin{center}
 \begin{tabular}{rr}
@@ -268,13 +283,16 @@ $A_{min}$ & RMSE \\
 \end{table}
 \todo{Consider also calculating statistical bias (average error)?}
 
-The results on \autoref{tab:rmse} indicate that $A_{min}=0.5$ is more
-representative of the distribution of cropland because although the
-total area indicated is higher according to \autoref{tab:areas}, there
-is less error on a cell-by-cell basis indicating that it does a better
-job of representing the spatial distribution than $A_{min}=1.0$.  This
-is reflected in the structure revealed by \autoref{fig:hexplot05}
-where fewer cells in the MLCT data are set at 100\% crop because of
+We expect that setting $A_{min}=1$ will produce a maximum overall bias
+and attendant error by assigning entire pixels to the cropland class
+and not allowing for the possibility of mixed covers.  The results on
+\autoref{tab:rmse} indicate that $A_{min}=0.5$ is more representative
+of the distribution of cropland because although the total area
+indicated is higher according to \autoref{tab:areas}, there is less
+error on a cell-by-cell basis indicating that it does a better job of
+representing the spatial distribution than $A_{min}=1.0$.  This is
+reflected in the structure revealed by \autoref{fig:hexplot05} where
+fewer cells in the MLCT data are set at 100\% crop because of
 including the secondary class in calculating $5'$ coverage fractions.
 Where crop was included in a secondary class it also caused cells of
 near-zero value for MLCT to lift away from the x-axis.  The
@@ -292,7 +310,7 @@ all information imparted by the MLCT data.
 \label{sec:nlcd_offsets}
 
 
-From Table \ref{tab:areas} it is apparent that the MLCT results are
+From \autoref{tab:areas} it is apparent that the MLCT results are
 negatively biased in the total areas assigned to water, wetland, and
 urban features relative to the NLCD.  It is clear from visual
 inspection that features of these classes tend to have smaller
@@ -344,7 +362,7 @@ in order to conserve the total area and maintain the sum of the
 fractions at 1.0.
 
 
-\begin{figure}[hpt]
+\begin{figure}[h]
   \centering
 
 
@@ -353,9 +371,8 @@ fractions at 1.0.
   \label{fig:offsets1} 
 \end{figure} 
 
-\todo{Fix resolution of NLCD offset maps}
 
-\begin{figure}[hpt]
+\begin{figure}[h]
   \centering
 
 
@@ -380,7 +397,7 @@ may locally overestimate these classes in particular regions and still
 suffer an aggregate deficit relative to NLCD.
 
 
-\begin{figure}[hpt]
+\begin{figure}[ht]
   \centering
     \includegraphics{fig_corOffsets}
   \caption{Correlation matrix of NLCD offsets}
@@ -433,7 +450,6 @@ values have changed.
 
 
 
-%\todo[caption=Is \autoref{tab:restack_check} interesting enough to include?]{ Maybe there is another way to work this into the text in-line.}
 
 
 
@@ -444,27 +460,29 @@ calculation from above and extend Table~\ref{tab:rmse} with the new
 result, giving us Table~\ref{tab:rmse2}.
 
 % latex table generated in R 2.13.0 by xtable 1.5-6 package
-% Fri Jul 15 12:04:56 2011
+% Sat Jul 16 17:11:41 2011
 \begin{table}[ht]
 \begin{center}
-\begin{tabular}{lrrr}
+\begin{tabular}{lrr}
   \hline
-offset & $A_{min}$ & $RMSE_{crop}$ & $RMSE_{open}$ \\ 
+offset & $A_{min}$ & RMSE \\ 
   \hline
-TRUE & 0.5 & 0.151 & 0.236 \\ 
-  FALSE & 0.5 & 0.165 & 0.242 \\ 
-  FALSE & 1.0 & 0.180 & 0.267 \\ 
+TRUE & 0.5 & 0.151 \\ 
+  FALSE & 0.5 & 0.165 \\ 
+  FALSE & 1.0 & 0.180 \\ 
    \hline
 \end{tabular}
 \caption{RMSE, MLCT vs. Agland2000 crop with NLCD offsets}
 \label{tab:rmse2}
 \end{center}
 \end{table}
-\todo[caption=Should the RMSE tables be rearranged?]{Would it make
-  more sense to have the row order and independent variables (first
-  three) reversed in Table \ref{tab:rmse} and \ref{tab:rmse2}?}
+% \todo[caption=Should the RMSE tables be rearranged?]{Would it make
+%   more sense to have the row order and independent variables (first
+%   three) reversed in Table \ref{tab:rmse} and \ref{tab:rmse2}?}
 
-\todo[caption=Should references to the pasture/open data from Aglands2000 be removed?]{That data is not used in the analysis, although it is interesting to see that it's RMSE declines as well.}
+% \todo[caption=Should references to the pasture/open data from
+% Aglands2000 be removed?]{That data is not used in the analysis,
+%   although it is interesting to see that it's RMSE declines as well.}
 
 Seeing that this modification to the data set has improved our overall
 accuracy of the distribution of croplands the next step is to examine
@@ -472,7 +490,7 @@ the total areas for all classes compared with the input data sets.
 
 
 % latex table generated in R 2.13.0 by xtable 1.5-6 package
-% Fri Jul 15 12:04:56 2011
+% Sat Jul 16 17:11:42 2011
 \begin{table}[ht]
 \begin{center}
 {\small
@@ -498,7 +516,7 @@ water & 0.0 & 96.5 & 74.3 & 74.3 & 22.3 & 96.5 & 96.5 \\
 \end{center}
 \end{table}
 
-\begin{figure}[hpt]
+\begin{figure}[ht]
   \centering
 
 
@@ -511,17 +529,18 @@ water & 0.0 & 96.5 & 74.3 & 74.3 & 22.3 & 96.5 & 96.5 \\
 \autoref{fig:offsets} shows the totals by class of the offsets that
 result from this calculation.  The item labeled ``total'' appears
 blank because a value of zero is plotted there indicating that area
-was conserved in this operation, i.e. area subtracted from one class
-was reallocated to another.  As expected, the most significant offset
-was for the urban class, representing the low-density infrastructure
-outside of concentrations of development large enough and dense enough
-to be identified in the MLCT classification.  Water and wetland
-fractions were also increased to bring the total areas of those
-classes in line with NLCD.  However, the most important outcome with
-respect to our stated objective of bringing total cropland areas in
-line with the total from Aglands2000 is the reduction of crop areas by
+was conserved in this operation, which is to sat that area subtracted
+from one class was reallocated to another.  As expected, the most
+significant offset was for the urban class, representing the
+low-density infrastructure outside of concentrations of development
+large enough and dense enough to be identified in the MLCT
+classification.  Water and wetland fractions were also increased to
+bring the total areas of those classes in line with NLCD.  However,
+the most important outcome with respect to our stated objective of
+bringing total cropland areas in line with the total from Aglands2000
+is the reduction of crop areas by
 39 Ma ( 15.8 Mha) and mosaic areas
-by37.4 Ma ( 15.2 Mha).  This will
+by 37.4 Ma ( 15.2 Mha).  This will
 result in a total reduction of
 57.8 Ma ( 23.4 Mha)
 of the final crop class after mosaic decomposition because mosaic land
@@ -536,7 +555,7 @@ desired cropland area estimate, rather shows a convergence in these
 estimates by selectively incorporating information about other classes
 from an independent data set, namely NLCD.
 
-\begin{figure}[hpt]
+\begin{figure}[ht]
   \centering
 
 
@@ -546,7 +565,7 @@ from an independent data set, namely NLCD.
 \end{figure}
 
 
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
   \centering
 
     \includegraphics{fig_hexPlotAdj}
@@ -584,7 +603,7 @@ included in the land mass.  In those cases we accept the crop fraction
 previously calculated since there is nothing to compare it against.
 
 
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
   \centering
 
 
@@ -593,7 +612,7 @@ previously calculated since there is nothing to compare it against.
 \label{fig:agc} 
 \end{figure} 
 
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
   \centering
 
 
@@ -606,25 +625,25 @@ previously calculated since there is nothing to compare it against.
 
 
 % latex table generated in R 2.13.0 by xtable 1.5-6 package
-% Fri Jul 15 12:06:08 2011
+% Sat Jul 16 17:12:55 2011
 \begin{table}[ht]
 \begin{center}
-\begin{tabular}{llrrr}
+\begin{tabular}{llrr}
   \hline
-agland & offset & $A_{min}$ & $RMSE_{crop}$ & $RMSE_{open}$ \\ 
+agland & offset & $A_{min}$ & RMSE \\ 
   \hline
-TRUE & TRUE & 0.5 & 0.017 & 0.208 \\ 
-  FALSE & TRUE & 0.5 & 0.151 & 0.236 \\ 
-  FALSE & FALSE & 0.5 & 0.165 & 0.242 \\ 
-  FALSE & FALSE & 1.0 & 0.180 & 0.267 \\ 
+TRUE & TRUE & 0.5 & 0.017 \\ 
+  FALSE & TRUE & 0.5 & 0.151 \\ 
+  FALSE & FALSE & 0.5 & 0.165 \\ 
+  FALSE & FALSE & 1.0 & 0.180 \\ 
    \hline
 \end{tabular}
-\caption{RMSE of Agland Complete vs. Agland2000}
+\caption{RMSE of PEEL vs. Agland2000}
 \label{tab:rmse3}
 \end{center}
 \end{table}
 % latex table generated in R 2.13.0 by xtable 1.5-6 package
-% Fri Jul 15 12:06:14 2011
+% Sat Jul 16 17:13:01 2011
 \begin{table}[ht]
 \begin{center}
 {\small
@@ -645,14 +664,14 @@ water & 0.0 & 96.5 & 74.3 & 96.5 & 96.6 \\
    \noalign{\smallskip} \hline
 \end{tabular}
 }
-\caption{Agland Complete (AgC) acreages, $A_{min}=0.5$}
+\caption{PEEL acreages, $A_{min}=0.5$}
 \label{tab:areas3}
 \end{center}
 \end{table}
 \todo{Discuss implications of final area tabulation}
  
 
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
   \centering
 
     \includegraphics{fig_hexPlotAgc}
@@ -662,7 +681,7 @@ water & 0.0 & 96.5 & 74.3 & 96.5 & 96.6 \\
 
 
 
-\begin{sidewaysfigure}[hpt] 
+\begin{sidewaysfigure}[ht] 
   \centering
 
 
@@ -671,7 +690,6 @@ water & 0.0 & 96.5 & 74.3 & 96.5 & 96.6 \\
   \label{fig:agcThemeMap} 
 \end{sidewaysfigure} 
 
-\todo{Check that thematic map came out better (resolution, legend, orientation)}
 
 \autoref{fig:agcThemeMap} shows a thematic map that classifies the
 cells in our study area according to their agreement on the cropland
@@ -704,7 +722,7 @@ uncultivated cover must be present within such large areas.
 
 
 
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
   \centering
 
     \includegraphics{fig_cropSubClassesMap}
@@ -712,7 +730,7 @@ uncultivated cover must be present within such large areas.
   \label{fig:cropSubClassesMap} 
 \end{figure} 
 
-\begin{figure}[hpt] 
+\begin{figure}[ht] 
   \centering
 
     \includegraphics{fig_cropSubClassesMap2}

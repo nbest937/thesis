@@ -12,14 +12,14 @@
 \graphicspath{ {datasets/} }
 
 
-\chapter{Data Sets}
+\chapter{Data Sets and Methodology}
 \label{cha:datasets}
 
 This chapter presents summary descriptions of the various data sets
 that are relevant to this analysis and further discussion on how they
 were manipulated in preparation for analysis.  Operations where
-multiple data sets are used in conjunction are deferred to Chapter
-\ref{cha:analysis}.
+multiple data sets are used in conjunction are deferred to
+\autoref{cha:analysis}.
 
 The general approach with the MLCT and NLCD data sets is to reclassify
 their categories, calculate per-pixel, per-class areas at the native
@@ -143,7 +143,7 @@ low intensity of economic activity.
 
 
 
-\begin{figure}[hpt] 
+\begin{figure}[htp] 
   \centering
   
 
@@ -161,7 +161,7 @@ south with scattered forests and pockets of development throughout.
 The urban complex of Port Huron, Michigan and Sarnia, Ontario is
 visible in the southeast corner.
 
-\begin{figure}[hpt] 
+\begin{figure}[htp] 
 \centering
   
 
@@ -184,7 +184,7 @@ and secondary classifications it simply reflects a distinction between
 sub-types of forest in the original data, for example evergreen and
 deciduous.
 
-\begin{figure}[hpt] 
+\begin{figure}[htp] 
 \centering
   
 
@@ -214,7 +214,7 @@ primary class in our example detail area and
 \autoref{fig:thumb_sec_facet} for the secondary class.
 
 
-\begin{figure}[hpt] 
+\begin{figure}[htp] 
 \centering
   
 
@@ -225,7 +225,7 @@ primary class in our example detail area and
 \end{figure} 
 
 
-\begin{figure}[hpt] 
+\begin{figure}[htp] 
 \centering
   
 
@@ -260,7 +260,7 @@ covers.
 
 
 
-\begin{sidewaysfigure}[hpt] 
+\begin{sidewaysfigure}[htp] 
   \centering
 
 
@@ -269,9 +269,8 @@ covers.
 \label{fig:mlct_pri_reclass} 
 \end{sidewaysfigure} 
 
-\todo{Make cUSA graphics wider or even turn sideways for full-page}
 
-\begin{sidewaysfigure}[hpt] 
+\begin{sidewaysfigure}[htp] 
   \centering
   
 
@@ -281,7 +280,7 @@ covers.
 \end{sidewaysfigure} 
 
 
-\begin{sidewaysfigure}[hpt] 
+\begin{sidewaysfigure}[htp] 
   \centering
   
 
@@ -291,7 +290,7 @@ covers.
 \end{sidewaysfigure} 
 
 
-\begin{figure}[hpt] 
+\begin{figure}[htp] 
   \centering
   
 
@@ -300,7 +299,7 @@ covers.
 \label{fig:mlct_pri_facet} 
 \end{figure} 
 
-\begin{figure}[hpt] 
+\begin{figure}[htp] 
   \centering
   
 
@@ -310,7 +309,7 @@ covers.
 \end{figure} 
 
 
-\begin{figure}[hpt] 
+\begin{figure}[htp] 
   \centering
   
 
@@ -319,7 +318,7 @@ covers.
 \label{fig:mlct_sec_facet} 
 \end{figure} 
 
-\begin{figure}[hpt] 
+\begin{figure}[htp] 
   \centering
   
 
@@ -328,6 +327,7 @@ covers.
 \label{fig:mlct_sec_facet2} 
 \end{figure} 
 
+\clearpage
 
 \subsection{Aggregation}
 \label{sec:mlct-aggr}
@@ -397,7 +397,7 @@ simply a linear scaling and offset of the latter.  \autoref{fig:thumb_fracs} sho
 %\label{sec:agg-detail-area}
 
 
-\begin{figure}[hpt] 
+\begin{figure}[htp] 
 \centering
   
 
@@ -414,7 +414,7 @@ pixel area.  \autoref{fig:thumb1_fracs} shows these differences.  The
 effect of adjusting $A_{min}$ is subtle; we will examine it more
 closely after aggregating to the $5'$ grid.
 
-\begin{figure}[hpt] 
+\begin{figure}[htp] 
 \centering
 
 
@@ -439,7 +439,7 @@ Because the desired $5'$ resolution is a multiple of the original
 convenient for properly computing this mean.
 
 
-\begin{figure}[hpt] 
+\begin{figure}[htp] 
 \centering
   
 
@@ -449,7 +449,7 @@ convenient for properly computing this mean.
 \label{fig:thumb_agg}
 \end{figure} 
 
-\begin{figure}[hpt] 
+\begin{figure}[htp] 
 \centering
   
 
@@ -486,7 +486,7 @@ we saw from the earlier maps (\autoref{fig:thumb_pri_facet} and
 \autoref{fig:thumb_sec_reclass}) of the MLCT data which classes were
 indicated by the secondary classes in those areas.
 
-\begin{figure}[hpt]
+\begin{figure}[htp]
 \centering
   
 %def
@@ -512,6 +512,7 @@ can be confident that they will perform correctly over the greater
 extent.
 
 
+\clearpage
 
 \subsection{Mosaic decomposition}
 \label{sec:decomposition}
@@ -562,7 +563,7 @@ values of 0.5 and 1.0 respectively.
 
 
 
-\begin{figure}[hpt]
+\begin{figure}[htp]
 \centering
   
 
@@ -573,7 +574,7 @@ values of 0.5 and 1.0 respectively.
 \label{fig:thumb_nomos}
 \end{figure} 
 
-\begin{figure}[hpt]
+\begin{figure}[htp]
 \centering
   
 
@@ -586,7 +587,7 @@ values of 0.5 and 1.0 respectively.
 
 
 
-\begin{figure}[hpt]
+\begin{figure}[htp]
 \centering
   
 
@@ -620,7 +621,7 @@ chapter.
 % test. \todo{illustrate/demonstrate the RMSE test on the 5-arcmin MLCT
 %   data sets}
 
-
+\clearpage
 
 \section{National Land-cover Database 2001 (NLCD)}
 \label{sec:nlcd}
@@ -656,14 +657,15 @@ requirement.  This deficiency was addressed by resampling the input to
 analysis using a nearest-neighbor sampling algorithm, which gives an
 even factor of 240 between the two resolutions.
 
-\todo{Incorporate Joshua's suggestion to show further NLCD detail to better illustrate the discrepancy in developed areas}
+%\todo{Incorporate Joshua's suggestion to show further NLCD detail to better illustrate the discrepancy in developed areas}
 
+\clearpage
 
 \subsection{Reclassification}
 \label{sec:nlcd-reclass}
 
 
-\begin{table}[htbp]
+\begin{table}[htb]
   \begin{center}
     \begin{tabular}{|l|l|l|l|}
       \hline
@@ -711,6 +713,7 @@ even factor of 240 between the two resolutions.
   \end{center}
 \end{table}
 
+
 In contrast to the reclassification table for MLCT shown in
 \autoref{tab:mlct_reclass}, the reclassification for NLCD given in
 \autoref{tab:nlcd_reclass} is somewhat more complicated.  Although
@@ -725,17 +728,17 @@ developed areas of all densities.
 \todo{NLCD reclassification seems problematic now}
 
 
-\begin{figure}[hpt] 
+\begin{figure}[htp] 
 \centering
 
 
-\includegraphics{fig_thumb_nlcd_reclass}
+\includegraphics[width=\textwidth]{fig_thumb_nlcd_reclass}
  
 \caption{NLCD reclassified} 
 \label{fig:thumb_nlcd_reclass} 
 \end{figure} 
 
-\begin{figure}[hpt] 
+\begin{figure}[htp] 
 \centering
   
 
@@ -744,6 +747,8 @@ developed areas of all densities.
 \caption{NLCD covers shown separately, detail} 
 \label{fig:thumb_nlcd_facet} 
 \end{figure} 
+
+\clearpage
 
 \subsection{Aggregation}
 \label{sec:nlcd-aggr}
@@ -757,7 +762,7 @@ expensive due to the NLCD's high resolution.
 
  
 
-\begin{figure}[hpt] 
+\begin{figure}[htp] 
 \centering
   
 
@@ -770,7 +775,7 @@ expensive due to the NLCD's high resolution.
 
 
 
-\begin{figure}[hpt] 
+\begin{figure}[htp] 
   \centering
   
   \includegraphics{fig_nlcd}
@@ -778,7 +783,7 @@ expensive due to the NLCD's high resolution.
 \label{fig:nlcd}
 \end{figure} 
 
-\begin{figure}[hpt] 
+\begin{figure}[htp] 
   \centering
   
   \includegraphics{fig_nlcd2}
@@ -786,6 +791,7 @@ expensive due to the NLCD's high resolution.
 \label{fig:nlcd2}
 \end{figure} 
 
+\clearpage
 
 \section{Agricultural Lands in the Year 2000 (Agland2000)}
 \label{sec:agland2000}
@@ -820,7 +826,7 @@ derive from MLCT in \autoref{cha:analysis}.
   
 %def 
 
-\begin{figure}[hpt]
+\begin{figure}[htp]
 \centering
   
 
@@ -830,7 +836,7 @@ derive from MLCT in \autoref{cha:analysis}.
 \label{fig:thumb_agland} 
 \end{figure} 
 
-\begin{figure}[hpt]
+\begin{figure}[htp]
 \centering
   
 
@@ -841,6 +847,7 @@ derive from MLCT in \autoref{cha:analysis}.
 \label{fig:agland} 
 \end{figure} 
 
+\clearpage
 
 \section{Harvested Area and Yields of 175 Crops (175crops2000)}
 \label{sec:175crops2000}
@@ -867,7 +874,7 @@ classified by MLCT as forest or shrub in this step.
 
 
 
-\begin{figure}[hpt] 
+\begin{figure}[htp] 
   \centering
 
 
@@ -877,7 +884,7 @@ classified by MLCT as forest or shrub in this step.
 \end{figure} 
 
 
-\begin{figure}[hpt] 
+\begin{figure}[htp] 
   \centering
 
 

@@ -339,7 +339,9 @@ performed is as follows:
 
 @ 
 <<info>>=
+options(width=40)
 print( sessionInfo(), locale=FALSE)
+options(width=80)
 @ %def 
 
 
@@ -348,6 +350,6 @@ Northeastern Illinois University's Graduate college along with the
 final draft.  It will also be available via GitHub at
 \url{https://github.com/nbest937/thesis}.  The initial, intermediate,
 and final data products will be made available for download either
-through \url{http://www.ci.uchicago.edu/~nbest} and\slash or
-\url{http://www.cimearth.org/} by request to
+through \url{http://www.ci.uchicago.edu/~nbest/thesis} and\slash or
+\url{http://www.cimearth.org/} or by request to
 \url{mailto:nbest@ci.uchicago.edu} or \url{mailto:nbest@alum.mit.edu}.

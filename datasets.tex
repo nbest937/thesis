@@ -9,6 +9,7 @@
 
 
 
+
 \graphicspath{ {datasets/} }
 
 
@@ -143,7 +144,7 @@ low intensity of economic activity.
 
 
 
-\begin{figure}[htp] 
+\begin{figure}[ht] 
   \centering
   
 
@@ -161,7 +162,7 @@ south with scattered forests and pockets of development throughout.
 The urban complex of Port Huron, Michigan and Sarnia, Ontario is
 visible in the southeast corner.
 
-\begin{figure}[htp] 
+\begin{figure}[ht] 
 \centering
   
 
@@ -184,7 +185,7 @@ and secondary classifications it simply reflects a distinction between
 sub-types of forest in the original data, for example evergreen and
 deciduous.
 
-\begin{figure}[htp] 
+\begin{figure}[ht] 
 \centering
   
 
@@ -214,7 +215,7 @@ primary class in our example detail area and
 \autoref{fig:thumb_sec_facet} for the secondary class.
 
 
-\begin{figure}[htp] 
+\begin{figure}[ht] 
 \centering
   
 
@@ -225,7 +226,7 @@ primary class in our example detail area and
 \end{figure} 
 
 
-\begin{figure}[htp] 
+\begin{figure}[ht] 
 \centering
   
 
@@ -260,7 +261,7 @@ covers.
 
 
 
-\begin{sidewaysfigure}[htp] 
+\begin{sidewaysfigure}[ht] 
   \centering
 
 
@@ -270,7 +271,7 @@ covers.
 \end{sidewaysfigure} 
 
 
-\begin{sidewaysfigure}[htp] 
+\begin{sidewaysfigure}[ht] 
   \centering
   
 
@@ -280,7 +281,7 @@ covers.
 \end{sidewaysfigure} 
 
 
-\begin{sidewaysfigure}[htp] 
+\begin{sidewaysfigure}[ht] 
   \centering
   
 
@@ -290,7 +291,7 @@ covers.
 \end{sidewaysfigure} 
 
 
-\begin{figure}[htp] 
+\begin{figure}[ht] 
   \centering
   
 
@@ -299,7 +300,7 @@ covers.
 \label{fig:mlct_pri_facet} 
 \end{figure} 
 
-\begin{figure}[htp] 
+\begin{figure}[ht] 
   \centering
   
 
@@ -309,7 +310,7 @@ covers.
 \end{figure} 
 
 
-\begin{figure}[htp] 
+\begin{figure}[ht] 
   \centering
   
 
@@ -318,7 +319,7 @@ covers.
 \label{fig:mlct_sec_facet} 
 \end{figure} 
 
-\begin{figure}[htp] 
+\begin{figure}[ht] 
   \centering
   
 
@@ -327,7 +328,6 @@ covers.
 \label{fig:mlct_sec_facet2} 
 \end{figure} 
 
-\clearpage
 
 \subsection{Aggregation}
 \label{sec:mlct-aggr}
@@ -397,7 +397,7 @@ simply a linear scaling and offset of the latter.  \autoref{fig:thumb_fracs} sho
 %\label{sec:agg-detail-area}
 
 
-\begin{figure}[htp] 
+\begin{figure}[ht] 
 \centering
   
 
@@ -414,7 +414,7 @@ pixel area.  \autoref{fig:thumb1_fracs} shows these differences.  The
 effect of adjusting $A_{min}$ is subtle; we will examine it more
 closely after aggregating to the $5'$ grid.
 
-\begin{figure}[htp] 
+\begin{figure}[ht] 
 \centering
 
 
@@ -438,8 +438,17 @@ Because the desired $5'$ resolution is a multiple of the original
 15$''$ resolution the pixels are perfectly nested, which is
 convenient for properly computing this mean.
 
+\begin{figure}[ht] 
+\centering
+  
 
-\begin{figure}[htp] 
+\includegraphics{fig_thumb1_agg}
+ 
+\caption{Aggregated sub-pixel fractions for $A_{min}=1$}
+\label{fig:thumb1_agg}
+\end{figure} 
+
+\begin{figure}[ht] 
 \centering
   
 
@@ -449,15 +458,6 @@ convenient for properly computing this mean.
 \label{fig:thumb_agg}
 \end{figure} 
 
-\begin{figure}[htp] 
-\centering
-  
-
-\includegraphics{fig_thumb1_agg}
- 
-\caption{Aggregated sub-pixel fractions for $A_{min}=1$}
-\label{fig:thumb1_agg}
-\end{figure} 
 
 
 Before proceeding further it is interesting to inspect the differences
@@ -486,14 +486,14 @@ we saw from the earlier maps (\autoref{fig:thumb_pri_facet} and
 \autoref{fig:thumb_sec_reclass}) of the MLCT data which classes were
 indicated by the secondary classes in those areas.
 
-\begin{figure}[htp]
+\begin{figure}[ht]
 \centering
   
 %def
 
 \includegraphics{fig_thumb_agg_diff}
  
-\caption{ Difference of aggregated sub-pixel fractions}
+\caption{Difference of aggregated sub-pixel fractions, positive when $f(A_{min} = 0.5)$ is greater}
 \label{fig:thumb_agg_diff}
 \end{figure} 
 
@@ -510,6 +510,7 @@ decrease in relative resolution makes interpretation difficult.  Based
 on the behavior that these functions exhibited over the detail area we
 can be confident that they will perform correctly over the greater
 extent.
+
 
 
 \clearpage
@@ -559,22 +560,24 @@ pixels in a $5'$ cell where only forest is found of the three non-crop
 mosaic components will be allocated 50\% crop and 50\% forest.
 \autoref{fig:thumb_nomos} and \autoref{fig:thumb1_nomos} show the
 effect of decomposing the mosaic class in this fashion for $A_{min}$
-values of 0.5 and 1.0 respectively.
+values of 0.5 and 1.0 respectively. \autoref{fig:thumb_nomos_diff}
+shows the difference between the two maps that result from the mosaic
+decomposition process in the same manner as the previous difference
+map.  Values are positive when $A_{min}=0.5$ results in a greater
+value.  This difference map shows that the effect of the choice of
+$A_{min}$ on the crop class is much less pronounced than in the
+previous step, rather it is the natural cover classes that also make
+up the mosaic class that exhibit shifts in relative composition.  The
+open class is virtually nonexistent in the primary classification but
+has a strong component in the secondary classification (see
+\autoref{fig:thumb_pri_reclass} and \autoref{fig:thumb_sec_reclass}), which
+changes the balance of the natural covers when calculating the mosaic
+decomposition as described above.
 
 
 
-\begin{figure}[htp]
-\centering
-  
 
-
-\includegraphics{fig_thumb_nomos}
- 
-\caption{Aggregated cover fractions after mosaic decomposition, $A_{min}=0.5$}
-\label{fig:thumb_nomos}
-\end{figure} 
-
-\begin{figure}[htp]
+\begin{figure}[ht]
 \centering
   
 
@@ -585,9 +588,21 @@ values of 0.5 and 1.0 respectively.
 \label{fig:thumb1_nomos}
 \end{figure} 
 
+\begin{figure}[ht]
+\centering
+  
 
 
-\begin{figure}[htp]
+\includegraphics{fig_thumb_nomos}
+ 
+\caption{Aggregated cover fractions after mosaic decomposition, $A_{min}=0.5$}
+\label{fig:thumb_nomos}
+\end{figure} 
+
+
+
+
+\begin{figure}[ht]
 \centering
   
 
@@ -620,6 +635,7 @@ chapter.
 % judging from a simple root-mean-squared-error (RMSE)
 % test. \todo{illustrate/demonstrate the RMSE test on the 5-arcmin MLCT
 %   data sets}
+
 
 \clearpage
 
@@ -659,13 +675,14 @@ even factor of 240 between the two resolutions.
 
 %\todo{Incorporate Joshua's suggestion to show further NLCD detail to better illustrate the discrepancy in developed areas}
 
+
 \clearpage
 
 \subsection{Reclassification}
 \label{sec:nlcd-reclass}
 
 
-\begin{table}[htb]
+\begin{table}[htbp]
   \begin{center}
     \begin{tabular}{|l|l|l|l|}
       \hline
@@ -728,17 +745,17 @@ developed areas of all densities.
 \todo{NLCD reclassification seems problematic now}
 
 
-\begin{figure}[htp] 
+\begin{figure}[ht] 
 \centering
 
 
-\includegraphics[width=\textwidth]{fig_thumb_nlcd_reclass}
+\includegraphics{fig_thumb_nlcd_reclass}
  
 \caption{NLCD reclassified} 
 \label{fig:thumb_nlcd_reclass} 
 \end{figure} 
 
-\begin{figure}[htp] 
+\begin{figure}[ht] 
 \centering
   
 
@@ -762,7 +779,7 @@ expensive due to the NLCD's high resolution.
 
  
 
-\begin{figure}[htp] 
+\begin{figure}[ht] 
 \centering
   
 
@@ -775,7 +792,7 @@ expensive due to the NLCD's high resolution.
 
 
 
-\begin{figure}[htp] 
+\begin{figure}[ht] 
   \centering
   
   \includegraphics{fig_nlcd}
@@ -783,7 +800,7 @@ expensive due to the NLCD's high resolution.
 \label{fig:nlcd}
 \end{figure} 
 
-\begin{figure}[htp] 
+\begin{figure}[ht] 
   \centering
   
   \includegraphics{fig_nlcd2}
@@ -807,26 +824,21 @@ sensing data as inputs, an older version of the MLCT (known as
 BU-MODIS) and the GLC2000 data set mentioned in
 \autoref{sec:background}.  Its allocation of cropland and pastures is
 constrained by a mask based on climatic criteria in order to avoid
-misallocation at higher latitudes, mainly a problem in boreal Canada
-which should have little to no bearing on our study area.  The
-``open'' class in this data set has been renamed from ``pasture'' in
-its creator's nomenclature, but it is clear from its distribution
-shown in \autoref{fig:agland} that it represents a phenomena that is
-not apparent in the MLCT data, so we do not attempt to use it or
-reconcile it here, rather only carry it along to a small degree for
-sake of comparison.  We attribute this discrepancy to commingling of
-managed pasture lands and natural open land in the MLCT
-classification.  It is important to note that Agland2000 is used as an
-input into the classification algorithm of the version of MLCT that we
-are using here and acknowledge the possibility of circularity when
-comparing the two, but because of its basis in census data we will use
-the cropland component of Agland2000 as an ``observed truth'' for the
-purposes of evaluating our incremental adjustments to the maps we
-derive from MLCT in \autoref{cha:analysis}.
+misallocation at higher latitudes beyond our study area.  The
+``pasture'' class in this data set likely has much in common with the
+``open'' class from MLCT but we are not employing that data in this
+analysis. It is important to note that the cropland aspect of
+Agland2000 is used as an input into the classification algorithm of
+the version of MLCT that we are using here and acknowledge the
+possibility of circularity when comparing the two, but because of its
+basis in census data we will use the cropland component of Agland2000
+as an ``observed truth'' for the purposes of evaluating our
+incremental adjustments to the maps we derive from MLCT in
+\autoref{cha:analysis}.
   
 %def 
 
-\begin{figure}[htp]
+\begin{figure}[ht]
 \centering
   
 
@@ -836,7 +848,7 @@ derive from MLCT in \autoref{cha:analysis}.
 \label{fig:thumb_agland} 
 \end{figure} 
 
-\begin{figure}[htp]
+\begin{figure}[ht]
 \centering
   
 
@@ -849,10 +861,9 @@ derive from MLCT in \autoref{cha:analysis}.
 
 \clearpage
 
-\section{Harvested Area and Yields of 175 Crops (175crops2000)}
+\section{Harvested Area and Yields of 175 Crops (175Crops2000)}
 \label{sec:175crops2000}
 
-\citet{Monfreda2008}
 
 \missingfigure{Table of crops and types reproduced from \citep{Monfreda2008}}
 
@@ -860,21 +871,58 @@ derive from MLCT in \autoref{cha:analysis}.
 
 \todo{Address issue of smaller land mask for 175crops2000 and Agland2000}
 
-This data set will provide the information needed to disaggregate the
-cropland area taken from Agland2000.  It is not possible to use this
-data directly because it reflects only harvested area and so ignores
-various types of ancillary agricultural land, rather it will provide
-proportions for the disaggregation at the grid cell level.  Rather
-than considering the full array of 175 crops we will consider only
-corn, soy, wheat, rice, and sugarcane individually, combine other
-cereals into their own class, and combine all remaining crops as a
-catch-all ``other'' category.  Field crops will be distinguished from
-orchard / plantation crops that would likely fall under areas
-classified by MLCT as forest or shrub in this step.
+This data set, described in \citet{Monfreda2008}, will provide the
+information needed to disaggregate the cropland area taken from
+Agland2000.  It is not possible to use this data directly because it
+reflects only harvested area and so ignores various types of ancillary
+agricultural land, rather it will provide proportions for the
+disaggregation at the grid cell level.  Rather than considering the
+full array of 175 crops we will consider only corn, soy, wheat, rice,
+and sugarcane individually, combine other cereals into their own
+class, and combine all remaining crops as a catch-all ``other''
+category.  Field crops will be distinguished from orchard / plantation
+crops that would likely fall under areas classified by MLCT as forest
+or shrub in this step. \autoref{tab:subclass} provides the details on how the 175 crops in the \citet{Monfreda2008} data set are collected into crop sub-classes for the purposes of the PEEL model.
 
 
 
-\begin{figure}[htp] 
+
+
+\begin{table}[ht]
+  \begin{center}
+    \begin{tabular}{|p{1in}|p{4in}|}
+      \hline
+      Sub-class & Crops \\
+      \hline
+      maize & maize \\
+      \hline
+      wheat & wheat \\
+      \hline
+      rice & rice \\
+      \hline
+      other cereals & barley; buckwheat; canary seed; cereals nes; fonio; millet; mixed grain; oats; pop corn; quinoa; rye; sorghum; triticale \\
+      \hline
+      soybean & soybean \\
+      \hline
+      sugarcane & sugarcane \\
+      \hline
+      forage &  alfalfa for forage; beets for fodder; cabbage for fodder; carrots for fodder; clover; forage products nes; grasses nes; green oilseeds fr fodder; legumes nes; maize for forage; mixed grasses and legumes; rye grass for forage; sorghum for forage; swedes for fodder; turnips for fodder; vegetables and roots for fodder \\
+      \hline
+      other field crops &  anise, badian and fennel; artichokes; asparagus; bambara beans; beans, dry; beans, green; broad beans, dry; broad beans, green; cabbages; cantaloupes and other melons; carrots; cassava; castor beans; cauliflower; chickpeas; chicory roots; chillies and peppers, green; coir; cotton; cow peas, dry; cucumbers and gherkins; eggplants; fibre crops nes; flax fibre and tow; garlic; ginger; green corn (maize); groundnuts in shell; hemp fibre and tow; hempseed; jute; jute-like fibres; lentils; lettuce; linseed; lupins; melonseed; mushrooms; mustard seed; oilseeds nes; okra; onions and shallots, green; onions, dry; peas, dry; peas, green; peppermint; pigeon peas; pimento; poppy seed; potatoes; pulses nes; pumpkins, squash, gourds; rapeseed; roots and tubers nes; safflower seed; sesame seed; spinach; string beans; sugar beets; sugar crops nes; sunflower seed; sweet potatoes; taro; tobacco leaves; tomatoes; vegetables fresh nes; vetches; watermelons; yams; yautia \\
+      \hline
+      shrub crops &  abaca (manila hemp); agave fibres nes; bananas; berries nes; blueberries; cocoa beans; coffee, green; cranberries; gooseberries; grapes; hops; mate; nutmeg and mace and cardamons; pepper; pineapples; plantains; pyrethrum, dried flowers; ramie; raspberries; sisal; strawberries; tea; vanilla \\
+      \hline
+      tree crops &  almonds; apples; apricots; areca nuts (betel); avocados; brazil nuts; carobs; cashewapple; cashew nuts; cherries; chestnuts; cinnamon (canella); citrus fruit nes; cloves; coconuts; currants; dates; figs; fruit fresh nes; fruit tropical fresh nes; grapefruit and pomelos; hazelnuts (filberts); kapok fibre; kapokseed in shell; karite nuts (sheanuts); kiwi fruit; kolanuts; lemons and limes; mangoes; natural gums; natural rubber; nuts nes; oil palm fruit; olives; oranges; papayas; peaches and nectarines; pears; persimmons; pistachios; plums; quinces; sour cherries; spices nes; stone fruit nes, fresh; tang.mand.clement.satsma; tung nuts; walnuts \\
+      \hline
+      \multicolumn{2}{l}{\footnotesize nes: "not elsewhere specified"} \\
+    \end{tabular}
+    \caption{ Crop sub-classes for simplifying 175Crops2000 (adapted from \citet{Monfreda2008})}
+    \label{tab:subclass}
+  \end{center}
+\end{table}
+
+
+\begin{figure}[ht] 
   \centering
 
 
@@ -884,7 +932,7 @@ classified by MLCT as forest or shrub in this step.
 \end{figure} 
 
 
-\begin{figure}[htp] 
+\begin{figure}[ht] 
   \centering
 
 

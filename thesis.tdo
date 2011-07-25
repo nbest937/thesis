@@ -1,10 +1,10 @@
 \contentsline {todo}{{Check format of \autoref {tab:lulc}}}{3}{section*.9}
 \contentsline {todo}{{Do these statements need to be substantiated?}}{6}{section*.10}
-\contentsline {todo}{{consider including histograms showing confidence distribution}}{22}{section*.11}
+\contentsline {todo}{{consider including histograms showing confidence distribution}}{15}{section*.11}
 \contentsline {todo}{{NLCD reclassification seems problematic now}}{31}{section*.12}
-\contentsline {todo}{Figure: {Table of crops and types reproduced from \citep {Monfreda2008}}}{39}{section.2.4}
-\contentsline {todo}{Figure: {Summary table of crop aggregations for our model}}{39}{section.2.4}
-\contentsline {todo}{{Address issue of smaller land mask for 175crops2000 and Agland2000}}{39}{section*.13}
+\contentsline {todo}{Figure: {Table of crops and types reproduced from \citep {Monfreda2008}}}{38}{section.2.4}
+\contentsline {todo}{Figure: {Summary table of crop aggregations for our model}}{38}{section.2.4}
+\contentsline {todo}{{Address issue of smaller land mask for 175crops2000 and Agland2000}}{38}{section*.13}
 \contentsline {todo}{{Consider also calculating statistical bias (average error)?}}{47}{section*.14}
 \contentsline {todo}{{Discuss implications of final area tabulation}}{55}{section*.15}
 \contentsline {todo}{{Should we elaborate on this validation exercise in the conclusion or just leave it out?}}{63}{section*.16}

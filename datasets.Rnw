@@ -9,6 +9,7 @@
 \SweaveOpts{ eval=TRUE}
 
 
+
 \graphicspath{ {datasets/} }
 
 @ 
@@ -700,6 +701,23 @@ Because the desired $5'$ resolution is a multiple of the original
 15$''$ resolution the pixels are perfectly nested, which is
 convenient for properly computing this mean.
 
+\begin{figure}[ht] 
+\centering
+  
+<<fig_thumb1_agg>>= 
+
+if( overwriteFigures) {
+  my.ggsave( texWd, "fig_thumb1_agg.png",
+            plot= thumbPlots1$agg)
+}
+
+@ 
+
+\includegraphics{fig_thumb1_agg}
+ 
+\caption{Aggregated sub-pixel fractions for $A_{min}=1$}
+\label{fig:thumb1_agg}
+\end{figure} 
 
 \begin{figure}[ht] 
 \centering
@@ -719,23 +737,6 @@ if( overwriteFigures) {
 \label{fig:thumb_agg}
 \end{figure} 
 
-\begin{figure}[ht] 
-\centering
-  
-<<fig_thumb1_agg>>= 
-
-if( overwriteFigures) {
-  my.ggsave( texWd, "fig_thumb1_agg.png",
-            plot= thumbPlots1$agg)
-}
-
-@ 
-
-\includegraphics{fig_thumb1_agg}
- 
-\caption{Aggregated sub-pixel fractions for $A_{min}=1$}
-\label{fig:thumb1_agg}
-\end{figure} 
 
 
 Before proceeding further it is interesting to inspect the differences
@@ -800,7 +801,7 @@ if( overwriteFigures) {
 
 \includegraphics{fig_thumb_agg_diff}
  
-\caption{ Difference of aggregated sub-pixel fractions}
+\caption{Difference of aggregated sub-pixel fractions, positive when $f(A_{min} = 0.5)$ is greater}
 \label{fig:thumb_agg_diff}
 \end{figure} 
 
@@ -892,7 +893,20 @@ pixels in a $5'$ cell where only forest is found of the three non-crop
 mosaic components will be allocated 50\% crop and 50\% forest.
 \autoref{fig:thumb_nomos} and \autoref{fig:thumb1_nomos} show the
 effect of decomposing the mosaic class in this fashion for $A_{min}$
-values of 0.5 and 1.0 respectively.
+values of 0.5 and 1.0 respectively. \autoref{fig:thumb_nomos_diff}
+shows the difference between the two maps that result from the mosaic
+decomposition process in the same manner as the previous difference
+map.  Values are positive when $A_{min}=0.5$ results in a greater
+value.  This difference map shows that the effect of the choice of
+$A_{min}$ on the crop class is much less pronounced than in the
+previous step, rather it is the natural cover classes that also make
+up the mosaic class that exhibit shifts in relative composition.  The
+open class is virtually nonexistent in the primary classification but
+has a strong component in the secondary classification (see
+\autoref{fig:thumb_pri_reclass} and \autoref{fig:thumb_sec_reclass}), which
+changes the balance of the natural covers when calculating the mosaic
+decomposition as described above.
+
 
 
 <<thumbNomos>>=
@@ -902,27 +916,46 @@ thumb  <- decomposeMosaic( thumb, overwrite= overwriteRasters, progress= "text")
 thumb1 <- decomposeMosaic( thumb1, overwrite= overwriteRasters, progress= "text")
 
 if( overwriteFigures) {
-  thumbPlots$nomos <- coverMaps( thumb$nomos, 1)
-  thumbPlots1$nomos <- coverMaps( thumb1$nomos, 1)  
+  thumbPlots$nomos <- coverMaps( thumb$nomos)
+  thumbPlots1$nomos <- coverMaps( thumb1$nomos)  
 }
 
 thumbNomosDiff <- 
   if( overwriteRasters) {
-    overlay( thumb$agg, thumb1$agg, 
+    overlay( thumb$nomos, thumb1$nomos, 
             fun= function( t, t1) t -t1, 
             filename= "thumb_nomos_diff.tif", 
             overwrite= TRUE)
   } else brick( "thumb_nomos_diff.tif")
-layerNames( thumbNomosDiff) <- layerNames( thumb$agg)
+layerNames( thumbNomosDiff) <- layerNames( thumb$nomos)
 
 if( overwriteFigures) {
   thumbNomosDiffPlot <- coverMaps( thumbNomosDiff) + 
     scale_fill_gradientn( "diff", colours= rev( brewer.pal( 11, "BrBG")), 
-                         limits= c( 0.1, -0.1),
-                         breaks= seq( 0.1, -0.1, by= -0.02))
+                         limits= c( 0.3, -0.3),
+                         breaks= seq( 0.3, -0.3, by= -0.06))
 }
 
 @ %def 
+
+\begin{figure}[ht]
+\centering
+  
+<<fig_thumb1_nomos>>= 
+
+if( overwriteFigures) {
+  my.ggsave( texWd, "fig_thumb1_nomos.png",
+            plot= thumbPlots1$nomos)
+}
+
+@ 
+
+
+\includegraphics{fig_thumb1_nomos}
+ 
+\caption{Aggregated cover fractions after mosaic decomposition, $A_{min}=1.0$}
+\label{fig:thumb1_nomos}
+\end{figure} 
 
 \begin{figure}[ht]
 \centering
@@ -943,24 +976,6 @@ if( overwriteFigures) {
 \label{fig:thumb_nomos}
 \end{figure} 
 
-\begin{figure}[ht]
-\centering
-  
-<<fig_thumb1_nomos>>= 
-
-if( overwriteFigures) {
-  my.ggsave( texWd, "fig_thumb1_nomos.png",
-            plot= thumbPlots1$nomos)
-}
-
-@ 
-
-
-\includegraphics{fig_thumb1_nomos}
- 
-\caption{Aggregated cover fractions after mosaic decomposition, $A_{min}=1.0$}
-\label{fig:thumb1_nomos}
-\end{figure} 
 
 
 
@@ -1166,7 +1181,7 @@ if( overwriteFigures) {
 
 @ 
 
-\includegraphics[width=\textwidth]{fig_thumb_nlcd_reclass}
+\includegraphics{fig_thumb_nlcd_reclass}
  
 \caption{NLCD reclassified} 
 \label{fig:thumb_nlcd_reclass} 
@@ -1315,22 +1330,17 @@ sensing data as inputs, an older version of the MLCT (known as
 BU-MODIS) and the GLC2000 data set mentioned in
 \autoref{sec:background}.  Its allocation of cropland and pastures is
 constrained by a mask based on climatic criteria in order to avoid
-misallocation at higher latitudes, mainly a problem in boreal Canada
-which should have little to no bearing on our study area.  The
-``open'' class in this data set has been renamed from ``pasture'' in
-its creator's nomenclature, but it is clear from its distribution
-shown in \autoref{fig:agland} that it represents a phenomena that is
-not apparent in the MLCT data, so we do not attempt to use it or
-reconcile it here, rather only carry it along to a small degree for
-sake of comparison.  We attribute this discrepancy to commingling of
-managed pasture lands and natural open land in the MLCT
-classification.  It is important to note that Agland2000 is used as an
-input into the classification algorithm of the version of MLCT that we
-are using here and acknowledge the possibility of circularity when
-comparing the two, but because of its basis in census data we will use
-the cropland component of Agland2000 as an ``observed truth'' for the
-purposes of evaluating our incremental adjustments to the maps we
-derive from MLCT in \autoref{cha:analysis}.
+misallocation at higher latitudes beyond our study area.  The
+``pasture'' class in this data set likely has much in common with the
+``open'' class from MLCT but we are not employing that data in this
+analysis. It is important to note that the cropland aspect of
+Agland2000 is used as an input into the classification algorithm of
+the version of MLCT that we are using here and acknowledge the
+possibility of circularity when comparing the two, but because of its
+basis in census data we will use the cropland component of Agland2000
+as an ``observed truth'' for the purposes of evaluating our
+incremental adjustments to the maps we derive from MLCT in
+\autoref{cha:analysis}.
   
 @ 
 <<agland>>=
@@ -1339,7 +1349,7 @@ setwd( dataWd)
 setwd( "agland")
 
 agland <- stack( list.files( patt="(cropland|pasture).tif$"))
-layerNames(agland) <- c("crop", "open")
+layerNames(agland) <- c("crop", "pasture")
 agland <- setMinMax( agland)
   
 thumbAgland <-
@@ -1354,7 +1364,7 @@ thumbAgland <-
                            "thumbAgland.tif",
                            full.names= TRUE,
                            recursive= TRUE))
-layerNames( thumbAgland) <- c("crop", "open")
+layerNames( thumbAgland) <- c("crop", "pasture")
                                         # crop() returns a brick
 
 
@@ -1414,10 +1424,9 @@ if( overwriteFigures) {
 
 \clearpage
 
-\section{Harvested Area and Yields of 175 Crops (175crops2000)}
+\section{Harvested Area and Yields of 175 Crops (175Crops2000)}
 \label{sec:175crops2000}
 
-\citet{Monfreda2008}
 
 \missingfigure{Table of crops and types reproduced from \citep{Monfreda2008}}
 
@@ -1425,17 +1434,18 @@ if( overwriteFigures) {
 
 \todo{Address issue of smaller land mask for 175crops2000 and Agland2000}
 
-This data set will provide the information needed to disaggregate the
-cropland area taken from Agland2000.  It is not possible to use this
-data directly because it reflects only harvested area and so ignores
-various types of ancillary agricultural land, rather it will provide
-proportions for the disaggregation at the grid cell level.  Rather
-than considering the full array of 175 crops we will consider only
-corn, soy, wheat, rice, and sugarcane individually, combine other
-cereals into their own class, and combine all remaining crops as a
-catch-all ``other'' category.  Field crops will be distinguished from
-orchard / plantation crops that would likely fall under areas
-classified by MLCT as forest or shrub in this step.
+This data set, described in \citet{Monfreda2008}, will provide the
+information needed to disaggregate the cropland area taken from
+Agland2000.  It is not possible to use this data directly because it
+reflects only harvested area and so ignores various types of ancillary
+agricultural land, rather it will provide proportions for the
+disaggregation at the grid cell level.  Rather than considering the
+full array of 175 crops we will consider only corn, soy, wheat, rice,
+and sugarcane individually, combine other cereals into their own
+class, and combine all remaining crops as a catch-all ``other''
+category.  Field crops will be distinguished from orchard / plantation
+crops that would likely fall under areas classified by MLCT as forest
+or shrub in this step. \autoref{tab:subclass} provides the details on how the 175 crops in the \citet{Monfreda2008} data set are collected into crop sub-classes for the purposes of the PEEL model.
 
 
 @ 
@@ -1446,7 +1456,7 @@ setwd( dataWd)
 cropsWd <- path.expand( "~/see/data/raw/175crops2000/nc")
 ## list.files( cropsWd, "vrt$")
 
-cropTable <- read.csv( "/home/nbest/see/data/raw/175crops2000/monfreda2008 table1.csv", header= TRUE)
+cropTable <- read.csv( "monfreda2008 table1.csv", header= TRUE)
 
 ## For now we consider only herbaceous crops
 
@@ -1513,6 +1523,42 @@ names( catMasked) <- names( catStacks)
 
 
 @ 
+
+
+
+\begin{table}[ht]
+  \begin{center}
+    \begin{tabular}{|p{1in}|p{4in}|}
+      \hline
+      Sub-class & Crops \\
+      \hline
+      maize & maize \\
+      \hline
+      wheat & wheat \\
+      \hline
+      rice & rice \\
+      \hline
+      other cereals & \Sexpr{ paste( sort( tolower( cropTable[ cropTable$cat == "cereals", "crop"])), collapse="; ")} \\
+      \hline
+      soybean & soybean \\
+      \hline
+      sugarcane & sugarcane \\
+      \hline
+      forage &  \Sexpr{ paste( sort( tolower( cropTable[ cropTable$cat == "forage", "crop"])), collapse="; ")} \\
+      \hline
+      other field crops &  \Sexpr{ paste( sort( tolower( cropTable[ cropTable$cat == "field_crop", "crop"])), collapse="; ")} \\
+      \hline
+      shrub crops &  \Sexpr{ paste( tolower( sort( cropTable[ cropTable$cat == "shrub_crop", "crop"])), collapse="; ")} \\
+      \hline
+      tree crops &  \Sexpr{ paste( sort( tolower( cropTable[ cropTable$cat == "tree_crop", "crop"])), collapse="; ")} \\
+      \hline
+      \multicolumn{2}{l}{\footnotesize nes: "not elsewhere specified"} \\
+    \end{tabular}
+    \caption{ Crop sub-classes for simplifying 175Crops2000 (adapted from \citet{Monfreda2008})}
+    \label{tab:subclass}
+  \end{center}
+\end{table}
+
 
 \begin{figure}[ht] 
   \centering

@@ -1,0 +1,66 @@
+\section{Cropland Data Layer (CDL)}
+\label{sec:cdl}
+
+\missingfigure{Table or chart showing CDL covereage for various years}
+
+The CDL is only available for a small number of states in 2001.  If
+time allows it might be good to compare what is available with our
+results as another independent evaluation against a higher-resolution
+data set.
+
+\subsection{Reclassification}
+\label{sec:cdl-reclass}
+
+
+
+%  gdalbuildvrt -tr 0.0002777778 0.0002777778 -te -124.8333 24.5 -66.91667 49.33333 cdl_2001.vrt $(find . -name "*2001*")
+
+
+\todo{Calculate CDL mask for 5-arcmin cells completely filled}
+\todo(Calculate CDL aggregated in GRASS}
+
+@ 
+<<cdl,eval=FALSE>>=
+
+
+cdl <- list( pri= raster( "/gpfs/pads/projects/see/data/raw/cdl/vrt/cdl_2001.vrt"))
+
+cdlReclassMatrix <- 
+  matrix( c(
+            83,  83,  0,               # water
+            85,  85,  0,
+            63,  63,  1,               # forest
+                                       # no shrub
+            62,  62,  3,               # open
+            88,  88,  3,
+            87,  87,  4,               # wetland
+             1,  61,  5,               # crop
+            90,  90,  5,
+            82,  82,  6,               # urban
+            84,  84,  6,
+            86,  86,  6),
+                                       # no mosaic
+                                       # no barren
+         ncol= 3, byrow= TRUE)
+
+cdl  <- mlctReclass( cdl, cdlReclassMatrix, overwrite= overwriteRasters, progress= "text")
+
+cdl$Amin <- 1
+cdl <- coverFractions( cdl, mosaic= FALSE, overwrite= TRUE, progress="text")
+cdl <- aggregateFractions( cdl, overwrite=TRUE, progress="text")
+
+
+cdl_il <- list( pri= raster( "cdl_il_2001.tif"))
+cdl_il <- mlctReclass( cdl_il, cdlReclassMatrix, overwrite= overwriteRasters, progress= "text")
+cdl_il$Amin <- 1
+cdl_il <- coverFractions( cdl_il, mosaic= FALSE, overwrite= TRUE, progress="text")
+cdl_il <- aggregateFractions( cdl_il, overwrite=TRUE, progress="text")
+
+@ %def $$$
+
+
+
+\missingfigure{CDL reclassification table}
+
+\subsection{Aggregation}
+\label{sec:cdl-aggr}

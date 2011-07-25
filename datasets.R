@@ -1,7 +1,7 @@
 ###################################################
 ### chunk number 1: initialize
 ###################################################
-#line 16 "/home/nbest/thesis/datasets.Rnw"
+#line 17 "/home/nbest/thesis/datasets.Rnw"
 
                                         # load helper functions
                                         # code will appear in appendix
@@ -17,7 +17,7 @@ overwriteFigures <- TRUE
 ###################################################
 ### chunk number 2: thumb
 ###################################################
-#line 101 "/home/nbest/thesis/datasets.Rnw"
+#line 102 "/home/nbest/thesis/datasets.Rnw"
 
 texWd <- setwd("../data")
 dataWd <- getwd()
@@ -64,7 +64,7 @@ igbpLegend <- igbpLegend[ igbpLegend != "#000000"]
 ###################################################
 ### chunk number 3: mlct-reclass
 ###################################################
-#line 201 "/home/nbest/thesis/datasets.Rnw"
+#line 202 "/home/nbest/thesis/datasets.Rnw"
 
 
 thumb <- mlctReclass( thumb, mlctReclassMatrix, overwrite= overwriteRasters)
@@ -84,7 +84,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 4: fig_thumb_pri_reclass
 ###################################################
-#line 223 "/home/nbest/thesis/datasets.Rnw"
+#line 224 "/home/nbest/thesis/datasets.Rnw"
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_thumb_pri_reclass.png",
@@ -96,7 +96,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 5: fig_thumb_sec_reclass
 ###################################################
-#line 249 "/home/nbest/thesis/datasets.Rnw"
+#line 250 "/home/nbest/thesis/datasets.Rnw"
 
 
 if( overwriteFigures) {
@@ -109,7 +109,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 6: fig_thumb_pct
 ###################################################
-#line 281 "/home/nbest/thesis/datasets.Rnw"
+#line 282 "/home/nbest/thesis/datasets.Rnw"
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_thumb_pct.png",
@@ -121,7 +121,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 7: fig_thumb_pri_facet
 ###################################################
-#line 319 "/home/nbest/thesis/datasets.Rnw"
+#line 320 "/home/nbest/thesis/datasets.Rnw"
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_thumb_pri_facet.png",
@@ -135,7 +135,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 8: fig_thumb_sec_facet
 ###################################################
-#line 340 "/home/nbest/thesis/datasets.Rnw"
+#line 341 "/home/nbest/thesis/datasets.Rnw"
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_thumb_sec_facet.png",
@@ -149,7 +149,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 9: mlct_reclass
 ###################################################
-#line 381 "/home/nbest/thesis/datasets.Rnw"
+#line 382 "/home/nbest/thesis/datasets.Rnw"
 
 ## repeat for cUSA
 setwd( dataWd)
@@ -174,7 +174,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 10: fig_mlct_pri_reclass
 ###################################################
-#line 407 "/home/nbest/thesis/datasets.Rnw"
+#line 408 "/home/nbest/thesis/datasets.Rnw"
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_mlct_pri_reclass.png",
@@ -187,7 +187,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 11: fig_mlct_sec_reclass
 ###################################################
-#line 426 "/home/nbest/thesis/datasets.Rnw"
+#line 427 "/home/nbest/thesis/datasets.Rnw"
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_mlct_sec_reclass.png",
@@ -201,7 +201,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 12: fig_mlct_pct
 ###################################################
-#line 446 "/home/nbest/thesis/datasets.Rnw"
+#line 447 "/home/nbest/thesis/datasets.Rnw"
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_mlct_pct.png",
@@ -215,7 +215,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 13: fig_mlct_pri_facet
 ###################################################
-#line 466 "/home/nbest/thesis/datasets.Rnw"
+#line 467 "/home/nbest/thesis/datasets.Rnw"
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_mlct_pri_facet.png",
@@ -231,7 +231,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 14: fig_mlct_pri_facet2
 ###################################################
-#line 487 "/home/nbest/thesis/datasets.Rnw"
+#line 488 "/home/nbest/thesis/datasets.Rnw"
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_mlct_pri_facet2.png",
@@ -247,7 +247,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 15: fig_mlct_sec_facet
 ###################################################
-#line 509 "/home/nbest/thesis/datasets.Rnw"
+#line 510 "/home/nbest/thesis/datasets.Rnw"
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_mlct_sec_facet.png",
@@ -263,7 +263,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 16: fig_mlct_sec_facet2
 ###################################################
-#line 530 "/home/nbest/thesis/datasets.Rnw"
+#line 531 "/home/nbest/thesis/datasets.Rnw"
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_mlct_sec_facet2.png",
@@ -279,7 +279,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 17: thumbPlots
 ###################################################
-#line 606 "/home/nbest/thesis/datasets.Rnw"
+#line 607 "/home/nbest/thesis/datasets.Rnw"
 
 
 setwd( dataWd)
@@ -312,7 +312,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 18: fig_thumb_fracs
 ###################################################
-#line 650 "/home/nbest/thesis/datasets.Rnw"
+#line 651 "/home/nbest/thesis/datasets.Rnw"
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_thumb_fracs.png",
@@ -324,7 +324,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 19: fig_thumb1_fracs
 ###################################################
-#line 675 "/home/nbest/thesis/datasets.Rnw"
+#line 676 "/home/nbest/thesis/datasets.Rnw"
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_thumb1_fracs.png",
@@ -334,21 +334,9 @@ if( overwriteFigures) {
 
 
 ###################################################
-### chunk number 20: fig_thumb_agg
+### chunk number 20: fig_thumb1_agg
 ###################################################
 #line 708 "/home/nbest/thesis/datasets.Rnw"
-
-if( overwriteFigures) {
-  my.ggsave( texWd, "fig_thumb_agg.png",
-            plot= thumbPlots$agg)
-}
-
-
-
-###################################################
-### chunk number 21: fig_thumb1_agg
-###################################################
-#line 726 "/home/nbest/thesis/datasets.Rnw"
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_thumb1_agg.png",
@@ -358,9 +346,21 @@ if( overwriteFigures) {
 
 
 ###################################################
+### chunk number 21: fig_thumb_agg
+###################################################
+#line 726 "/home/nbest/thesis/datasets.Rnw"
+
+if( overwriteFigures) {
+  my.ggsave( texWd, "fig_thumb_agg.png",
+            plot= thumbPlots$agg)
+}
+
+
+
+###################################################
 ### chunk number 22: thumbAggDiff
 ###################################################
-#line 754 "/home/nbest/thesis/datasets.Rnw"
+#line 755 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( dataWd)
 
@@ -385,7 +385,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 23: fig_thumb_agg_diff
 ###################################################
-#line 792 "/home/nbest/thesis/datasets.Rnw"
+#line 793 "/home/nbest/thesis/datasets.Rnw"
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_thumb_agg_diff.png",
@@ -397,7 +397,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 24: mlct_agg
 ###################################################
-#line 823 "/home/nbest/thesis/datasets.Rnw"
+#line 824 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( dataWd)
 
@@ -426,51 +426,39 @@ mlct1 <- aggregateFractions( mlct1,
 ###################################################
 ### chunk number 25: thumbNomos
 ###################################################
-#line 899 "/home/nbest/thesis/datasets.Rnw"
+#line 913 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( dataWd)
 thumb  <- decomposeMosaic( thumb, overwrite= overwriteRasters, progress= "text")
 thumb1 <- decomposeMosaic( thumb1, overwrite= overwriteRasters, progress= "text")
 
 if( overwriteFigures) {
-  thumbPlots$nomos <- coverMaps( thumb$nomos, 1)
-  thumbPlots1$nomos <- coverMaps( thumb1$nomos, 1)  
+  thumbPlots$nomos <- coverMaps( thumb$nomos)
+  thumbPlots1$nomos <- coverMaps( thumb1$nomos)  
 }
 
 thumbNomosDiff <- 
   if( overwriteRasters) {
-    overlay( thumb$agg, thumb1$agg, 
+    overlay( thumb$nomos, thumb1$nomos, 
             fun= function( t, t1) t -t1, 
             filename= "thumb_nomos_diff.tif", 
             overwrite= TRUE)
   } else brick( "thumb_nomos_diff.tif")
-layerNames( thumbNomosDiff) <- layerNames( thumb$agg)
+layerNames( thumbNomosDiff) <- layerNames( thumb$nomos)
 
 if( overwriteFigures) {
   thumbNomosDiffPlot <- coverMaps( thumbNomosDiff) + 
     scale_fill_gradientn( "diff", colours= rev( brewer.pal( 11, "BrBG")), 
-                         limits= c( 0.1, -0.1),
-                         breaks= seq( 0.1, -0.1, by= -0.02))
+                         limits= c( 0.3, -0.3),
+                         breaks= seq( 0.3, -0.3, by= -0.06))
 }
 
 
 
 ###################################################
-### chunk number 26: fig_thumb_nomos
+### chunk number 26: fig_thumb1_nomos
 ###################################################
-#line 931 "/home/nbest/thesis/datasets.Rnw"
-
-if( overwriteFigures) {
-  my.ggsave( texWd, "fig_thumb_nomos.png",
-            plot= thumbPlots$nomos)
-}
-
-
-
-###################################################
-### chunk number 27: fig_thumb1_nomos
-###################################################
-#line 950 "/home/nbest/thesis/datasets.Rnw"
+#line 945 "/home/nbest/thesis/datasets.Rnw"
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_thumb1_nomos.png",
@@ -480,9 +468,21 @@ if( overwriteFigures) {
 
 
 ###################################################
+### chunk number 27: fig_thumb_nomos
+###################################################
+#line 964 "/home/nbest/thesis/datasets.Rnw"
+
+if( overwriteFigures) {
+  my.ggsave( texWd, "fig_thumb_nomos.png",
+            plot= thumbPlots$nomos)
+}
+
+
+
+###################################################
 ### chunk number 28: fig_thumb_nomos_diff
 ###################################################
-#line 971 "/home/nbest/thesis/datasets.Rnw"
+#line 986 "/home/nbest/thesis/datasets.Rnw"
 
 if( overwriteFigures ) {
   my.ggsave( texWd, "fig_thumb_nomos_diff.png",
@@ -494,7 +494,7 @@ if( overwriteFigures ) {
 ###################################################
 ### chunk number 29: mlct_nomos
 ###################################################
-#line 989 "/home/nbest/thesis/datasets.Rnw"
+#line 1004 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( dataWd)
 
@@ -512,7 +512,7 @@ mlct1  <- decomposeMosaic( mlct1, overwrite= overwriteRasters, progress="text")
 ###################################################
 ### chunk number 30: thumb_nlcd
 ###################################################
-#line 1063 "/home/nbest/thesis/datasets.Rnw"
+#line 1078 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( dataWd)
 setwd( "nlcd")
@@ -525,7 +525,7 @@ thumbNlcd <- list( pri=raster( "thumbNlcd.tif"))
 ###################################################
 ### chunk number 31: thumb_nlcd_reclass
 ###################################################
-#line 1142 "/home/nbest/thesis/datasets.Rnw"
+#line 1157 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( nlcdWd)
 
@@ -543,7 +543,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 32: fig_thumb_nlcd_reclass
 ###################################################
-#line 1161 "/home/nbest/thesis/datasets.Rnw"
+#line 1176 "/home/nbest/thesis/datasets.Rnw"
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_thumb_nlcd_reclass.png",
@@ -555,7 +555,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 33: fig_thumb_nlcd_facet
 ###################################################
-#line 1179 "/home/nbest/thesis/datasets.Rnw"
+#line 1194 "/home/nbest/thesis/datasets.Rnw"
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_thumb_nlcd_facet.png",
@@ -569,7 +569,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 34: thumb_nlcd_aggr
 ###################################################
-#line 1209 "/home/nbest/thesis/datasets.Rnw"
+#line 1224 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( nlcdWd)
 
@@ -592,7 +592,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 35: fig_thumb_nlcd_agg
 ###################################################
-#line 1232 "/home/nbest/thesis/datasets.Rnw"
+#line 1247 "/home/nbest/thesis/datasets.Rnw"
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_thumb_nlcd_agg.png",
@@ -604,7 +604,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 36: nlcd
 ###################################################
-#line 1250 "/home/nbest/thesis/datasets.Rnw"
+#line 1265 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( dataWd)
 
@@ -624,7 +624,7 @@ layerNames(nlcd) <- names( peelClasses[ -8])
 ###################################################
 ### chunk number 37: fig_nlcd
 ###################################################
-#line 1270 "/home/nbest/thesis/datasets.Rnw"
+#line 1285 "/home/nbest/thesis/datasets.Rnw"
 
 if( overwriteFigures) {
   nlcdPlot <- coverMaps( nlcd, samp= 0.2,
@@ -638,7 +638,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 38: fig_nlcd2
 ###################################################
-#line 1288 "/home/nbest/thesis/datasets.Rnw"
+#line 1303 "/home/nbest/thesis/datasets.Rnw"
 
 if( overwriteFigures) {
   nlcdPlot2 <- coverMaps( nlcd, 0.2,
@@ -652,13 +652,13 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 39: agland
 ###################################################
-#line 1337 "/home/nbest/thesis/datasets.Rnw"
+#line 1347 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( dataWd)  
 setwd( "agland")
 
 agland <- stack( list.files( patt="(cropland|pasture).tif$"))
-layerNames(agland) <- c("crop", "open")
+layerNames(agland) <- c("crop", "pasture")
 agland <- setMinMax( agland)
   
 thumbAgland <-
@@ -673,7 +673,7 @@ thumbAgland <-
                            "thumbAgland.tif",
                            full.names= TRUE,
                            recursive= TRUE))
-layerNames( thumbAgland) <- c("crop", "open")
+layerNames( thumbAgland) <- c("crop", "pasture")
                                         # crop() returns a brick
 
 
@@ -694,7 +694,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 40: fig_thumb_agland
 ###################################################
-#line 1380 "/home/nbest/thesis/datasets.Rnw"
+#line 1390 "/home/nbest/thesis/datasets.Rnw"
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_thumb_agland.png",
@@ -706,7 +706,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 41: fig_agland
 ###################################################
-#line 1399 "/home/nbest/thesis/datasets.Rnw"
+#line 1409 "/home/nbest/thesis/datasets.Rnw"
 
 if( overwriteFigures) {
   my.ggsave( texWd, "fig_agland.png",
@@ -720,14 +720,14 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 42: 175crops
 ###################################################
-#line 1443 "/home/nbest/thesis/datasets.Rnw"
+#line 1453 "/home/nbest/thesis/datasets.Rnw"
 
 setwd( dataWd)  
 
 cropsWd <- path.expand( "~/see/data/raw/175crops2000/nc")
 ## list.files( cropsWd, "vrt$")
 
-cropTable <- read.csv( "/home/nbest/see/data/raw/175crops2000/monfreda2008 table1.csv", header= TRUE)
+cropTable <- read.csv( "monfreda2008 table1.csv", header= TRUE)
 
 ## For now we consider only herbaceous crops
 
@@ -798,7 +798,7 @@ names( catMasked) <- names( catStacks)
 ###################################################
 ### chunk number 43: fig_crops
 ###################################################
-#line 1521 "/home/nbest/thesis/datasets.Rnw"
+#line 1567 "/home/nbest/thesis/datasets.Rnw"
 
 if( overwriteFigures) {
   cropsMap <-
@@ -814,7 +814,7 @@ if( overwriteFigures) {
 ###################################################
 ### chunk number 44: fig_crops2
 ###################################################
-#line 1543 "/home/nbest/thesis/datasets.Rnw"
+#line 1589 "/home/nbest/thesis/datasets.Rnw"
 
 if( overwriteFigures) {
   cropsMap2 <-

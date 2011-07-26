@@ -21,7 +21,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{1143}
+% \CheckSum{0}
 %
 % \MakeShortVerb{\|}
 %
@@ -1440,13 +1440,13 @@ Juan Valdez was born\ldots.
 \def\ps@plain{%
   \let\@mkboth\@gobbletwo
   \if@thesisdraft
-    \def\@oddhead{\draftheader\hfil}
+    \def\@oddfoot{\draftheader\hfil}
   \else
-    \let\@oddhead\@empty
+    \let\@oddfoot\@empty
   \fi
-  \let\@evenhead\@oddhead
-  \def\@oddfoot{\reset@font\hfil\thepage\hfil}%
   \let\@evenfoot\@oddfoot
+  \def\@oddhead{\reset@font\hfil\thepage}%
+  \let\@evenfoot\@oddhead
 }
 %    \end{macrocode}
 % \end{macro}

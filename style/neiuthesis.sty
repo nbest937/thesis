@@ -441,13 +441,13 @@
 \def\ps@plain{%
   \let\@mkboth\@gobbletwo
   \if@thesisdraft
-    \def\@oddhead{\draftheader\hfil}
+    \def\@oddfoot{\draftheader\hfil}
   \else
-    \let\@oddhead\@empty
+    \let\@oddfoot\@empty
   \fi
-  \let\@evenhead\@oddhead
-  \def\@oddfoot{\reset@font\hfil\thepage\hfil}%
   \let\@evenfoot\@oddfoot
+  \def\@oddhead{\reset@font\hfil\thepage}%
+  \let\@evenfoot\@oddhead
 }
 \if@twoside
   \def\ps@headings{%

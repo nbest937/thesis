@@ -274,9 +274,9 @@
   \font\cminch=cminch at 60pt
   \newcommand\chapternumberfont{\cminch}
 \else
-  \newcommand\chapternumberfont{\huge\bfseries}
+  \newcommand\chapternumberfont{\large\bfseries}
 \fi
-\newcommand\chaptertitlefont{\Huge\bfseries}
+\newcommand\chaptertitlefont{\Large\bfseries}
 \def\@chapter[#1]#2{%
   \ifnum \c@secnumdepth >\m@ne
     \if@mainmatter
@@ -333,7 +333,7 @@
 \if@thesisfancy
   \setlength{\chaptertitleheight}{1.5in}
 \else
-  \setlength{\chaptertitleheight}{1.85in}
+  \setlength{\chaptertitleheight}{0.75in}
 \fi
 \def\@makechapterhead#1{%
   \vbox to \chaptertitleheight{

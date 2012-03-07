@@ -413,7 +413,7 @@
 \textheight 8.9in
 \if@fullpage
   \setlength{\textwidth}{\paperwidth}
-  \addtolength{\textwidth}{-2in}
+  \addtolength{\textwidth}{-2.5in}
   \@settopoint\textwidth
 \fi
 \setlength{\@tempdima}{\paperwidth}

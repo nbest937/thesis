@@ -31,6 +31,7 @@ ggplotRaster <- function( r, samp) {
 
 peelMap <- function( r, samp, classes= names( peelClasses)) {
   p <- ggplotRaster( r, samp)
+  colnames( p$data)[1] <- "values" 
   p$data$values <- factor( p$data$values, 
                           levels= peelClasses, 
                           labels= names( peelClasses))

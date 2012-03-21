@@ -90,6 +90,7 @@ agland <- stack( list.files( paste( dataPath, "agland", sep="/"),
                             full.names= TRUE))
 layerNames(agland) <- c("crop", "open")
 agland <- setMinMax( agland)
+aglandCrop <- unstack( agland)[[ 1]]
 if( studyArea == "thumb") {
   agland <- crop( agland, thumbExtent)
 }
@@ -117,7 +118,6 @@ nomos1 <-
                     patt= paste( studyArea, "1_Amin_1_nomosaic.tif", sep=""),
                     full.names= TRUE))
 layerNames( nomos1) <- c( names( peelClasses)[ -8], "total")
-
 
 nlcd <-
   brick( sapply( names( peelClasses),
@@ -1725,12 +1725,12 @@ may be others such as multiple cropping of rice in the southern
 extremes of its range.  In areas where soy and wheat are
 double-cropped their areas will be underestimated in this data set
 relative to that given in the 175Crops2000 data set, subsequent to the
-NLCD offset adjustment.  This issues also bears further study.
+NLCD offset adjustment.  This issue also bears further study.
 
 
 @ 
 <<restack_crops>>=
-
+setwd( rasterWd)
 
 check <- 
   getPeelBand( aglandComplete, "crop") -
@@ -1770,21 +1770,88 @@ layerNames( peelData)[ 16] <- c("mlct_crop")
 peelData <- brick( peelData,
                   filename= sprintf( "%s/peel.tif", rasterWd),
                   overwrite= TRUE)
-
+                           
 layerNames( peelData) <-
     c( unlist( llply( c( aglandComplete,
                         cropSubClasses),
                      layerNames)),
       "mlct_crop")
 
+                                        # raster's native method for writing out
+                                        # a .nc file doesn't create variables
+                                        # from named layers, so we have to roll
+                                        # our own.
+                           
+## peelCdf <- brick( peelData, filename= "peel.nc", overwrite= TRUE,
+##                  varname= layerNames( peelData),
+##                  varunit= "" )
 
-peelDf <- data.frame( peelData[ !is.na( grid[])])
-rownames( peelDf) <- grid[][ !is.na(grid[])]
+if( require( ncdf4)) {                             
+  cdfVars <- function( r) {
+    halfCell <- res( r) /2
+    cdfDimVars <- {
+      x <- ncdim_def( "longitude", "degrees_east",
+                     vals= seq(
+                       from= xmin( r) +halfCell[ 1],
+                       to=   xmax( r) -halfCell[ 1],
+                       by= res(r)[ 1]))
+      y <- ncdim_def( "latitude", "degrees_north",
+                     vals= seq(
+                       from= ymax( r) -halfCell[ 2],
+                       to=   ymin( r) +halfCell[ 2],
+                       by= -res(r)[ 2]))
+      list( x, y)
+    }
+    cdfVarFun <- function( layerName) {
+      ncvar_def( layerName, units= "", cdfDimVars, missval= -1)
+    }
+    sapply( layerNames( r), cdfVarFun, simplify= FALSE)
+  }
+  peelCdf <- nc_create( "peel0.nc",
+                       c( list( crs= ncvar_def( "crs", "",
+                                  list(), prec= "integer")),
+                         cdfVars( peelData)))
+  ncatt_put( peelCdf, 0, "Conventions", "CF-1.6")
+  ncatt_put( peelCdf, 0, "title",
+            "PEEL0 LULC dataset")
+  ncatt_put( peelCdf, 0, "institution",
+            "Computation Institute, University of Chicago")
+  ncatt_put( peelCdf, 0, "source",
+            "Best, N. (2011), \"Synthesis of a complete land use/land cover data set for the conterminous United States emphasizing accuracy in area and distribution of agricultural activity\", Master’s thesis, Northeastern Illinois University.")
+  ncatt_put( peelCdf, 0, "references", 
+            "Best et al. (forthcoming), \"Synthesis of a complete land use/land cover dataset for the conterminous United States\", RDCEP Working Paper Series and elsewhere")
+  ncatt_put( peelCdf, 0, "history", date())
+  ## ncatt_put( peelCdf, 0, "spatial_ref", showWKT( projection( peelData)))
 
+  ncatt_put( peelCdf, "crs", "grid_mapping_name", "latitude_longitude")
+  ncatt_put( peelCdf, "crs", "longitude_of_prime_meridian", 0.0)
+  ncatt_put( peelCdf, "crs", "semi_major_axis", 6378137.0)
+  ncatt_put( peelCdf, "crs", "inverse_flattening", 298.257223563)
+
+  for( layerName in layerNames( peelData)) {
+    ncatt_put( peelCdf, layerName, "grid_mapping", "crs")
+    ## ncatt_put( peelCdf, layerName, "spatial_ref",
+    ##           showWKT( projection( peelData)))
+    ncvar_put( peelCdf, layerName, subset( peelData, layerName, drop= TRUE)[],
+              start= c( 1, 1),
+              count= c( -1, -1))
+  }
+
+  nc_close( peelCdf)
+
+  
+## peelDf <- data.frame( peelData[ !is.na( grid[])])
+## rownames( peelDf) <- grid[][ !is.na(grid[])]
+
+peelDf <- data.frame( cell= grid[], peelData[])[ !is.na( grid[]), ]
+peelDf$cell <- as.character( peelDf$cell)
+                           
+                           
 write.csv( format.df( peelDf,
                      dec=3,
                      numeric.dollar=FALSE,
                      na.blank= TRUE),
+          row.names= FALSE,
           file= "peel.csv",
           quote= FALSE)
 

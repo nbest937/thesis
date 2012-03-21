@@ -5,7 +5,6 @@
 \SweaveOpts{ echo=FALSE}
 \SweaveOpts{ engine=R}
 \SweaveOpts{ keep.source=TRUE}
-\SweaveOpts{ eval=FALSE}
 \SweaveOpts{ eval=TRUE}
 
 
@@ -22,7 +21,7 @@ source("~/thesis/code/maps.R")
 setwd( "~/thesis/datasets")
 
 overwriteRasters <- FALSE
-overwriteFigures <- TRUE
+overwriteFigures <- FALSE
 
 @ 
 
@@ -197,9 +196,11 @@ which would include deserts, to form the PEEL barren class based on
 their shared characteristics of low population density and relatively
 low intensity of economic activity.
 
+\SweaveOpts{ eval=FALSE}
+
 @ 
 <<mlct-reclass>>=
-
+setwd( dataWd)
 
 thumb <- mlctReclass( thumb, mlctReclassMatrix, overwrite= overwriteRasters)
 
@@ -1446,6 +1447,7 @@ class, and combine all remaining crops as a catch-all ``other''
 category.  Field crops will be distinguished from orchard / plantation
 crops that would likely fall under areas classified by MLCT as forest
 or shrub in this step. \autoref{tab:subclass} provides the details on how the 175 crops in the \citet{Monfreda2008} data set are collected into crop sub-classes for the purposes of the PEEL model.
+
 
 
 @ 
